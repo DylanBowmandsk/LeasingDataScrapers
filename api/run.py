@@ -12,6 +12,10 @@ porschelist = ["Cayenne", "Panamera"]
 def index():
     return "hello world!"
 
-@app.route("/bmw")
-def getCarList():
+@app.route("/get/brands")
+def getBrands():
     return jsonify(["bmw","porsche"])
+
+@app.route("/get/<brand>/models")
+def getModels(brand):
+    return jsonify(bmwlist if brand == "bmw" else porschelist)

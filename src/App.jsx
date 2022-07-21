@@ -2,7 +2,6 @@ import ScraperForm from "./ScraperForm";
 
 const App = () => {
 
-
   return (
     <ScraperForm />
   );
