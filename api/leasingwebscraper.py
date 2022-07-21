@@ -12,10 +12,12 @@ def scrapeModel(brand,model):
     if response.status_code == 200:
         soup = BeautifulSoup(response.content,"html.parser")
         rows = []
-        for deal in soup.find_all("div", id="alldeals"):
-            car = model
-            monthly = deal.find("div" , class_="price").text
-            print(car,monthly)
+        dealsdiv = soup.find("div", id="alldeals")
+        deals = dealsdiv.find_all("div", class_="deal-panel-card")
+        for deal in deals:
+            car = brand
+            price = deal.find("div", class_="price").text
+            print(car,price)
             
         return rows
     elif response.status_code == 403:
