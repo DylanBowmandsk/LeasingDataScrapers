@@ -21,12 +21,17 @@ const ScraperForm = () => {
 const populateBrandFields = () => {
     let selector = document.getElementById("brand")
     selector.innerHTML = ""
-    let list = ["porsche","bmw"]
-    list.forEach(element => {
-      let option = document.createElement("option")
-      option.innerHTML = element
-      selector.appendChild(option)
-    });
+    fetch("http://localhost:5000/bmw")
+    .then(response => response.json())
+    .then(data => {
+      data.forEach(element => {
+        let option = document.createElement("option")
+        option.innerHTML = element
+        selector.appendChild(option)
+      });
+    })
+    
+    
 }
   
   const populateModelFields = (model, setBrand) => {
