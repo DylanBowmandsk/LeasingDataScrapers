@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 const ScraperForm = () => {
 
     const [brand, setBrand] = useState()
+    const [model, setModel] = useState()
 
     useEffect(() => {
       populateBrandFields()
@@ -11,9 +12,9 @@ const ScraperForm = () => {
   
     return (
       <div className="App">
-        <select name="brand" id="brand" onChange={(e) => {populateModelFields(e.target.value, setBrand)}}>brand</select>
-        <select name="model" id="model"><option>model</option></select>
-        <button>Scrape</button>
+        <select name="brand" id="brand" onChange={e => {populateModelFields(e.target.value, setBrand)}}>brand</select>
+        <select name="model" id="model" onChange={e => {setModel(e.target.value)}}><option>model</option></select>
+        <button onClick={() => {scrapeData(brand, model)}}>Scrape</button>
       </div>
     );
 }
@@ -48,6 +49,14 @@ const populateBrandFields = () => {
         selector.appendChild(option)
       });
     });
+}
+
+const scrapeData = (brand, model) => {
+  fetch("http://localhost:5000/scrape/"+brand+"/"+model)
+  .then(response => response.json())
+  .then(data => {
+    console.log(data)
+  })
 }
 
 export default ScraperForm
