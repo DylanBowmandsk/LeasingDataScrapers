@@ -12,8 +12,8 @@ const ScraperForm = () => {
   
     return (
       <div className="App">
-        <select name="brand" id="brand" onChange={e => {populateModelFields(e.target.value, setBrand)}}>brand</select>
-        <select name="model" id="model" onChange={e => {setModel(e.target.value)}}><option>model</option></select>
+        <select name="brand" id="brand" defaultValue="--Brand--" onChange={e => {populateRangeFields(e.target.value, setBrand)}}></select>
+        <select name="model" id="model" defaultValue="--Model--" onChange={e => {setModel(e.target.value)}}></select>
         <button onClick={() => {scrapeData(brand, model)}}>Scrape</button>
       </div>
     );
@@ -23,7 +23,6 @@ const ScraperForm = () => {
 //makes api call and fills out input fields of all brands we have in stock
 const populateBrandFields = () => {
     let selector = document.getElementById("brand")
-    selector.innerHTML = ""
     fetch("http://localhost:5000/get/brands")
     .then(response => response.json())
     .then(data => {
@@ -35,12 +34,12 @@ const populateBrandFields = () => {
     })
 }
   
-//makes api call to populate the models of the previously selected brand input
-  const populateModelFields = (brand, setBrand) => {
+//makes api call to populate the ranges of the previously selected brand input
+  const populateRangeFields = (brand, setBrand) => {
     setBrand(brand)
     let selector = document.getElementById("model")
     selector.innerHTML = ""
-    fetch("http://localhost:5000/get/"+brand+"/models")
+    fetch("http://localhost:5000/get/"+brand+"/range")
     .then(response => response.json())
     .then(data => {
       data.forEach(element => {

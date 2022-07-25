@@ -15,12 +15,12 @@ def index():
 
 @app.route("/get/brands")
 def getBrands():
-    return jsonify(["bmw","porsche"])
+    return jsonify(leasingwebscraper.scrapeBrandList())
 
-@app.route("/get/<brand>/models")
-def getModels(brand):
-    return jsonify(bmwlist if brand == "bmw" else porschelist)
+@app.route("/get/<brand>/range")
+def getRange(brand):
+    return jsonify(leasingwebscraper.scrapeRangeList(brand))
 
-@app.route("/scrape/<brand>/<model>")
-def scrape(brand,model):
-    return jsonify(leasingwebscraper.scrapeModel(brand,model))
+@app.route("/scrape/<brand>/<range>")
+def scrape(brand,range):
+    return jsonify(leasingwebscraper.scrape(brand,range))
