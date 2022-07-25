@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react"
 
 
@@ -20,6 +19,7 @@ const ScraperForm = () => {
           <option value="">Series</option>
         </select>
         <button onClick={() => {scrapeData(brand, model)}}>Scrape</button>
+        
       </div>
     );
 }
