@@ -24,7 +24,6 @@ const ScraperForm = () => {
     );
 }
 
-
 //makes api call and fills out input fields of all brands we have in stock
 const populateBrandFields = () => {
     let selector = document.getElementById("brand")

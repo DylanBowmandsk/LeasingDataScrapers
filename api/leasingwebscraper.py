@@ -1,4 +1,3 @@
-from distutils.filelist import findall
 import requests 
 #Imports the beautiful soup library for scraping
 from bs4 import BeautifulSoup
@@ -17,20 +16,30 @@ def scrape(brand,range):
 
         for deal in deals:
             price = deal.find("div", class_="price").text
-            mileageli = deal.find("li", class_="mileage")
-            mileage = mileageli.find("span").text
+            derivitive = deal.find("div", "derivative").text
+            mileageLi = deal.find("li", class_="mileage")
+            mileage = mileageLi.find("span").text
+            termLi = deal.find("li", class_="term")
+            term = termLi.find("span").text
+            initialMonthsLi = deal.find("li", class_="initial-rental")
+            initialMonths = initialMonthsLi.find("span").text
             priceList = deal.find("ul", class_="price-list")
             liList = priceList.findAll("span", class_="data")
             initialRental = liList[0].text
             additionalFees = liList[1].text
             totalLease = liList[2].text
 
+            
+
             rows.append({"brand": brand+ " " + range,
              "price" : price,
              "mileage" : mileage,
              "initial rental": initialRental,
              "additional fees": additionalFees,
-             "total lease" : totalLease})
+             "total lease" : totalLease,
+             "term" : term,
+             "initial rental months" : initialMonths,
+             "derivitive" : derivitive})
             
         return rows
 
