@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react"
 
 
@@ -12,8 +13,12 @@ const ScraperForm = () => {
   
     return (
       <div className="App">
-        <select name="brand" id="brand" defaultValue="--Brand--" onChange={e => {populateRangeFields(e.target.value, setBrand)}}></select>
-        <select name="model" id="model" defaultValue="--Model--" onChange={e => {setModel(e.target.value)}}></select>
+        <select name="brand" id="brand" defaultValue="--Brand--" onChange={e => {populateRangeFields(e.target.value, setBrand, setModel)}}>
+          <option value="">Brand</option>
+        </select>
+        <select name="model" id="model" defaultValue="--Model--" onChange={e => {setModel(e.target.value)}}>
+          <option value="">Series</option>
+        </select>
         <button onClick={() => {scrapeData(brand, model)}}>Scrape</button>
       </div>
     );
@@ -35,14 +40,15 @@ const populateBrandFields = () => {
 }
   
 //makes api call to populate the ranges of the previously selected brand input
-  const populateRangeFields = (brand, setBrand) => {
+  const populateRangeFields = (brand, setBrand,setModel) => {
     setBrand(brand)
     let selector = document.getElementById("model")
     selector.innerHTML = ""
     fetch("http://localhost:5000/get/"+brand+"/range")
     .then(response => response.json())
     .then(data => {
-      data.forEach(element => {
+      data.forEach((element, index) => {
+        if (index === 0) setModel(element)
         let option = document.createElement("option")
         option.innerHTML = element
         selector.appendChild(option)

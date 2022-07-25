@@ -15,16 +15,25 @@ def scrape(brand,range):
         dealsdiv = soup.find("div", id="alldeals")
         deals = dealsdiv.find_all("div", class_="deal-panel-card")
 
-        mileageli = soup.find("li", class_="mileage")
-        mileage = mileageli.find("span").text
-
         for deal in deals:
             price = deal.find("div", class_="price").text
-            rows.append([brand+ " " + range,
-             price,
-             mileage])
+            mileageli = deal.find("li", class_="mileage")
+            mileage = mileageli.find("span").text
+            priceList = deal.find("ul", class_="price-list")
+            liList = priceList.findAll("span", class_="data")
+            initialRental = liList[0].text
+            additionalFees = liList[1].text
+            totalLease = liList[2].text
+
+            rows.append({"brand": brand+ " " + range,
+             "price" : price,
+             "mileage" : mileage,
+             "initial rental": initialRental,
+             "additional fees": additionalFees,
+             "total lease" : totalLease})
             
         return rows
+
     elif response.status_code == 403:
         print("forbidden")
 
