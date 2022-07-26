@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 
 
-const ScraperForm = () => {
+const ScraperForm = ({setScrapedData}) => {
 
     const [brand, setBrand] = useState()
     const [model, setModel] = useState()
@@ -18,8 +18,7 @@ const ScraperForm = () => {
         <select name="model" id="model" defaultValue="--Model--" onChange={e => {setModel(e.target.value)}}>
           <option value="">Series</option>
         </select>
-        <button onClick={() => {scrapeData(brand, model)}}>Scrape</button>
-        
+        <button onClick={() => {scrapeData(brand, model, setScrapedData)}}>Scrape</button>
       </div>
     );
 }
@@ -55,11 +54,11 @@ const populateBrandFields = () => {
     });
 }
 
-const scrapeData = (brand, model) => {
+const scrapeData = (brand, model, setScrapedData) => {
   fetch("http://localhost:5000/scrape/"+brand+"/"+model)
   .then(response => response.json())
   .then(data => {
-    console.log(data)
+    setScrapedData(data)
   })
 }
 

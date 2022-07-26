@@ -21,8 +21,8 @@ def scrape(brand,range):
             mileage = mileageLi.find("span").text
             termLi = deal.find("li", class_="term")
             term = termLi.find("span").text
-            initialMonthsLi = deal.find("li", class_="initial-rental")
-            initialMonths = initialMonthsLi.find("span").text
+            initialRentalTermLi = deal.find("li", class_="initial-rental")
+            initialRentalTerm = initialRentalTermLi.find("span").text
             priceList = deal.find("ul", class_="price-list")
             liList = priceList.findAll("span", class_="data")
             initialRental = liList[0].text
@@ -34,11 +34,11 @@ def scrape(brand,range):
             rows.append({"brand": brand+ " " + range,
              "price" : price,
              "mileage" : mileage,
-             "initial rental": initialRental,
-             "additional fees": additionalFees,
-             "total lease" : totalLease,
+             "initialRental": initialRental,
+             "additionalFees": additionalFees,
+             "totalLease" : totalLease,
              "term" : term,
-             "initial rental months" : initialMonths,
+             "initialRentalTerm" : initialRentalTerm,
              "derivitive" : derivitive})
             
         return rows
