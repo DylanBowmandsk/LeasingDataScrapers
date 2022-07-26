@@ -32,6 +32,7 @@ const populateTable = (data) => {
         let row = document.createElement("div")
         row.classList.add("table-row")
         index % 2 === 0 ? row.classList.add("bg-slate-50") : row.classList.add("bg-slate-300")
+        
         //DERIVITIVE
         let divDerivitive = document.createElement("div")
         divDerivitive.innerHTML = element.derivitive

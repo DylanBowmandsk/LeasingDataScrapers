@@ -5,10 +5,6 @@ import leasingwebscraper
 app = Flask(__name__)
 CORS(app)
 
-bmwlist =  ["1-series", "2-series"]
-porschelist = ["cayenne", "panamera"] 
-
-
 @app.route("/")
 def index():
     return "hello world!"
