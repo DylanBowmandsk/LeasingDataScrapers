@@ -3,8 +3,8 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def scrape(brand,range):
-    url = "https://leasing.com/car-leasing/"+brand+"/"+range+"/?finance=personal"
+def scrape(make,range):
+    url = "https://leasing.com/car-leasing/"+make+"/"+range+"/?finance=personal"
     response = requests.get(url)
 
     if response.status_code == 200:
@@ -31,7 +31,7 @@ def scrape(brand,range):
 
             
 
-            rows.append({"brand": brand+ " " + range,
+            rows.append({"make": make+ " " + range,
              "price" : price,
              "mileage" : mileage,
              "initialRental": initialRental,
@@ -49,41 +49,41 @@ def scrape(brand,range):
     elif response.status_code == 404:
         print("not found")
 
-def scrapeRangeList(brand):
-    url = "https://leasing.com/car-leasing/"+brand
+def scrapeModelList(make):
+    url = "https://leasing.com/car-leasing/"+make
     response = requests.get(url)
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.content,"html.parser")
-        ranges = []
+        models = []
 
         tableBody = soup.findAll("tbody")
         for tables in tableBody:
             tableRows = tables.findAll("tr")
             for row in tableRows:
-                range = row.find("a").text
-                ranges.append(range)
-        return ranges
+                model = row.find("a").text
+                models.append(model)
+        return models
 
     elif response.status_code == 403:
         print("forbidden")
 
     elif response.status_code == 404:
-        print("not found")   
+        print("not found")  
 
-def scrapeBrandList():
+def scrapeMakeList():
     url = "https://leasing.com"
     response = requests.get(url)
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.content,"html.parser")
-        brands = []
-        brandSelect = soup.find("select", id="manList")
-        brandList = brandSelect.findAll("option")
-        for brand in brandList:
-            brands.append(brand.text)
-        del brands[0]
-        return brands
+        makes = []
+        makeSelect = soup.find("select", id="manList")
+        makeList = makeSelect.findAll("option")
+        for make in makeList:
+            makes.append(make.text)
+        del makes[0]
+        return makes
 
     elif response.status_code == 403:
         print("forbidden")

@@ -9,14 +9,14 @@ CORS(app)
 def index():
     return "hello world!"
 
-@app.route("/get/brands")
+@app.route("/get/makes")
 def getBrands():
-    return jsonify(leasingwebscraper.scrapeBrandList())
+    return jsonify(leasingwebscraper.scrapeMakeList())
 
-@app.route("/get/<brand>/range")
-def getRange(brand):
-    return jsonify(leasingwebscraper.scrapeRangeList(brand))
+@app.route("/get/<make>/model")
+def getRange(make):
+    return jsonify(leasingwebscraper.scrapeModelList(make))
 
-@app.route("/scrape/<brand>/<range>")
-def scrape(brand,range):
-    return jsonify(leasingwebscraper.scrape(brand,range))
+@app.route("/scrape/<make>/<model>")
+def scrape(make,model):
+    return jsonify(leasingwebscraper.scrape(make,model))
