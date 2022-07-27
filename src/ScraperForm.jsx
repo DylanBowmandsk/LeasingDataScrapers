@@ -26,7 +26,7 @@ const ScraperForm = ({setScrapedData}) => {
 //makes api call and fills out input fields of all brands we have in stock
 const populateMakeFields = () => {
     let selector = document.getElementById("make")
-    fetch("http://localhost:5000/get/makes")
+    fetch("http://localhost:5000/leasingcom/get/makes")
     .then(response => response.json())
     .then(data => {
       data.forEach(element => {
@@ -42,7 +42,7 @@ const populateMakeFields = () => {
     setMake(make)
     let selector = document.getElementById("model")
     selector.innerHTML = ""
-    fetch("http://localhost:5000/get/"+make+"/model")
+    fetch("http://localhost:5000/leasingcom/get/"+make+"/model")
     .then(response => response.json())
     .then(data => {
       data.forEach((element, index) => {
@@ -55,7 +55,7 @@ const populateMakeFields = () => {
 }
 
 const scrapeData = (make, model, setScrapedData) => {
-  fetch("http://localhost:5000/scrape/"+make+"/"+model)
+  fetch("http://localhost:5000/leasingcom/scrape/"+make+"/"+model)
   .then(response => response.json())
   .then(data => {
     setScrapedData(data)
