@@ -9,54 +9,19 @@ def scrape(make,range):
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.content,"html.parser")
-        rows = []
-        
-        dealsdiv = soup.find("div", id="alldeals")
-        deals = dealsdiv.find_all("div", class_="deal-panel-card")
-
-        for deal in deals:
-            price = deal.find("div", class_="price").text
-            derivitive = deal.find("div", "derivative").text
-            mileageLi = deal.find("li", class_="mileage")
-            mileage = mileageLi.find("span").text
-            termLi = deal.find("li", class_="term")
-            term = termLi.find("span").text
-            initialRentalTermLi = deal.find("li", class_="initial-rental")
-            initialRentalTerm = initialRentalTermLi.find("span").text
-            priceList = deal.find("ul", class_="price-list")
-            liList = priceList.findAll("span", class_="data")
-            initialRental = liList[0].text
-            additionalFees = liList[1].text
-            totalLease = liList[2].text
-
-            
-
-            rows.append({"make": make+ " " + range,
-             "price" : price,
-             "mileage" : mileage,
-             "initialRental": initialRental,
-             "additionalFees": additionalFees,
-             "totalLease" : totalLease,
-             "term" : term,
-             "initialRentalTerm" : initialRentalTerm,
-             "derivitive" : derivitive})
-            
+        rows = collateData(soup)
         return rows
-
     elif response.status_code == 403:
         print("forbidden")
-
     elif response.status_code == 404:
         print("not found")
 
 def scrapeModelList(make):
     url = "https://leasing.com/car-leasing/"+make
     response = requests.get(url)
-
     if response.status_code == 200:
         soup = BeautifulSoup(response.content,"html.parser")
         models = []
-
         tableBody = soup.findAll("tbody")
         for tables in tableBody:
             tableRows = tables.findAll("tr")
@@ -67,14 +32,12 @@ def scrapeModelList(make):
 
     elif response.status_code == 403:
         print("forbidden")
-
     elif response.status_code == 404:
         print("not found")  
 
 def scrapeMakeList():
     url = "https://leasing.com"
     response = requests.get(url)
-
     if response.status_code == 200:
         soup = BeautifulSoup(response.content,"html.parser")
         makes = []
@@ -87,8 +50,41 @@ def scrapeMakeList():
 
     elif response.status_code == 403:
         print("forbidden")
-
     elif response.status_code == 404:
         print("not found")   
-    
 
+def collateData(soup):
+    dealsdiv = soup.find("div", id="alldeals")
+    deals = dealsdiv.find_all("div", class_="deal-panel-card")
+    rows = []
+
+    for deal in deals:
+        price = deal.find("div", class_="price").text
+        derivitive = deal.find("div", "derivative").text
+
+        mileageLi = deal.find("li", class_="mileage")
+        mileage = mileageLi.find("span").text
+
+        termLi = deal.find("li", class_="term")
+        term = termLi.find("span").text
+
+        initialRentalTermLi = deal.find("li", class_="initial-rental")
+        initialRentalTerm = initialRentalTermLi.find("span").text
+        
+        priceList = deal.find("ul", class_="price-list")
+        liList = priceList.findAll("span", class_="data")
+        initialRental = liList[0].text
+        additionalFees = liList[1].text
+        totalLease = liList[2].text
+
+        rows.append({"make": make+ " " + range,
+            "price" : price,
+            "mileage" : mileage,
+            "initialRental": initialRental,
+            "additionalFees": additionalFees,
+            "totalLease" : totalLease,
+            "term" : term,
+            "initialRentalTerm" : initialRentalTerm,
+            "derivitive" : derivitive})
+
+    return rows

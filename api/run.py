@@ -14,17 +14,25 @@ def index():
 def getPvMakes():
     file = open('pv-master-cars.csv')
     csvreader = csv.reader(file)
+    data = []
     cars = []
     uniqueCars = []
-    for make, model in csvreader:
+
+    for row in csvreader:
+        data.append(row)
+
+    for make, model in data:
         if make not in uniqueCars:
             uniqueCars.append(make)
-    print(uniqueCars)
-    file.seek(0)
-    for makeL in uniqueCars:
-        temp = {"make": makeL,
-            "modelList" : []}
-        
+    
+    for uniqueCar in uniqueCars:
+        temp = {"make" : uniqueCar,
+                "cars" : []}
+        for make, model in data:
+            if make == uniqueCar:
+                temp["cars"] += [model]
+        cars.append(temp)
+   
             
     return jsonify(cars)
 
