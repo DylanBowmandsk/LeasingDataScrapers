@@ -9,7 +9,7 @@ def scrape(make,range):
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.content,"html.parser")
-        rows = collateData(soup)
+        rows = collateData(soup,make,range)
         return rows
     elif response.status_code == 403:
         print("forbidden")
@@ -53,7 +53,7 @@ def scrapeMakeList():
     elif response.status_code == 404:
         print("not found")   
 
-def collateData(soup):
+def collateData(soup, make, range):
     dealsdiv = soup.find("div", id="alldeals")
     deals = dealsdiv.find_all("div", class_="deal-panel-card")
     rows = []
