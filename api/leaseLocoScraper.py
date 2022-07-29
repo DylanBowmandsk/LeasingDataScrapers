@@ -3,14 +3,15 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def scrape(make,range):
+def scrape():
     url = "https://leaseloco.com/car-leasing/search"
     response = requests.get(url)
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.content,"html.parser")
-        rows = collateData(soup,make,range)
-        return rows
+        div = soup.find("main", class_="container")
+        print(div)
+        return div
     elif response.status_code == 403:
         print("forbidden")
     elif response.status_code == 404:

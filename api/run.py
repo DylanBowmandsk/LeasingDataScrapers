@@ -1,6 +1,7 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 import leasingwebscraper
+import leaseLocoScraper
 import csv
 
 app = Flask(__name__)
@@ -33,12 +34,16 @@ def getLeasingcomRange(make):
 def scrapeLeasingcom(make,model):
     return jsonify(leasingwebscraper.scrape(make,model))
 
+@app.route("/leaseloco/scrape")
+def scrapeLeaseLoco():
+    leaseLocoScraper.scrape()
+    return "api test"
+
 def getPVUniqueCarsList(data):
     uniqueCars = []
     for make, model in data:
         if make not in uniqueCars:
             uniqueCars.append(make)
-    print(uniqueCars)
     return uniqueCars
 
 def generatePVInputList(uniqueCars, data):
