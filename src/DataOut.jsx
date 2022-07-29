@@ -28,6 +28,7 @@ const DataOut = ({data}) => {
 
 const populateTable = (data) => {
     let tableGroup = document.getElementById("table-rows-group")
+    tableGroup.innerHTML= ""
     data.forEach((element, index) => {
         let row = document.createElement("div")
         row.classList.add("table-row")
