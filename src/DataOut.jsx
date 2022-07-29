@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 const DataOut = ({data}) => {
 
     useEffect(() => {
-        if(data) populateTable(data)
+        data && populateTable(data)
     })
 
     return (
