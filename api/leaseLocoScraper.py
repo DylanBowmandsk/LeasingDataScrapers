@@ -17,10 +17,13 @@ def scrape():
     options.headless = True
     driver = webdriver.Chrome(executable_path=path, options=options)
     driver.get(url)
-    waitTimer = WebDriverWait(driver, 3).until(
-    ec.presence_of_element_located((By.CLASS_NAME, "css-1gzxeik")))
-    listLink = driver.find_element(By.CLASS_NAME, "link--result-row")
-    print(listLink.get_attribute("innerHTML"))
+    waitTimer = WebDriverWait(driver, 1).until(
+    ec.presence_of_element_located((By.CLASS_NAME, "link--result-row")))
+    listLink = driver.find_elements(By.CLASS_NAME, "link--result-row")
+
+    for link in listLink:
+        name = link.find_element(By.CLASS_NAME, "text-main")
+        print(name.get_attribute("innerHTML"))
     
     response = requests.get(url)
     if response.status_code == 200:
