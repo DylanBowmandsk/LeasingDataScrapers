@@ -36,8 +36,7 @@ def scrapeLeasingcom(make,model):
 
 @app.route("/leaseloco/scrape")
 def scrapeLeaseLoco():
-    leaseLocoScraper.scrape()
-    return "api test"
+    return leaseLocoScraper.scrape()
 
 def getPVUniqueCarsList(data):
     uniqueCars = []
