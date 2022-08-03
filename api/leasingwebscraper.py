@@ -71,23 +71,23 @@ def collateData(soup, make, range):
         termLi = deal.find("li", class_="term")
         term = termLi.find("span").text
 
-        initialRentalTermLi = deal.find("li", class_="initial-rental")
-        initialRentalTerm = initialRentalTermLi.find("span").text
+        initialTermLi = deal.find("li", class_="initial-rental")
+        initialTerm = initialTermLi.find("span").text
         
         priceList = deal.find("ul", class_="price-list")
         liList = priceList.findAll("span", class_="data")
-        initialRental = liList[0].text
+        upfrontCost = liList[0].text
         additionalFees = liList[1].text
         totalLease = liList[2].text
 
         rows.append({"make": make+ " " + range,
             "price" : price,
             "mileage" : mileage,
-            "initialRental": initialRental,
+            "upfrontCost": upfrontCost,
             "additionalFees": additionalFees,
             "totalLease" : totalLease,
             "term" : term,
-            "initialRentalTerm" : initialRentalTerm,
+            "initialTerm" : initialTerm,
             "derivitive" : derivitive})
 
     return rows

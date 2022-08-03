@@ -19,8 +19,8 @@ const ScraperForm = ({setScrapedData}) => {
         <select name="model" id="model" onChange={e => {setModel(e.target.value)}}>
           <option value="">Series</option>
         </select>
-        <button onClick={() => {scrapeData(make, model, setScrapedData)}}>Scrape</button>
-        <button onClick={() => {scrapelocoData()}}>Scrape loco</button>
+        <button onClick={() => {scrapeLeasingData(make, model, setScrapedData)}}>Scrape</button>
+        <button onClick={() => {scrapelocoData(make, model, setScrapedData)}}>Scrape loco</button>
       </div>
     );
 }
@@ -55,16 +55,19 @@ const populateMakeFields = (setCarList) => {
     });
 }
 
-const scrapeData = (make, model, setScrapedData) => {
-  fetch(`http://localhost:5000/leasingcom/scrape/${make}/${model}`)
-  .then(response => response.json())
-  .then(data => {
+const scrapeLeasingData = (make, model, setScrapedData) => {
+  fetch("http://localhost:5000/leasingcom/scrape/"+make+"/"+model)
+  .then(response => response.json()).then(data => {
     setScrapedData(data)
   })
 }
 
-const scrapelocoData = () => {
-  fetch("http://localhost:5000/leaseloco/scrape")
+const scrapelocoData = (make,model, setScrapedData) => {
+  fetch("http://localhost:5000/leaseloco/scrape/"+make+"/"+model)
+  .then(response => response.json()).then(data => {
+    console.log(data)
+    setScrapedData(data)
+  })
 }
 
 export default ScraperForm
