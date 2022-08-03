@@ -30,11 +30,21 @@ def setupDriver(url):
     driver = webdriver.Chrome(executable_path=path, options=options)
     driver.get(url)
     driver.set_window_size(1024, 768)
-    print()
+    setMakeModel(driver)
     #waits for the page to load until list item appears
-    waitTimer = WebDriverWait(driver, 0.5).until(ec.presence_of_element_located((By.CLASS_NAME, "link--result-row")))
+    waitTimer = WebDriverWait(driver, 3).until(ec.presence_of_element_located((By.CLASS_NAME, "link--result-row")))
+    
 
-    return  driver
+    return driver
+
+def setMakeModel(driver):
+    makeButton = driver.find_element(By.CLASS_NAME, "add-filter--manufacturers")
+    makeButton.click()
+    waitTimer = WebDriverWait(driver, 3).until(ec.presence_of_element_located((By.CLASS_NAME, "button--manufacturers--audi")))
+    makesSelector = driver.find_element(By.CLASS_NAME, "button--manufacturers--audi")
+    makesSelector.click()
+
+
 
 def getElements(driver, make, model):
     listLink = driver.find_elements(By.XPATH, "//*[@id='__next']/main/div/div[2]/div[3]/div[3]/div/div[2]/a")
