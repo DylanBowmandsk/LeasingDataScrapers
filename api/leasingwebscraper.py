@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 #root scrape function uses make and range to scrape
 def scrape(make,range):
-    url = "https://leasing.com/car-leasing/"+make+"/"+range+"/?finance=personal"
+    url = f"https://leasing.com/car-leasing/{make}/{range}/?finance=personal"
     response = requests.get(url)
 
     if response.status_code == 200:

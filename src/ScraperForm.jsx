@@ -56,7 +56,7 @@ const populateMakeFields = (setCarList) => {
 }
 
 const scrapeData = (make, model, setScrapedData) => {
-  fetch("http://localhost:5000/leasingcom/scrape/"+make+"/"+model)
+  fetch(`http://localhost:5000/leasingcom/scrape/${make}/${model}`)
   .then(response => response.json())
   .then(data => {
     setScrapedData(data)
