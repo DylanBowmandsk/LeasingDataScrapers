@@ -34,9 +34,9 @@ def getLeasingcomRange(make):
 def scrapeLeasingcom(make,model):
     return jsonify(leasingwebscraper.scrape(make,model))
 
-@app.route("/leaseloco/scrape")
-def scrapeLeaseLoco():
-    return leaseLocoScraper.scrape()
+@app.route("/leaseloco/scrape/<make>/<model>")
+def scrapeLeaseLoco(make, model):
+    return jsonify(leaseLocoScraper.scrape(make, model))
 
 def getPVUniqueCarsList(data):
     uniqueCars = []

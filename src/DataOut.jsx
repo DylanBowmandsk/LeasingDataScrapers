@@ -11,12 +11,11 @@ const DataOut = ({data}) => {
             <div className="table-header-group">
                 <div className="table-row ">
                 <div className="table-cell text-left py-2">Derivitive</div>
-                    <div className="table-cell text-left py-2">Per Month</div>
+                    <div className="table-cell text-left py-2">Price</div>
                     <div className="table-cell text-left py-2">Total Cost</div>
                     <div className="table-cell text-left py-2">Mileage</div>
                     <div className="table-cell text-left py-2">Term</div>
-                    <div className="table-cell text-left py-2">Additional Fees</div>
-                    <div className="table-cell text-left py-2">Initial Rental</div>
+                    <div className="table-cell text-left py-2">Upfront Cost</div>
                     <div className="table-cell text-left py-2">Initial Rental Months</div>
                 </div>
             </div>
@@ -59,19 +58,15 @@ const populateTable = (data) => {
         divTerm.innerHTML = element.term
         row.appendChild(divTerm)
 
-        //ADDITIONAL FEES
-        let divAdditionalFees = document.createElement("div")
-        divAdditionalFees.innerHTML = element.additionalFees
-        row.appendChild(divAdditionalFees)
 
-        //INITIAL RENTAL
+        //UPFRONT COST
         let divInitialRental = document.createElement("div")
-        divInitialRental.innerHTML = element.initialRental
+        divInitialRental.innerHTML = element.upfrontCost
         row.appendChild(divInitialRental)
 
-        //INITIAL RENTAL TERM
+        //INITIAL TERM
         let divInitialRentalTerm = document.createElement("div")
-        divInitialRentalTerm.innerHTML = element.initialRentalTerm
+        divInitialRentalTerm.innerHTML = element.initialTerm
         row.appendChild(divInitialRentalTerm)
 
         for(var i = 0; i< row.children.length; i++){
