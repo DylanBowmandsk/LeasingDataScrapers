@@ -43,17 +43,18 @@ def getElements(driver, make, model):
         try:
             name = link.find_element(By.CLASS_NAME, "text-main").get_attribute("innerHTML")
             derivitive = link.find_element(By.XPATH, f"//*[@id='__next']/main/div/div[3]/div[2]/div[3]/div/div[2]/a[{idx+1}]/div/div[2]/div[1]/p").get_attribute("innerHTML")
-            price = driver.find_element(By.XPATH, f"//*[@id='__next']/main/div/div[3]/div[2]/div[3]/div/div[2]/a[{idx+1}]/div/div[4]/p[1]").get_attribute("innerHTML")+"p/m"
+            price = driver.find_element(By.XPATH, f"//*[@id='__next']/main/div/div[3]/div[2]/div[3]/div/div[2]/a[{idx+1}]/div/div[4]/p[1]").get_attribute("innerHTML")
             upfront = driver.find_element(By.XPATH, f"//*[@id='__next']/main/div/div[2]/div[3]/div[3]/div/div[2]/a[{idx+1}]/div/div[4]/p[2]/mark").get_attribute("innerHTML")
             profile = driver.find_element(By.XPATH, f"//*[@id='__next']/main/div/div[2]/div[3]/div[3]/div/div[2]/a[{idx+1}]/div/div[2]/div[2]/div[2]/p[1]/mark").get_attribute("innerHTML").split("+")
             initialTerm = profile[0]+" Months"
             term = profile[1]+" Months"
             mileage = driver.find_element(By.XPATH, f"//*[@id='__next']/main/div/div[2]/div[3]/div[3]/div/div[2]/a[{idx+1}]/div/div[2]/div[2]/div[2]/p[2]/mark").get_attribute("innerHTML").replace("k", "000") + " p/a"
-            
+            totalLease = int(profile[1]) * float(price.replace("£",""))
             rows.append({"make": make+ " " + model,
-            "price" : price,
+            "price" : price+" p/m",
             "mileage" : mileage,
             "upfrontCost": upfront,
+            "totalLease" : "£"+str(totalLease),
             "term" : term,
             "initialTerm" : initialTerm,
             "derivitive" : derivitive})
@@ -65,13 +66,15 @@ def getElements(driver, make, model):
             upfront = driver.find_element(By.XPATH, f"//*[@id='__next']/main/div/div[2]/div[3]/div[3]/div/div[2]/a[{idx+1}]/div/div[5]/p[2]/mark").get_attribute("innerHTML")
             profile = driver.find_element(By.XPATH, f"//*[@id='__next']/main/div/div[2]/div[3]/div[3]/div/div[2]/a[{idx+1}]/div/div[3]/div[2]/div[2]/p[1]/mark").get_attribute("innerHTML").split("+")
             initialTerm = profile[0]+" Months"
-            term = profile[1]+" Months"
+            term = int(profile[1])+" Months"
             mileage = driver.find_element(By.XPATH, f"//*[@id='__next']/main/div/div[2]/div[3]/div[3]/div/div[2]/a[{idx+1}]/div/div[3]/div[2]/div[2]/p[2]/mark").get_attribute("innerHTML")
-            
+            totalLease = int(profile[1]) * float(price.replace("£",""))
+
             rows.append({"make": make+ " " + model,
-            "price" : price,
+            "price" : price+" p/m",
             "mileage" : mileage,
             "upfrontCost": upfront,
+            "totalLease" : "£"+str(totalLease),
             "term" : term,
             "initialTerm" : initialTerm,
             "derivitive" : derivitive})
