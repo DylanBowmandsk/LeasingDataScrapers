@@ -20,6 +20,7 @@ const ScraperForm = ({setScrapedData}) => {
           <option value="">Series</option>
         </select>
         <button onClick={() => {scrapeData(make, model, setScrapedData)}}>Scrape</button>
+        <button onClick={() => {scrapelocoData()}}>Scrape loco</button>
       </div>
     );
 }
@@ -60,6 +61,10 @@ const scrapeData = (make, model, setScrapedData) => {
   .then(data => {
     setScrapedData(data)
   })
+}
+
+const scrapelocoData = () => {
+  fetch("http://localhost:5000/leaseloco/scrape")
 }
 
 export default ScraperForm

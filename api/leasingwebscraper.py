@@ -2,7 +2,7 @@ import requests
 #Imports the beautiful soup library for scraping
 from bs4 import BeautifulSoup
 
-
+#root scrape function uses make and range to scrape
 def scrape(make,range):
     url = f"https://leasing.com/car-leasing/{make}/{range}/?finance=personal"
     response = requests.get(url)
@@ -16,6 +16,7 @@ def scrape(make,range):
     elif response.status_code == 404:
         print("not found")
 
+#scrapes leasing.coms model list takes a make as a paramater to define search
 def scrapeModelList(make):
     url = "https://leasing.com/car-leasing/"+make
     response = requests.get(url)
@@ -35,6 +36,7 @@ def scrapeModelList(make):
     elif response.status_code == 404:
         print("not found")  
 
+#scrapes leasing.coms make list
 def scrapeMakeList():
     url = "https://leasing.com"
     response = requests.get(url)
@@ -53,6 +55,7 @@ def scrapeMakeList():
     elif response.status_code == 404:
         print("not found")   
 
+#collates scraped data into objects
 def collateData(soup, make, range):
     dealsdiv = soup.find("div", id="alldeals")
     deals = dealsdiv.find_all("div", class_="deal-panel-card")
