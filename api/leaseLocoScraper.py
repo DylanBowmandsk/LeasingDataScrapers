@@ -30,7 +30,7 @@ def setupDriver(url):
     driver = webdriver.Chrome(executable_path=path, options=options)
     driver.get(url)
     driver.set_window_size(1024, 768)
-
+    print()
     #waits for the page to load until list item appears
     waitTimer = WebDriverWait(driver, 0.5).until(ec.presence_of_element_located((By.CLASS_NAME, "link--result-row")))
 
