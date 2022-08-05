@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
-import leasingwebscraper
+import leasingScraper
 import leaseLocoScraper
 import csv
 
@@ -24,15 +24,15 @@ def getPvMakes():
 
 @app.route("/leasingcom/get/makes")
 def getLeasingcomBrands():
-    return jsonify(leasingwebscraper.scrapeMakeList())
+    return jsonify(leasingScraper.scrapeMakeList())
 
 @app.route("/leasingcom/get/<make>/model")
 def getLeasingcomRange(make):
-    return jsonify(leasingwebscraper.scrapeModelList(make))
+    return jsonify(leasingScraper.scrapeModelList(make))
 
 @app.route("/leasingcom/scrape/<make>/<model>")
 def scrapeLeasingcom(make,model):
-    return jsonify(leasingwebscraper.scrape(make,model))
+    return jsonify(leasingScraper.scrape(make,model))
 
 @app.route("/leaseloco/scrape/<make>/<model>")
 def scrapeLeaseLoco(make, model):
