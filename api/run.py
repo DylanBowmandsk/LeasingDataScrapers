@@ -2,6 +2,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 import leasingScraper
 import leaseLocoScraper
+import selectLeasingScraper
 import csv
 
 app = Flask(__name__)
@@ -40,7 +41,7 @@ def scrapeLeaseLoco(make, model):
 
 @app.route("/selectleasing/scrape/<make>/<model>")
 def scrapeSelectLeasing(make,model):
-    return "api"
+    return jsonify(selectLeasingScraper.scrape(make, model))
 
 def getPVUniqueCarsList(data):
     uniqueCars = []

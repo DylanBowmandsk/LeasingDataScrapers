@@ -1,5 +1,6 @@
 import ScraperForm from "./ScraperForm";
 import DataOut from "./DataOut";
+import Info from "./Info";
 import { useState } from "react";
 
 const App = () => {

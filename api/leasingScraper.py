@@ -2,14 +2,14 @@ import requests
 #Imports the beautiful soup library for scraping
 from bs4 import BeautifulSoup
 
-#root scrape function uses make and range to scrape
-def scrape(make,range):
-    url = f"https://leasing.com/car-leasing/{make}/{range}/?finance=personal"
+#root scrape function uses make and model to scrape
+def scrape(make,model):
+    url = f"https://leasing.com/car-leasing/{make}/{model}/?finance=personal"
     response = requests.get(url)
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.content,"html.parser")
-        rows = collateData(soup,make,range)
+        rows = collateData(soup,make,model)
         return rows
     elif response.status_code == 403:
         print("forbidden")
