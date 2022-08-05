@@ -11,7 +11,7 @@ const DataOut = ({data}) => {
             <div className="table-header-group">
                 <div className="table-row ">
                 <div className="table-cell text-left py-2">Name</div> 
-                <div className="table-cell text-left py-2">Derivitive</div>
+                <div className="table-cell text-left py-2">Derivative</div>
                     <div className="table-cell text-left py-2">Price</div>
                     <div className="table-cell text-left py-2">Total Cost</div>
                     <div className="table-cell text-left py-2">Mileage</div>
@@ -40,9 +40,10 @@ const populateTable = (data) => {
         row.appendChild(divName)
         
         //DERIVITIVE
-        let divDerivitive = document.createElement("div")
-        divDerivitive.innerHTML = element.derivitive
-        row.appendChild(divDerivitive)
+        let divDerivative = document.createElement("div")
+        console.log(element)
+        divDerivative.innerHTML = element.derivative
+        row.appendChild(divDerivative)
 
         //MONTHLY PRIVE
         let divPrice = document.createElement("div")

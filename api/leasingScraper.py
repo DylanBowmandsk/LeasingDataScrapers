@@ -63,7 +63,7 @@ def collateData(soup, make, range):
 
     for deal in deals:
         price = deal.find("div", class_="price").text
-        derivitive = deal.find("div", "derivative").text
+        derivative = deal.find("div", "derivative").text
 
         mileageLi = deal.find("li", class_="mileage")
         mileage = mileageLi.find("span").text
@@ -88,6 +88,6 @@ def collateData(soup, make, range):
             "totalLease" : totalLease,
             "term" : term,
             "initialTerm" : initialTerm,
-            "derivitive" : derivitive})
+            "derivative" : derivative})
 
     return rows
