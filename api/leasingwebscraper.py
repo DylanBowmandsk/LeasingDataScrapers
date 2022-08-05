@@ -80,7 +80,7 @@ def collateData(soup, make, range):
         additionalFees = liList[1].text
         totalLease = liList[2].text
 
-        rows.append({"make": make+ " " + range,
+        rows.append({"name": make+ " " + range,
             "price" : price,
             "mileage" : mileage,
             "upfrontCost": upfrontCost,

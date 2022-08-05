@@ -1,6 +1,6 @@
+from time import sleep
 import requests 
-#Imports the beautiful soup library for scraping
-from bs4 import BeautifulSoup
+#Selenium virtual brwoser for scraping web pages
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
@@ -30,20 +30,17 @@ def setupDriver(url, make, model):
     driver = webdriver.Chrome(executable_path=path, options=options)
     driver.get(url)
     driver.set_window_size(1024, 768)
-    setMakeModel(driver, make, model)
     #waits for the page to load until list item appears
-    waitTimer = WebDriverWait(driver, 3).until(ec.presence_of_element_located((By.CLASS_NAME, "link--result-row")))
-    
-
     return driver
 
 def setMakeModel(driver, make, model):
-    searchBar = driver.find_element(By.CLASS_NAME, "search--input")
-    searchBar.sendkeys("test")
-
-    print(searchBar)
+    searchBar = driver.find_element(By.XPATH, "//*[@id='__next']/main/div/div[3]/div[2]/div[1]/div[1]/div/input")
+    searchBar.click()
+    searchBar.send_keys(make + " " + model)
+    sleep(1)
 
 def getElements(driver, make, model):
+    setMakeModel(driver, make, model)
     listLink = driver.find_elements(By.XPATH, "//*[@id='__next']/main/div/div[2]/div[3]/div[3]/div/div[2]/a")
     rows = []
     for idx, link in enumerate(listLink):
@@ -58,7 +55,7 @@ def getElements(driver, make, model):
             mileage = driver.find_element(By.XPATH, f"//*[@id='__next']/main/div/div[2]/div[3]/div[3]/div/div[2]/a[{idx+1}]/div/div[2]/div[2]/div[2]/p[2]/mark").get_attribute("innerHTML").replace("k", "000") + " p/a"
             totalLease = int(profile[1]) * float(price.replace("£",""))
 
-            rows.append({"make": make+ " " + model,
+            rows.append({"name": name,
             "price" : price+" p/m",
             "mileage" : mileage,
             "upfrontCost": upfront,
@@ -75,10 +72,10 @@ def getElements(driver, make, model):
             profile = driver.find_element(By.XPATH, f"//*[@id='__next']/main/div/div[2]/div[3]/div[3]/div/div[2]/a[{idx+1}]/div/div[3]/div[2]/div[2]/p[1]/mark").get_attribute("innerHTML").split("+")
             initialTerm = profile[0]+" Months"
             term = profile[1]+" Months"
-            mileage = driver.find_element(By.XPATH, f"//*[@id='__next']/main/div/div[2]/div[3]/div[3]/div/div[2]/a[{idx+1}]/div/div[3]/div[2]/div[2]/p[2]/mark").get_attribute("innerHTML")
+            mileage = driver.find_element(By.XPATH, f"//*[@id='__next']/main/div/div[2]/div[3]/div[3]/div/div[2]/a[{idx+1}]/div/div[3]/div[2]/div[2]/p[2]/mark").get_attribute("innerHTML").replace("k", "000") + " p/a"
             totalLease = int(profile[1]) * float(price.replace("£",""))
 
-            rows.append({"make": make+ " " + model,
+            rows.append({"name": name,
             "price" : price+" p/m",
             "mileage" : mileage,
             "upfrontCost": upfront,

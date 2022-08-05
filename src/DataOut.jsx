@@ -10,6 +10,7 @@ const DataOut = ({data}) => {
         <div className="table w-full">
             <div className="table-header-group">
                 <div className="table-row ">
+                <div className="table-cell text-left py-2">Name</div> 
                 <div className="table-cell text-left py-2">Derivitive</div>
                     <div className="table-cell text-left py-2">Price</div>
                     <div className="table-cell text-left py-2">Total Cost</div>
@@ -32,6 +33,11 @@ const populateTable = (data) => {
         let row = document.createElement("div")
         row.classList.add("table-row")
         index % 2 === 0 ? row.classList.add("bg-slate-50") : row.classList.add("bg-slate-300")
+
+        //NAME
+        let divName = document.createElement("div")
+        divName.innerHTML = element.name
+        row.appendChild(divName)
         
         //DERIVITIVE
         let divDerivitive = document.createElement("div")
