@@ -13,15 +13,22 @@ const ScraperForm = ({setScrapedData}) => {
   
     return (
       <div className="App">
-        <select name="make" id="make" onChange={e => {populateModelFields(e.target.value , setModel, carList, setMake)}}>
-          <option value="">Brand</option>
-        </select>
-        <select name="model" id="model" onChange={e => {setModel(e.target.value)}}>
-          <option value="">Series</option>
-        </select>
-        <button className="mx-5" onClick={() => {scrapeLeasingData(make, model, setScrapedData)}}>Scrape Leasing</button>
-        <button className="mx-5" onClick={() => {scrapelocoData(make, model, setScrapedData)}}>Scrape loco</button>
-        <button className="mx-5" onClick={() => {scrapeSelectData(make, model, setScrapedData)}}>Scrape Select</button>
+        <div className="mx-5">
+          <span className="text-lg font-semibold" id="make-selector">Make : </span>
+          <select className="mr-10 rounded" name="make" id="make" onChange={e => {populateModelFields(e.target.value , setModel, carList, setMake)}}>
+            <option value="">Brand</option>
+          </select>
+          <span className="text-lg font-semibold" id="model-selector"> Model: </span>
+          <select name="model" id="model" onChange={e => {setModel(e.target.value)}}>
+            <option value="">Series</option>
+          </select>
+        </div>
+        <hr />
+        <div className="mx-5 my-3" id="scraper-button-container">
+          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded mr-2" onClick={() => {scrapeLeasingData(make, model, setScrapedData)}}>Scrape Data Leasing.com</button>
+          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={() => {scrapelocoData(make, model, setScrapedData)}}>Scrape Data Leasing Loco.com</button>
+          <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={() => {scrapeSelectData(make, model, setScrapedData)}}>Scrape Data Select Leasing.com</button>
+        </div>
       </div>
     );
 }
