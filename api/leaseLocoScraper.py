@@ -46,7 +46,7 @@ def getElements(driver, make, model):
     for idx, link in enumerate(listLink):
         try:
             name = link.find_element(By.CLASS_NAME, "text-main").get_attribute("innerHTML")
-            derivitive = link.find_element(By.XPATH, f"//*[@id='__next']/main/div/div[3]/div[2]/div[3]/div/div[2]/a[{idx+1}]/div/div[2]/div[1]/p").get_attribute("innerHTML")
+            derivative = link.find_element(By.XPATH, f"//*[@id='__next']/main/div/div[3]/div[2]/div[3]/div/div[2]/a[{idx+1}]/div/div[2]/div[1]/p").get_attribute("innerHTML")
             price = driver.find_element(By.XPATH, f"//*[@id='__next']/main/div/div[3]/div[2]/div[3]/div/div[2]/a[{idx+1}]/div/div[4]/p[1]").get_attribute("innerHTML")
             upfront = driver.find_element(By.XPATH, f"//*[@id='__next']/main/div/div[2]/div[3]/div[3]/div/div[2]/a[{idx+1}]/div/div[4]/p[2]/mark").get_attribute("innerHTML")
             profile = driver.find_element(By.XPATH, f"//*[@id='__next']/main/div/div[2]/div[3]/div[3]/div/div[2]/a[{idx+1}]/div/div[2]/div[2]/div[2]/p[1]/mark").get_attribute("innerHTML").split("+")
@@ -62,11 +62,11 @@ def getElements(driver, make, model):
             "totalLease" : "£"+str(totalLease),
             "term" : term,
             "initialTerm" : initialTerm,
-            "derivitive" : derivitive})
+            "derivative" : derivative})
 
         except NoSuchElementException:
             name = link.find_element(By.CLASS_NAME, "text-main").get_attribute("innerHTML")
-            derivitive = link.find_element(By.XPATH, f"//*[@id='__next']/main/div/div[3]/div[2]/div[3]/div/div[2]/a[{idx+1}]/div/div[3]/div[1]/p").get_attribute("innerHTML")
+            derivative = link.find_element(By.XPATH, f"//*[@id='__next']/main/div/div[3]/div[2]/div[3]/div/div[2]/a[{idx+1}]/div/div[3]/div[1]/p").get_attribute("innerHTML")
             price = driver.find_element(By.XPATH, f"//*[@id='__next']/main/div/div[3]/div[2]/div[3]/div/div[2]/a[{idx+1}]/div/div[5]/p[1]").get_attribute("innerHTML")
             upfront = driver.find_element(By.XPATH, f"//*[@id='__next']/main/div/div[2]/div[3]/div[3]/div/div[2]/a[{idx+1}]/div/div[5]/p[2]/mark").get_attribute("innerHTML")
             profile = driver.find_element(By.XPATH, f"//*[@id='__next']/main/div/div[2]/div[3]/div[3]/div/div[2]/a[{idx+1}]/div/div[3]/div[2]/div[2]/p[1]/mark").get_attribute("innerHTML").split("+")
@@ -82,6 +82,6 @@ def getElements(driver, make, model):
             "totalLease" : "£"+str(totalLease),
             "term" : term,
             "initialTerm" : initialTerm,
-            "derivitive" : derivitive})
+            "derivative" : derivative})
 
     return rows

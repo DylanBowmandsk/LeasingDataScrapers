@@ -38,6 +38,10 @@ def scrapeLeasingcom(make,model):
 def scrapeLeaseLoco(make, model):
     return jsonify(leaseLocoScraper.scrape(make, model))
 
+@app.route("/selectleasing/scrape/<make>/<model>")
+def scrapeSelectLeasing(make,model):
+    return "api"
+
 def getPVUniqueCarsList(data):
     uniqueCars = []
     for make, model in data:
