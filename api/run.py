@@ -4,9 +4,12 @@ import leasingScraper
 import leaseLocoScraper
 import selectLeasingScraper
 import csv
-
+import sqlconnector
 app = Flask(__name__)
 CORS(app)
+
+db = sqlconnector.initialiseDB()
+cursor = db.cursor()
 
 @app.route("/")
 def index():

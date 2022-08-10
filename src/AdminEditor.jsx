@@ -6,7 +6,7 @@ const AdminEditor = () => {
 
     return (
         <div id="editor-container" className="h-96 overflow-y-scroll">
-            
+        
         </div>
     )
 }

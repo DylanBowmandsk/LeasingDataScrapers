@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import AdminEditor from "./AdminEditor"
 
+
 const AdminPage = () => {
 
     const [make, setMake] = useState()
