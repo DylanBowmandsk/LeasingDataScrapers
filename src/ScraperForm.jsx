@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react"
-import ScrapeButtons from "./ScrapeButtons"
-
 
 const ScraperForm = ({setMake, setModel, setVariant}) => {
 
@@ -35,7 +33,7 @@ const ScraperForm = ({setMake, setModel, setVariant}) => {
 //makes api call and fills out input fields of all brands we have in stock
 const populateMakeFields = (setCarList) => {
     let selector = document.getElementById("make")
-    fetch("http://localhost:5000/get/makes")
+    fetch("http://localhost:5000/get/cars")
     .then(response => response.json())
     .then(data => {
       setCarList(data)
@@ -52,12 +50,12 @@ const populateMakeFields = (setCarList) => {
     setMake(make)
     let selector = document.getElementById("model")
     selector.innerHTML = ""
-    const models = carList.filter(element => element.make === make)
-    console.log(models)
-    models[0].cars.forEach((model, index) => {
-      if (index === 0) setModel(model)
+    const filteredList = carList.filter(element => element.make === make)
+    console.log(filteredList)
+    filteredList[0].cars.forEach((element, index) => {
+      if (index === 0) setModel(element)
       let option = document.createElement("option")
-      option.innerHTML = model
+      option.innerHTML = element.model
       selector.appendChild(option)
     });
 }

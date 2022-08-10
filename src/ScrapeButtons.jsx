@@ -1,4 +1,5 @@
 const ScrapeButtons = ({make, model, setScrapedData}) => {
+    
     return (
     <div className="mx-5 my-3" id="scraper-button-container">
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded mr-2" onClick={() => {scrapeLeasingData(make, model, setScrapedData)}}>Scrape Data Leasing.com</button>

@@ -12,7 +12,7 @@ CORS(app)
 def index():
     return "hello world!"
 
-@app.route("/get/makes")
+@app.route("/get/cars")
 def getPvMakes():
     data = []
     file = open('pv-master-cars.csv')
@@ -57,6 +57,10 @@ def generatePVInputList(uniqueCars, data):
                 "cars" : []}
         for make, model in data:
             if make == uniqueCar and model not in temp:
-                temp["cars"] += [model]
+                temp["cars"].append({
+                    "model" : model,
+                    "variants" : []
+                }) 
         cars.append(temp)
+
     return cars
