@@ -1,17 +1,18 @@
-import ScraperForm from "./ScraperForm";
-import DataOut from "./DataOut";
-import Info from "./Info";
 import { useState } from "react";
+import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import AdminPage from "./AdminPage";
+import HomePage from "./HomePage";
 
 const App = () => {
-
-  const [scrapedData, setScrapedData] = useState()
-
   return (
-    <div className="main-container">
-      <ScraperForm setScrapedData={setScrapedData}/>
-      <DataOut  data={scrapedData}/>
-    </div>
+    <Router>
+      <Routes>
+          <Route path="/" element={<HomePage />}>
+          </Route>
+          <Route path="/admin" element={<AdminPage />}>
+          </Route>
+      </Routes>
+    </Router>
   );
 }
 

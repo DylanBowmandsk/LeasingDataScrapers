@@ -56,7 +56,7 @@ def generatePVInputList(uniqueCars, data):
         temp = {"make" : uniqueCar,
                 "cars" : []}
         for make, model in data:
-            if make == uniqueCar:
+            if make == uniqueCar and model not in temp:
                 temp["cars"] += [model]
         cars.append(temp)
     return cars

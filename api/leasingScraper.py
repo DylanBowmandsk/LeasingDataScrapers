@@ -9,7 +9,7 @@ def scrape(make,model):
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.content,"html.parser")
-        rows = collateData(soup,make,model)
+        rows = collateData(soup, make, model)
         return rows
     elif response.status_code == 403:
         print("forbidden")
