@@ -32,9 +32,17 @@ def getPvModels():
         if model != "":
             models.append({"modelID" : id,
             "makeID": makeID,
-            "model": model})
-            print(id,makeID,model)
+            "modelName": model})
     return jsonify(models)
+
+@app.route("/get/variants")
+def getPvVariants():
+    variants = []
+    for i, variant in cursor.execute("select ModelID, ModelTrim from [ModelTrimMaster]"):
+        if variant != "":
+            variants.append({"ModelID": i,
+            "ModelTrim": variant})
+    return jsonify(variants)
 
 @app.route("/leasingcom/get/makes")
 def getLeasingcomBrands():
@@ -56,18 +64,3 @@ def scrapeLeaseLoco(make, model):
 def scrapeSelectLeasing(make,model):
     return jsonify(selectLeasingScraper.scrape(make, model))
 
-def generatePVInputList(makes, models):
-    data =[]
-    cars = []
-    for make , i in makes:
-        temp = {"make" : make,
-                "cars" : []}
-        for model,  in models:
-            if make == make and model not in temp:
-                temp["cars"].append({
-                    "model" : model,
-                    "variants" : []
-                }) 
-        cars.append(temp)
-
-    return cars
