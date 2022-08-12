@@ -10,7 +10,7 @@ const ScraperForm = ({setMake, setModel, setVariant}) => {
       <div>
         <div className="mx-5">
           <span className="text-lg font-semibold" id="make-selector">Make : </span>
-          <select className="mr-10 rounded" name="make" id="make" onChange={e => {populateModelFields(e.target.value , setMake ,setModel)}}>
+          <select className="mr-10 rounded" name="make" id="make" onChange={e => {populateModelFields(e.target.value , setMake)}}>
             <option value="">Brand</option>
           </select>
           <span className="text-lg font-semibold" id="model-selector"> Model: </span>
@@ -44,7 +44,7 @@ const populateMakeFields = () => {
 }
   
 //makes api call to populate the models of the previously selected brand input
-  const populateModelFields = (makeString, setMake, setModel) => {
+  const populateModelFields = (makeString, setMake) => {
     let make = JSON.parse(makeString)
     setMake(make)
     let selector = document.getElementById("model")
