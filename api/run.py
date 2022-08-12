@@ -56,11 +56,11 @@ def getLeasingcomRange(make):
 def scrapeLeasingcom(make,model,variant):
     return jsonify(leasingScraper.scrape(make,model,variant))
 
-@app.route("/leaseloco/scrape/<make>/<model>")
-def scrapeLeaseLoco(make, model):
-    return jsonify(leaseLocoScraper.scrape(make, model))
+@app.route("/leaseloco/scrape/<make>/<model>/<variant>")
+def scrapeLeaseLoco(make, model, variant):
+    return jsonify(leaseLocoScraper.scrape(make, model, variant))
 
-@app.route("/selectleasing/scrape/<make>/<model>")
-def scrapeSelectLeasing(make,model):
-    return jsonify(selectLeasingScraper.scrape(make, model))
+@app.route("/selectleasing/scrape/<make>/<model>/<variant>")
+def scrapeSelectLeasing(make, model, variant):
+    return jsonify(selectLeasingScraper.scrape(make, model, variant))
 

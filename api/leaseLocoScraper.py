@@ -10,10 +10,10 @@ from selenium.common.exceptions import NoSuchElementException
 
 
 # global scrape function for lease loco
-def scrape(make, model):
+def scrape(make, model, variant):
     url = "https://leaseloco.com/car-leasing/search"
     driver = setupDriver(url)
-    rows = getElements(driver, make, model)
+    rows = getElements(driver, make, model, variant)
     response = requests.get(url)
     if response.status_code == 200:
         return rows
@@ -33,15 +33,15 @@ def setupDriver(url):
     return driver
 
 #Enters search terms for make and model
-def setMakeModel(driver, make, model):
+def setMakeModel(driver, make, model, variant):
     searchBar = driver.find_element(By.XPATH, "//*[@id='__next']/main/div/div[3]/div[2]/div[1]/div[1]/div/input")
     searchBar.click()
-    searchBar.send_keys(make + " " + model)
+    searchBar.send_keys(make + " " + model + " " + variant)
     sleep(1)
 
 #Scrapes data for processing to end point output
-def getElements(driver, make, model):
-    setMakeModel(driver, make, model)
+def getElements(driver, make, model, variant):
+    setMakeModel(driver, make, model, variant)
     rows = []
     listLink = driver.find_elements(By.XPATH, "//*[@id='__next']/main/div/div[2]/div[3]/div[3]/div/div[2]/a")
 
