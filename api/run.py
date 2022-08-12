@@ -5,6 +5,7 @@ import leaseLocoScraper
 import selectLeasingScraper
 import csv
 import sqlconnector
+
 app = Flask(__name__)
 CORS(app)
 
@@ -13,18 +14,27 @@ cursor = db.cursor()
 
 @app.route("/")
 def index():
-    return "hello world!"
+    return "API ENTRY"
 
-@app.route("/get/cars")
+@app.route("/get/makes")
 def getPvMakes():
-    data = []
-    file = open('pv-master-cars.csv')
-    csvreader = csv.reader(file)
-    for row in csvreader:
-        data.append(row)
-    uniqueCars = getPVUniqueCarsList(data)
-    cars = generatePVInputList(uniqueCars,data)  
-    return jsonify(cars)
+    makes = []
+    for i, make in cursor.execute("select * from [Make Master] where not Make = ''"):
+        if make != "":
+            makes.append({"makeID": i,
+            "makeName": make})
+    return jsonify(makes)
+
+@app.route("/get/models")
+def getPvModels():
+    models = []
+    for id, makeID , model in cursor.execute("select UniqueID, MakeID, Model from [Model Master] where not Model = ''"):
+        if model != "":
+            models.append({"modelID" : id,
+            "makeID": makeID,
+            "model": model})
+            print(id,makeID,model)
+    return jsonify(models)
 
 @app.route("/leasingcom/get/makes")
 def getLeasingcomBrands():
@@ -46,20 +56,14 @@ def scrapeLeaseLoco(make, model):
 def scrapeSelectLeasing(make,model):
     return jsonify(selectLeasingScraper.scrape(make, model))
 
-def getPVUniqueCarsList(data):
-    uniqueCars = []
-    for make, model in data:
-        if make not in uniqueCars:
-            uniqueCars.append(make)
-    return uniqueCars
-
-def generatePVInputList(uniqueCars, data):
+def generatePVInputList(makes, models):
+    data =[]
     cars = []
-    for uniqueCar in uniqueCars:
-        temp = {"make" : uniqueCar,
+    for make , i in makes:
+        temp = {"make" : make,
                 "cars" : []}
-        for make, model in data:
-            if make == uniqueCar and model not in temp:
+        for model,  in models:
+            if make == make and model not in temp:
                 temp["cars"].append({
                     "model" : model,
                     "variants" : []

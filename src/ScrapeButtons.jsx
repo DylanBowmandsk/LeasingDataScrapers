@@ -10,14 +10,14 @@ const ScrapeButtons = ({make, model, setScrapedData}) => {
 }
 
 const scrapeLeasingData = (make, model, setScrapedData) => {
-    fetch(`http://localhost:5000/leasingcom/scrape/${make}/${model}`)
+    fetch(`http://localhost:5000/leasingcom/scrape/${make.makeName}/${model}`)
     .then(response => response.json()).then(data => {
       setScrapedData(data)
     })
   }
   
   const scrapelocoData = (make, model, setScrapedData) => {
-    fetch(`http://localhost:5000/leaseloco/scrape/${make}/${model}`)
+    fetch(`http://localhost:5000/leaseloco/scrape/${make.makeName}/${model}`)
     .then(response => response.json()).then(data => {
       console.log(data)
       setScrapedData(data)
@@ -25,7 +25,7 @@ const scrapeLeasingData = (make, model, setScrapedData) => {
   }
   
   const scrapeSelectData = (make, model, setScrapedData) => {
-    fetch(`http://localhost:5000/selectleasing/scrape/${make}/${model}`)
+    fetch(`http://localhost:5000/selectleasing/scrape/${make.makeName}/${model}`)
     .then(response => response.json()).then(data => {
       console.log(data)
       setScrapedData(data)
