@@ -13,7 +13,7 @@ const HomePage = () => {
     return (
         <div>
             <ScraperForm setMake={setMake} setModel={setModel} setVariant={setVariant}/>
-            <ScrapeButtons setScrapedData={setScrapedData} make={make} model={model}/>
+            <ScrapeButtons setScrapedData={setScrapedData} make={make} model={model} variant={variant}/>
             <DataOut  data={scrapedData}/>
         </div>
     )

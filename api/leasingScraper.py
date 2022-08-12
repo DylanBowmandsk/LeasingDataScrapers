@@ -3,7 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 
 #root scrape function uses make and model to scrape
-def scrape(make,model):
+def scrape(make,model, variant):
     url = f"https://leasing.com/car-leasing/{make}/{model}/?finance=personal"
     response = requests.get(url)
 

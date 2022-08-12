@@ -41,7 +41,7 @@ def getPvVariants():
     for i, variant in cursor.execute("select ModelID, ModelTrim from [ModelTrimMaster]"):
         if variant != "":
             variants.append({"ModelID": i,
-            "ModelTrim": variant})
+            "modelTrim": variant})
     return jsonify(variants)
 
 @app.route("/leasingcom/get/makes")
@@ -52,9 +52,9 @@ def getLeasingcomBrands():
 def getLeasingcomRange(make):
     return jsonify(leasingScraper.scrapeModelList(make))
 
-@app.route("/leasingcom/scrape/<make>/<model>")
-def scrapeLeasingcom(make,model):
-    return jsonify(leasingScraper.scrape(make,model))
+@app.route("/leasingcom/scrape/<make>/<model>/<variant>")
+def scrapeLeasingcom(make,model,variant):
+    return jsonify(leasingScraper.scrape(make,model,variant))
 
 @app.route("/leaseloco/scrape/<make>/<model>")
 def scrapeLeaseLoco(make, model):

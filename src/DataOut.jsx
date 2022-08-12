@@ -41,7 +41,6 @@ const populateTable = (data) => {
         
         //DERIVITIVE
         let divDerivative = document.createElement("div")
-        console.log(element)
         divDerivative.innerHTML = element.derivative
         row.appendChild(divDerivative)
 
@@ -81,7 +80,6 @@ const populateTable = (data) => {
         }
 
         tableGroup.appendChild(row)
-        console.log(element)
     });
 }
 
