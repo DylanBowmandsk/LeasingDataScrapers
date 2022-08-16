@@ -1,7 +1,12 @@
 import { useState } from "react"
 import { useEffect } from "react"
 
-const AdminEditor = ({setMake, setModel, setVariant}) => {
+const AdminEditor = () => {
+
+    const [make, setMake] = useState()
+    const [model, setModel] = useState()
+    const [variant, setVariant] = useState()
+    const [variantInput, setVariantInput] = useState()
 
     useEffect(() => {
         populateMakeFields()
@@ -24,7 +29,8 @@ const AdminEditor = ({setMake, setModel, setVariant}) => {
               <option value="">Variant</option>
             </select>
             <div>
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 m-5 rounded mr-2">Add</button>
+              <input type="text" onChange={e => setVariantInput(e.target.value)} />
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 m-5 rounded mr-2" onClick={() => {addCar(make.makeID, model.modelID ,variantInput)}}>Add</button>
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 m-5 rounded mr-2">Edit</button>
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 m-5 rounded mr-2">Delete</button></div>
             </div>
@@ -96,5 +102,17 @@ const populateVariantsFields = (modelString, setModel) => {
     })
   }
 
+  const addCar = (makeID, modelID, variant) => {
+    const requestOptions = {
+      method: 'POST',
+      headers: {'Accept' : 'application/json, text/plain, */*',
+       'Content-Type': 'application/json' },
+      body: JSON.stringify({ "makeID" : makeID, "modelID": modelID, "variant" : variant })
+  }
+  fetch(`http://localhost:5000/admin/add/${makeID}/${modelID}/${variant}`, requestOptions)
+        .then(response => response.json())
+        .then(data =>  console.log(data));
+  
+  }
 
 export default AdminEditor

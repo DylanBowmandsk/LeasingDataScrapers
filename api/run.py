@@ -64,3 +64,8 @@ def scrapeLeaseLoco(make, model, variant):
 def scrapeSelectLeasing(make, model, variant):
     return jsonify(selectLeasingScraper.scrape(make, model, variant))
 
+@app.route("/admin/add/<makeID>/<modelID>/<variant>", methods = ['POST'])
+def addCar(makeID, modelID, variant):
+    cursor.execute(f"INSERT INTO ModelTrimMaster VALUES ('{variant}', '{modelID}')")
+    return "posted"
+
