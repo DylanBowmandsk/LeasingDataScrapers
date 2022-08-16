@@ -12,6 +12,7 @@ const ScrapeButtons = ({make, model, variant, setScrapedData}) => {
 const scrapeLeasingData = (make, model, variant, setScrapedData) => {
     fetch(`http://localhost:5000/leasingcom/scrape/${make.makeName}/${model.modelName}/${variant}`)
     .then(response => response.json()).then(data => {
+      console.log(data)
       setScrapedData(data)
     })
   }
