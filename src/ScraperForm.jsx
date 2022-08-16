@@ -1,25 +1,51 @@
+import { list } from "postcss"
 import { useEffect, useState } from "react"
 
 const ScraperForm = ({setMake, setModel, setVariant}) => {
+
+    const [makeList, setMakeList] = useState()
+    const [modelList, setModelList] = useState()
+    const [variantList, setVariantList] = useState()
   
     useEffect(() => {
-      populateMakeFields()
+      populateMakeFields(setMakeList)
     },[])
   
     return (
       <div>
         <div className="mx-5">
           <span className="text-lg font-semibold" id="make-selector">Make : </span>
-          <select className="mr-10 rounded" name="make" id="make" onChange={e => {populateModelFields(e.target.value , setMake)}}>
+          <select className="mr-10 rounded" name="make" id="make" onChange={e => {populateModelFields(e.target.value, setMake, setModelList)}}>
             <option value="">Brand</option>
+            {makeList && makeList.map((data, index) => {
+              return (
+              <option key={index} value={JSON.stringify(data)}>
+                {data.makeName}
+              </option>
+              )
+            })}
           </select>
-          <span className="text-lg font-semibold" id="model-selector"> Model: </span>
-          <select name="model" id="model" onChange={e => {populateVariantsFields(e.target.value, setModel)}}>
+          <span className="text-lg font-semibold" id="model-selector">Model: </span>
+          <select name="model" id="model" onChange={e => {populateVariantsFields(e.target.value, setModel, setVariantList)}}>
             <option value="">Model</option>
+            {modelList && modelList.map((data, index) => {
+              return (
+              <option key={index} value={JSON.stringify(data)}>
+                {data.modelName}
+              </option>
+              )
+            })}
           </select>
           <span className="text-lg font-semibold" id="variant-selector"> Variant: </span>
           <select name="Variant" id="variant" onChange={e => {setVariant(e.target.value)}}>
-            <option value="">Variant</option>
+          <option value="">Variant</option>
+            {variantList && variantList.map((data, index) => {
+              return (
+              <option key={index} value={JSON.stringify(data)}>
+                {data.modelTrim}
+              </option>
+              )
+            })}
           </select>
         </div>
         <hr />
@@ -29,65 +55,49 @@ const ScraperForm = ({setMake, setModel, setVariant}) => {
 }
 
 //makes api call and fills out input fields of all brands we have in stock
-const populateMakeFields = () => {
-    let selector = document.getElementById("make")
+const populateMakeFields = (setMakeList) => {
     fetch("http://localhost:5000/get/makes")
     .then(response => response.json())
     .then(data => {
+      let list = []
       data.forEach(element => {
-        const option = document.createElement("option")
-        option.innerHTML = element.makeName
-        option.value = JSON.stringify(element)
-        selector.appendChild(option)
+        list.push(element)
       });
+      setMakeList(list)
     })
 }
   
 //makes api call to populate the models of the previously selected brand input
-  const populateModelFields = (makeString, setMake) => {
+  const populateModelFields = (makeString, setMake, setModelList) => {
     let make = JSON.parse(makeString)
     setMake(make)
-    let selector = document.getElementById("model")
-    selector.innerHTML = ""
-    const option = document.createElement("option")
-    option.innerHTML = "Model"
-    selector.appendChild(option)
-
     fetch("http://localhost:5000/get/models")
     .then(response => response.json())
     .then(data => {
+      let list = []
       data.forEach((element) => {
         if(make.makeID === element.makeID){
-        const option = document.createElement("option")
-        option.innerHTML = element.modelName
-        option.value = JSON.stringify(element)
-        selector.appendChild(option)
+          console.log(element)
+          list.push(element)
         }
       });
+      setModelList(list)
     })
 }
 
 //makes api call and fills out input fields of all model variants we have in stock
-const populateVariantsFields = (modelString, setModel) => {
+const populateVariantsFields = (modelString, setModel, setVariantList) => {
   let model = JSON.parse(modelString)
   setModel(model)
-  let selector = document.getElementById("variant")
-  selector.innerHTML = ""
-  const option = document.createElement("option")
-  option.innerHTML = "Variant"
-  selector.appendChild(option)
-
   fetch("http://localhost:5000/get/variants")
   .then(response => response.json())
   .then(data => {
+    let list = []
     data.forEach(element => {
-      if(model.modelID === element.ModelID){
-      const option = document.createElement("option")
-      option.innerHTML = element.modelTrim
-      option.value = element.modelTrim
-      selector.appendChild(option)
-      }
+      if(model.modelID === element.ModelID)
+        list.push(element)
     });
+    setVariantList(list)
   })
 }
 export default ScraperForm

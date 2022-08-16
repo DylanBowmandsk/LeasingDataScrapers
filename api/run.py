@@ -69,3 +69,8 @@ def addCar(makeID, modelID, variant):
     cursor.execute(f"INSERT INTO ModelTrimMaster VALUES ('{variant}', '{modelID}')")
     return "posted"
 
+@app.route("/admin/delete/<makeID>/<modelID>/<variant>", methods = ['POST'])
+def deleteCar(makeID, modelID, variant):
+    cursor.execute(f"DELETE FROM ModelTrimMaster WHERE ModelTrim='{variant}' AND ModelID='{modelID}'")
+    return "posted"
+
