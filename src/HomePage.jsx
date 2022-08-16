@@ -1,6 +1,7 @@
 import ScraperForm from "./ScraperForm";
 import DataOut from "./DataOut";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import ScrapeButtons from "./ScrapeButtons";
 
 const HomePage = () => {
@@ -12,6 +13,7 @@ const HomePage = () => {
 
     return (
         <div>
+            <Link to={"/admin"}><button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 m-5 rounded mr-2">Admin</button></Link>
             <ScraperForm setMake={setMake} setModel={setModel} setVariant={setVariant}/>
             <ScrapeButtons setScrapedData={setScrapedData} make={make} model={model} variant={variant}/>
             <DataOut  data={scrapedData}/>

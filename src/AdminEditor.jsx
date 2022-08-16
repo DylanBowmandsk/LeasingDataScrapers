@@ -134,14 +134,14 @@ const populateVariantsFields = (modelString, setModel, setVariantList) => {
   
   }
 
-  const editCar = (makeID, modelID, variant, input) => {
+  const editCar = (makeID, modelID, variantID, input) => {
     const requestOptions = {
       method: 'POST',
       headers: {'Accept' : 'application/json, text/plain, */*',
        'Content-Type': 'application/json' },
-      body: JSON.stringify({ "makeID" : makeID, "modelID": modelID, "variant" : variant})
+      body: JSON.stringify({ "makeID" : makeID, "modelID": modelID, "variant" : variantID})
   }
-  fetch(`http://localhost:5000/admin/edit/${makeID}/${modelID}/${variant}/${input}`, requestOptions)
+  fetch(`http://localhost:5000/admin/edit/${makeID}/${modelID}/${variantID}/${input}`, requestOptions)
         .then(response => response.json())
         .then(data =>  console.log(data));
   

@@ -37,7 +37,7 @@ const ScraperForm = ({setMake, setModel, setVariant}) => {
             })}
           </select>
           <span className="text-lg font-semibold" id="variant-selector"> Variant: </span>
-          <select name="Variant" id="variant" onChange={e => {setVariant(e.target.value)}}>
+          <select name="Variant" id="variant" onChange={e => {setVariant(JSON.parse(e.target.value))}}>
           <option value="">Variant</option>
             {variantList && variantList.map((data, index) => {
               return (
@@ -96,6 +96,7 @@ const populateVariantsFields = (modelString, setModel, setVariantList) => {
     data.forEach(element => {
       if(model.modelID === element.ModelID)
         list.push(element)
+        console.log(element)
     });
     setVariantList(list)
   })
