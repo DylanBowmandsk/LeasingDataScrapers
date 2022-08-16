@@ -38,9 +38,9 @@ def getPvModels():
 @app.route("/get/variants")
 def getPvVariants():
     variants = []
-    for i, variant in cursor.execute("select ModelID, ModelTrim from [ModelTrimMaster]"):
+    for i, modelID, variant in cursor.execute("select UniqueID, ModelID, ModelTrim from [ModelTrimMaster]"):
         if variant != "":
-            variants.append({"ModelID": i,
+            variants.append({"variantID": i ,"ModelID": modelID,
             "modelTrim": variant})
     return jsonify(variants)
 
@@ -71,6 +71,11 @@ def addCar(makeID, modelID, variant):
 
 @app.route("/admin/delete/<makeID>/<modelID>/<variant>", methods = ['POST'])
 def deleteCar(makeID, modelID, variant):
-    cursor.execute(f"DELETE FROM ModelTrimMaster WHERE ModelTrim='{variant}' AND ModelID='{modelID}'")
+    cursor.execute(f"DELETE FROM ModelTrimMaster WHERE UniqueID = '{variant}'")
+    return "posted"
+
+@app.route("/admin/edit/<makeID>/<modelID>/<variant>/<input>", methods = ['POST'])
+def editCar(makeID, modelID, variant, input):
+    cursor.execute(f"UPDATE ModelTrimMaster set ModelTrim = '{input}' WHERE UniqueID=CAST({variant} AS INT)")
     return "posted"
 

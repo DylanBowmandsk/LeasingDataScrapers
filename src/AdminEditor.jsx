@@ -52,16 +52,14 @@ const AdminEditor = () => {
               )
             })}
             </select>
-            <div>
-              <input type="text" onChange={e => setVariantInput(e.target.value)} />
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 m-5 rounded mr-2" onClick={() => {addCar(make.makeID, model.modelID ,variantInput)}}>Add</button>
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 m-5 rounded mr-2">Edit</button>
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 m-5 rounded mr-2" onClick={() => {deleteCar(make.makeID, model.modelID ,variant)}}>Delete</button></div>
             </div>
+              <input className="block" placeholder="input" type="text" onChange={e => setVariantInput(e.target.value)} />
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 m-5 rounded mr-2" onClick={() => {addCar(make.makeID, model.modelID ,variantInput)}}>Add</button>
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 m-5 rounded mr-2" onClick={() => {editCar(make.makeID, model.modelID ,JSON.parse(variant).variantID, variantInput)}}>Edit</button>
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 m-5 rounded mr-2" onClick={() => {deleteCar(make.makeID, model.modelID ,JSON.parse(variant).variantID)}}>Delete</button>
         </div>
     )
 }
-
 
 //makes api call and fills out input fields of all brands we have in stock
 const populateMakeFields = (setMakeList) => {
@@ -110,27 +108,40 @@ const populateVariantsFields = (modelString, setModel, setVariantList) => {
   })
 }
 
-  const addCar = (makeID, modelID, variant) => {
+  const addCar = (makeID, modelID, input) => {
     const requestOptions = {
       method: 'POST',
       headers: {'Accept' : 'application/json, text/plain, */*',
        'Content-Type': 'application/json' },
-      body: JSON.stringify({ "makeID" : makeID, "modelID": modelID, "variant" : variant })
+      body: JSON.stringify({ "makeID" : makeID, "modelID": modelID, "variant" : input })
   }
-  fetch(`http://localhost:5000/admin/add/${makeID}/${modelID}/${variant}`, requestOptions)
+  fetch(`http://localhost:5000/admin/add/${makeID}/${modelID}/${input}`, requestOptions)
         .then(response => response.json())
         .then(data =>  console.log(data));
   
   }
 
-  const deleteCar = (makeID, modelID, variant) => {
+  const deleteCar = (makeID, modelID, variantID, input) => {
     const requestOptions = {
       method: 'POST',
       headers: {'Accept' : 'application/json, text/plain, */*',
        'Content-Type': 'application/json' },
-      body: JSON.stringify({ "makeID" : makeID, "modelID": modelID, "variant" : variant })
+      body: JSON.stringify({ "makeID" : makeID, "modelID": modelID, "variantID" : variantID})
   }
-  fetch(`http://localhost:5000/admin/delete/${makeID}/${modelID}/${variant}`, requestOptions)
+  fetch(`http://localhost:5000/admin/delete/${makeID}/${modelID}/${variantID}`, requestOptions)
+        .then(response => response.json())
+        .then(data =>  console.log(data));
+  
+  }
+
+  const editCar = (makeID, modelID, variant, input) => {
+    const requestOptions = {
+      method: 'POST',
+      headers: {'Accept' : 'application/json, text/plain, */*',
+       'Content-Type': 'application/json' },
+      body: JSON.stringify({ "makeID" : makeID, "modelID": modelID, "variant" : variant})
+  }
+  fetch(`http://localhost:5000/admin/edit/${makeID}/${modelID}/${variant}/${input}`, requestOptions)
         .then(response => response.json())
         .then(data =>  console.log(data));
   
