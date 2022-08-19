@@ -1,8 +1,8 @@
+from operator import indexOf
+from types import NoneType
 import requests 
-#Imports the beautiful soup library for scraping
 from bs4 import BeautifulSoup
 
-#root scrape function uses make and model to scrape
 def scrape(make,model, variant):
     url = f"https://leasing.com/car-leasing/{make}/{model.replace(' ', '-')}/{variant.replace(' ', '-')}?finance=personal".lower()
     response = requests.get(url)
@@ -16,9 +16,51 @@ def scrape(make,model, variant):
     elif response.status_code == 404:
         print("not found")
 
-#scrapes leasing.coms model list takes a make as a paramater to define search
+def scrapeVariantList(make, model):
+    url = f"https://leasing.com/car-leasing/{make}/{model}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content,"html.parser")
+        variants = []
+        tableBody = soup.findAll("tbody")
+        for tables in tableBody:
+            tableRows = tables.findAll("tr")
+            for row in tableRows:
+                variant = row.find("a").text
+                model = model.lower()
+                variant = variant.lower()
+                variant  = variant[variant.index(model) + len(model) + 1: variant.index(model) + len(variant)].strip()
+                variants.append(variant)
+        return variants
+
+    elif response.status_code == 403:
+        print("forbidden")
+    elif response.status_code == 404:
+        print("not found") 
+
+def scrapeDerivativeList(make, model, variant):
+    url = f"https://leasing.com/car-leasing/{make}/{model.replace(' ', '-')}/{variant.replace(' ', '-')}"
+    print(url)
+    response = requests.get(url)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content,"html.parser")
+        derivatives = []
+        tableBody = soup.findAll("tbody")
+        for tables in tableBody:
+            tableRows = tables.findAll("tr")
+            for row in tableRows:
+                if type(row.find("a")) is not NoneType:
+                    derivative = row.find("a").text
+                    derivatives.append(derivative.strip())
+        return derivatives
+
+    elif response.status_code == 403:
+        print("forbidden")
+    elif response.status_code == 404:
+        print("not found") 
+
 def scrapeModelList(make):
-    url = "https://leasing.com/car-leasing/"+make
+    url = f"https://leasing.com/car-leasing/{make}"
     response = requests.get(url)
     if response.status_code == 200:
         soup = BeautifulSoup(response.content,"html.parser")
@@ -36,7 +78,6 @@ def scrapeModelList(make):
     elif response.status_code == 404:
         print("not found")  
 
-#scrapes leasing.coms make list
 def scrapeMakeList():
     url = "https://leasing.com"
     response = requests.get(url)
@@ -55,8 +96,7 @@ def scrapeMakeList():
     elif response.status_code == 404:
         print("not found")   
 
-#collates scraped data into objects
-def collateData(soup, make, range):
+def collateData(soup, make, range, derivative):
     dealsdiv = soup.find("div", id="alldeals")
     deals = dealsdiv.find_all("div", class_="deal-panel-card")
     rows = []

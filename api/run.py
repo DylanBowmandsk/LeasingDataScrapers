@@ -44,17 +44,25 @@ def getPvVariants():
             "modelTrim": variant})
     return jsonify(variants)
 
-@app.route("/leasingcom/get/makes")
-def getLeasingcomBrands():
+@app.route("/leasingcom/get/make")
+def getLeasingcomMakes():
     return jsonify(leasingScraper.scrapeMakeList())
 
-@app.route("/leasingcom/get/<make>/model")
-def getLeasingcomRange(make):
+@app.route("/leasingcom/get/<make>/models")
+def getLeasingcomModels(make):
     return jsonify(leasingScraper.scrapeModelList(make))
+    
+@app.route("/leasingcom/get/<make>/<model>/variants")
+def getLeasingcomVariants(make, model):
+    return jsonify(leasingScraper.scrapeVariantList(make, model))
 
-@app.route("/leasingcom/scrape/<make>/<model>/<variant>")
-def scrapeLeasingcom(make,model,variant):
-    return jsonify(leasingScraper.scrape(make,model,variant))
+@app.route("/leasingcom/get/<make>/<model>/<variant>/derivative")
+def getLeasingcomDerivatives(make,model,variant):
+    return jsonify(leasingScraper.scrapeDerivativeList(make,model,variant))
+
+@app.route("/leasingcom/scrape/<make>/<model>/<variant>/<derivative>")
+def scrapeLeasingcom(make,model,variant,derivative):
+    return jsonify(leasingScraper.scrape(make,model,variant,derivative))
 
 @app.route("/leaseloco/scrape/<make>/<model>/<variant>")
 def scrapeLeaseLoco(make, model, variant):

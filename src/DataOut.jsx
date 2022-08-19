@@ -7,21 +7,24 @@ const DataOut = ({data}) => {
     })
 
     return (
-        <div className="table w-full">
-            <div className="table-header-group">
-                <div className="table-row ">
-                <div className="table-cell text-left py-2">Name</div> 
-                <div className="table-cell text-left py-2">Derivative</div>
-                    <div className="table-cell text-left py-2">Price</div>
-                    <div className="table-cell text-left py-2">Total Cost</div>
-                    <div className="table-cell text-left py-2">Mileage</div>
-                    <div className="table-cell text-left py-2">Term</div>
-                    <div className="table-cell text-left py-2">Upfront Cost</div>
-                    <div className="table-cell text-left py-2">Initial Rental Months</div>
+        <div>
+            <div className="table w-full">
+                <div className="table-header-group">
+                    <div className="table-row ">
+                    <div className="table-cell text-left py-2">Name</div> 
+                    <div className="table-cell text-left py-2">Derivative</div>
+                        <div className="table-cell text-left py-2">Price</div>
+                        <div className="table-cell text-left py-2">Total Cost</div>
+                        <div className="table-cell text-left py-2">Mileage</div>
+                        <div className="table-cell text-left py-2">Term</div>
+                        <div className="table-cell text-left py-2">Upfront Cost</div>
+                        <div className="table-cell text-left py-2">Initial Rental Months</div>
+                    </div>
+                </div>
+                <div className="table-row-group" id="table-rows-group">
                 </div>
             </div>
-            <div className="table-row-group" id="table-rows-group">
-            </div>
+            {!data && <span className="w-40 h-10 my-40 mx-auto block">No data to display</span>}
         </div>
     )
 }
