@@ -3,8 +3,12 @@ from types import NoneType
 import requests 
 from bs4 import BeautifulSoup
 
-def scrape(make,model, variant):
-    url = f"https://leasing.com/car-leasing/{make}/{model.replace(' ', '-')}/{variant.replace(' ', '-')}?finance=personal".lower()
+def scrape(make, model, variant, derivative):
+    derivative = derivative.replace("[", "")
+    derivative = derivative.replace("]", "")
+    derivative = derivative.replace(" ", "-")
+    url = f"https://leasing.com/car-leasing/{make}/{model.replace(' ', '-')}/{variant.replace(' ', '-')}/{derivative.replace('-', '' '')}?finance=personal".lower()
+    print(url)
     response = requests.get(url)
 
     if response.status_code == 200:
@@ -40,7 +44,6 @@ def scrapeVariantList(make, model):
 
 def scrapeDerivativeList(make, model, variant):
     url = f"https://leasing.com/car-leasing/{make}/{model.replace(' ', '-')}/{variant.replace(' ', '-')}"
-    print(url)
     response = requests.get(url)
     if response.status_code == 200:
         soup = BeautifulSoup(response.content,"html.parser")

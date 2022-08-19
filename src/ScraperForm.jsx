@@ -1,7 +1,7 @@
 import { list } from "postcss"
 import { useEffect, useState } from "react"
 
-const ScraperForm = ({setMake, setModel, setVariant, make, model}) => {
+const ScraperForm = ({setMake, setModel, setVariant, make, model, setDerivative}) => {
 
     const [makeList, setMakeList] = useState()
     const [modelList, setModelList] = useState()
@@ -49,13 +49,12 @@ const ScraperForm = ({setMake, setModel, setVariant, make, model}) => {
             })}
           </select>
           <span className="text-lg font-semibold" id="variant-selector"> Derivative: </span>
-          <select name="Variant" id="variant" onChange={e => {setVariant(e.target.value)}}>
+          <select name="Variant" id="variant" onChange={e => {setDerivative(e.target.value)}}>
           <option value="">Variant</option>
             {derivativeList && derivativeList.map((data, index) => {
               return (
               <option key={index} value={JSON.stringify(data)}>
                 {data}
-                {console.log(data)}
               </option>
               )
             })}
@@ -109,7 +108,6 @@ const populateVariantsFields = (modelString, make, setModel, setVariantList) => 
       data.forEach(element => {
         list.push(element)
     });
-    console.log(list)
     setVariantList(list)}
     catch{
       alert("no matches")
@@ -120,7 +118,6 @@ const populateVariantsFields = (modelString, make, setModel, setVariantList) => 
 
 const populateDerivativeFields = (variant, make, model, setVariant, setDerivativeList) => {
   variant = variant.replace(/['"]+/g, '')
-  console.log(variant)
   setVariant(variant)
   fetch(`http://localhost:5000/leasingcom/get/${make.makeName}/${model.modelName}/${variant}/derivative`)
   .then(response => response.json())
