@@ -7,13 +7,13 @@ def scrape(make, model, variant, derivative):
     derivative = derivative.replace("[", "")
     derivative = derivative.replace("]", "")
     derivative = derivative.replace(" ", "-")
-    url = f"https://leasing.com/car-leasing/{make}/{model.replace(' ', '-')}/{variant.replace(' ', '-')}/{derivative.replace('-', '' '')}?finance=personal".lower()
+    url = f"https://leasing.com/car-leasing/{make}/{model.replace(' ', '-')}/{variant.replace(' ', '-')}/{derivative}?finance=personal".lower()
     print(url)
     response = requests.get(url)
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.content,"html.parser")
-        rows = collateData(soup, make, model)
+        rows = collateData(soup, make, model,derivative)
         return rows
     elif response.status_code == 403:
         print("forbidden")
