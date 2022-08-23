@@ -39,7 +39,7 @@ const ScraperForm = ({setMake, setModel, setVariant, make, model, setDerivative}
           </select>
           <span className="text-lg font-semibold" id="variant-selector"> Variant: </span>
           <select name="Variant" id="variant" onChange={e => {populateDerivativeFields(e.target.value, make, model, setVariant,setDerivativeList)}}>
-          <option value="">Variant</option>
+          <option value="">Model</option>
             {variantList && variantList.map((data, index) => {
               return (
               <option key={index} value={JSON.stringify(data)}>
@@ -50,7 +50,7 @@ const ScraperForm = ({setMake, setModel, setVariant, make, model, setDerivative}
           </select>
           <span className="text-lg font-semibold" id="variant-selector"> Derivative: </span>
           <select name="Variant" id="variant" onChange={e => {setDerivative(e.target.value)}}>
-          <option value="">Variant</option>
+          <option value="All">All</option>
             {derivativeList && derivativeList.map((data, index) => {
               return (
               <option key={index} value={JSON.stringify(data)}>

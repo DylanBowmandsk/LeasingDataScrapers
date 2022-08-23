@@ -20,6 +20,25 @@ def scrape(make, model, variant, derivative):
     elif response.status_code == 404:
         print("not found")
 
+def scrapeAll(make, model, variant, derivatives):
+    rows = []
+    for derivative in derivatives:
+        derivative = derivative.replace("[", "")
+        derivative = derivative.replace("]", "")
+        derivative = derivative.replace(" ", "-")
+        derivative = derivative.replace("/", "")
+        url = f"https://leasing.com/car-leasing/{make}/{model.replace(' ', '-')}/{variant.replace(' ', '-')}/{derivative}?finance=personal".lower()
+        response = requests.get(url)
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.content,"html.parser")
+            rows += collateData(soup, make, model,derivative)
+        elif response.status_code == 403:
+            print("forbidden")
+        elif response.status_code == 404:
+            print("not found")
+    return rows
+        
+
 def scrapeVariantList(make, model):
     url = f"https://leasing.com/car-leasing/{make}/{model}"
     response = requests.get(url)
@@ -99,38 +118,38 @@ def scrapeMakeList():
     elif response.status_code == 404:
         print("not found")   
 
-def collateData(soup, make, range, derivative):
+def collateData(soup, make, model, derivative):
     dealsdiv = soup.find("div", id="alldeals")
-    deals = dealsdiv.find_all("div", class_="deal-panel-card")
+    deal = dealsdiv.find_all("div", class_="deal-panel-card")[0]
     rows = []
 
-    for deal in deals:
-        price = deal.find("div", class_="price").text
-        derivative = deal.find("div", "derivative").text
 
-        mileageLi = deal.find("li", class_="mileage")
-        mileage = mileageLi.find("span").text
+    price = deal.find("div", class_="price").text
+    derivative = deal.find("div", "derivative").text
 
-        termLi = deal.find("li", class_="term")
-        term = termLi.find("span").text
+    mileageLi = deal.find("li", class_="mileage")
+    mileage = mileageLi.find("span").text
 
-        initialTermLi = deal.find("li", class_="initial-rental")
-        initialTerm = initialTermLi.find("span").text
-        
-        priceList = deal.find("ul", class_="price-list")
-        liList = priceList.findAll("span", class_="data")
-        upfrontCost = liList[0].text
-        additionalFees = liList[1].text
-        totalLease = liList[2].text
+    termLi = deal.find("li", class_="term")
+    term = termLi.find("span").text
 
-        rows.append({"name": make+ " " + range,
-            "price" : price,
-            "mileage" : mileage,
-            "upfrontCost": upfrontCost,
-            "additionalFees": additionalFees,
-            "totalLease" : totalLease,
-            "term" : term,
-            "initialTerm" : initialTerm,
-            "derivative" : derivative})
+    initialTermLi = deal.find("li", class_="initial-rental")
+    initialTerm = initialTermLi.find("span").text
+    
+    priceList = deal.find("ul", class_="price-list")
+    liList = priceList.findAll("span", class_="data")
+    upfrontCost = liList[0].text
+    additionalFees = liList[1].text
+    totalLease = liList[2].text
+
+    rows.append({"name": make+ " " + model,
+        "price" : price,
+        "mileage" : mileage,
+        "upfrontCost": upfrontCost,
+        "additionalFees": additionalFees,
+        "totalLease" : totalLease,
+        "term" : term,
+        "initialTerm" : initialTerm,
+        "derivative" : derivative})
 
     return rows

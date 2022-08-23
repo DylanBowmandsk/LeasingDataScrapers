@@ -10,12 +10,19 @@ const ScrapeButtons = ({make, model, variant, derivative,  setScrapedData}) => {
 }
 
 const scrapeLeasingData = (make, model, variant, derivative, setScrapedData,) => {
+  if( derivative !== "All"){
+    derivative = derivative.replace("/", "")
     fetch(`http://localhost:5000/leasingcom/scrape/${make.makeName}/${model.modelName}/${variant}/${derivative.replace(/['"]+/g, '')}`)
     .then(response => response.json()).then(data => {
       setScrapedData(data)
     })
   }
-  
+  else {fetch(`http://localhost:5000/leasingcom/scrape/${make.makeName}/${model.modelName}/${variant}/all`)
+    .then(response => response.json()).then(data => {
+      setScrapedData(data)
+    })
+  }
+}
   const scrapelocoData = (make, model, variant, derivative, setScrapedData) => {
     fetch(`http://localhost:5000/leaseloco/scrape/${make.makeName}/${model.modelName}/${variant}/${derivative}`)
     .then(response => response.json()).then(data => {

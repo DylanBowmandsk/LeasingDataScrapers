@@ -3,7 +3,9 @@ from flask_cors import CORS
 import leasingScraper
 import leaseLocoScraper
 import selectLeasingScraper
-import csv
+import json
+import requests
+
 import sqlconnector
 
 app = Flask(__name__)
@@ -62,7 +64,15 @@ def getLeasingcomDerivatives(make,model,variant):
 
 @app.route("/leasingcom/scrape/<make>/<model>/<variant>/<derivative>")
 def scrapeLeasingcom(make,model,variant,derivative):
-    return jsonify(leasingScraper.scrape(make,model,variant,derivative))
+        return jsonify(leasingScraper.scrape(make,model,variant,derivative))
+
+@app.route("/leasingcom/scrape/<make>/<model>/<variant>/all")
+def scrapeAllLeasingcom(make,model,variant):
+    derivatives = []
+    data = json.loads(getLeasingcomDerivatives(make, model, variant).data)
+    for derivative in data:
+        derivatives.append(derivative)
+    return jsonify(leasingScraper.scrapeAll(make,model,variant, derivatives))
 
 @app.route("/leaseloco/scrape/<make>/<model>/<variant>")
 def scrapeLeaseLoco(make, model, variant):

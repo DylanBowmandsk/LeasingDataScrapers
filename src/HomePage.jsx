@@ -9,7 +9,7 @@ const HomePage = () => {
     const [make, setMake] = useState()
     const [model, setModel] = useState()
     const [variant, setVariant] = useState()
-    const [derivative , setDerivative] = useState()
+    const [derivative , setDerivative] = useState("All")
     const [scrapedData, setScrapedData] = useState()
 
     return (
