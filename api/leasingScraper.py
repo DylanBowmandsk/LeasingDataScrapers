@@ -3,11 +3,18 @@ from types import NoneType
 import requests 
 from bs4 import BeautifulSoup
 
-def scrape(make, model, variant, derivative):
+def scrape(make, model, variant, derivative, term, initialTerm, Mileage):
     derivative = derivative.replace("[", "")
     derivative = derivative.replace("]", "")
     derivative = derivative.replace(" ", "-")
-    url = f"https://leasing.com/car-leasing/{make}/{model.replace(' ', '-')}/{variant.replace(' ', '-')}/{derivative}?finance=personal".lower()
+    derivative = derivative.replace(".", "-")
+    url = f"https://leasing.com/car-leasing/{make}/{model.replace(' ', '-')}/{variant.replace(' ', '-')}/{derivative}/?finance=personal&".lower()
+    if term :
+        url += f"term={int(term)-1}&"
+    if initialTerm :
+        url += f"upfront={initialTerm}&"
+    if Mileage :
+        url += f"mileage={Mileage}&"
     print(url)
     response = requests.get(url)
 
@@ -20,14 +27,22 @@ def scrape(make, model, variant, derivative):
     elif response.status_code == 404:
         print("not found")
 
-def scrapeAll(make, model, variant, derivatives):
+def scrapeAll(make, model, variant, derivatives, term, initialTerm, Mileage):
     rows = []
     for derivative in derivatives:
         derivative = derivative.replace("[", "")
         derivative = derivative.replace("]", "")
         derivative = derivative.replace(" ", "-")
         derivative = derivative.replace("/", "")
-        url = f"https://leasing.com/car-leasing/{make}/{model.replace(' ', '-')}/{variant.replace(' ', '-')}/{derivative}?finance=personal".lower()
+        derivative = derivative.replace(".", "-")
+        url = f"https://leasing.com/car-leasing/{make}/{model.replace(' ', '-')}/{variant.replace(' ', '-')}/{derivative}?finance=personal&".lower()
+        if term :
+            url += f"term={int(term)-1}&"
+        if initialTerm :
+            url += f"upfront={initialTerm}&"
+        if Mileage :
+            url += f"mileage={Mileage}&"
+        print(url)
         response = requests.get(url)
         if response.status_code == 200:
             soup = BeautifulSoup(response.content,"html.parser")

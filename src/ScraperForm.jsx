@@ -1,4 +1,3 @@
-import { list } from "postcss"
 import { useEffect, useState } from "react"
 
 const ScraperForm = ({setMake, setModel, setVariant, make, model, setDerivative}) => {
