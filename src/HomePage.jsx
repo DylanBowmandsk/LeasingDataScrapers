@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import ScrapeButtons from "./ScrapeButtons";
 import ScraperFilters from "./ScraperFilters";
+import DataOutTest from "./DataOutTest"
 
 const HomePage = () => {
 
@@ -23,6 +24,7 @@ const HomePage = () => {
             <ScraperFilters setTerm={setTerm} setInitialTerm={setInitialTerm} setMileage={setMileage}/>
             <ScrapeButtons make={make} model={model} variant={variant} derivative={derivative} term={term} initialTerm={initialTerm} mileage={mileage} setScrapedData={setScrapedData}/>
             <DataOut  data={scrapedData}/>
+            <DataOutTest data={scrapedData} />
         </div>
         
     )

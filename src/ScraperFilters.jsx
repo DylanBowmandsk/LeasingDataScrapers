@@ -13,7 +13,7 @@ const ScraperFilters = ({setMileage, setTerm, setInitialTerm}) => {
                 <option value="1">1 Months</option>
                 <option value="3">3 Months</option>
                 <option value="6">6 Months</option>
-                <option value="">9 Months</option>
+                <option value="9">9 Months</option>
             </select>
             <span>Mileage</span>
             <select name="mileage" onChange={(e) => {setMileage(e.target.value)}} id="">

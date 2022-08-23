@@ -2,6 +2,7 @@ from operator import indexOf
 from types import NoneType
 import requests 
 from bs4 import BeautifulSoup
+import time
 
 def scrape(make, model, variant, derivative, term, initialTerm, Mileage):
     derivative = derivative.replace("[", "")
@@ -30,6 +31,7 @@ def scrape(make, model, variant, derivative, term, initialTerm, Mileage):
 def scrapeAll(make, model, variant, derivatives, term, initialTerm, Mileage):
     rows = []
     for derivative in derivatives:
+        time.sleep(0.8)
         derivative = derivative.replace("[", "")
         derivative = derivative.replace("]", "")
         derivative = derivative.replace(" ", "-")
