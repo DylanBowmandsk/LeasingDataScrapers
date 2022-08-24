@@ -54,6 +54,12 @@ const collateData = (leasingData, selectData, setData) => {
                 leasingPrice = leasingCar.price
             }
         })
+        data.append({"name":name,
+                "derivative": derivative,
+                "term": term,
+                "mileage":mileage,
+                "leasingPrice": leasingPrice,
+                "selectPrice": selectPrice})
     })
  
     
