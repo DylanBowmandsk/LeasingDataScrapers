@@ -34,7 +34,7 @@ const collateData = (leasingData, selectData, setData) => {
     });
 
     derivatives.forEach(element => {
-        let derivative = element.derivative
+        let derivative = element
         let name 
         let term
         let mileage
@@ -42,7 +42,7 @@ const collateData = (leasingData, selectData, setData) => {
         let selectPrice
 
         selectData.forEach(selectCar => {
-            if (selectCar.derivative === element.derivative){
+            if (selectCar.derivative === element){
                 name = selectCar.name
                 term = selectCar.term
                 mileage = selectCar.mileage
@@ -54,14 +54,14 @@ const collateData = (leasingData, selectData, setData) => {
                 leasingPrice = leasingCar.price
             }
         })
-        data.append({"name":name,
+        data.push({"name":name,
                 "derivative": derivative,
                 "term": term,
                 "mileage":mileage,
                 "leasingPrice": leasingPrice,
                 "selectPrice": selectPrice})
     })
- 
+    console.log(data)
     
 }
 
