@@ -28,7 +28,7 @@ def scrape(make, model, variant, derivative, term, initialTerm, Mileage):
     elif response.status_code == 404:
         print("not found")
 
-def scrapeAll(make, model, variant, derivatives, term, initialTerm, Mileage):
+def scrapeAll(make, model, variant, derivatives, term, initialTerm, mileage):
     rows = []
     for derivative in derivatives:
         time.sleep(0.8)
@@ -42,8 +42,8 @@ def scrapeAll(make, model, variant, derivatives, term, initialTerm, Mileage):
             url += f"term={int(term)-1}&"
         if initialTerm :
             url += f"upfront={initialTerm}&"
-        if Mileage :
-            url += f"mileage={Mileage}&"
+        if mileage :
+            url += f"mileage={mileage}&"
         print(url)
         response = requests.get(url)
         if response.status_code == 200:

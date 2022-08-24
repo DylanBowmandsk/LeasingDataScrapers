@@ -1,3 +1,4 @@
+import { list } from "postcss"
 import { useEffect, useState } from "react"
 
 const ScraperForm = ({setMake, setModel, setVariant, make, model, setDerivative}) => {
@@ -38,7 +39,7 @@ const ScraperForm = ({setMake, setModel, setVariant, make, model, setDerivative}
           </select>
           <span className="text-lg font-semibold" id="variant-selector"> Variant: </span>
           <select name="Variant" id="variant" onChange={e => {populateDerivativeFields(e.target.value, make, model, setVariant,setDerivativeList)}}>
-          <option value="">Model</option>
+          <option value="">Variant</option>
             {variantList && variantList.map((data, index) => {
               return (
               <option key={index} value={JSON.stringify(data)}>

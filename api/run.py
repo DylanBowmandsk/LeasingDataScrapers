@@ -3,8 +3,8 @@ from flask_cors import CORS
 import leasingScraper
 import leaseLocoScraper
 import selectLeasingScraper
+import pvData
 import json
-import requests
 
 import sqlconnector
 
@@ -78,9 +78,9 @@ def scrapeAllLeasingcom(make,model,variant,term,initialTerm,mileage):
 def scrapeLeaseLoco(make, model, variant):
     return jsonify(leaseLocoScraper.scrape(make, model, variant))
 
-@app.route("/selectleasing/scrape/<make>/<model>/<variant>")
-def scrapeSelectLeasing(make, model, variant):
-    return jsonify(selectLeasingScraper.scrape(make, model, variant))
+@app.route("/selectleasing/scrape/<make>/<model>/<variant>/<derivative>/<term>/<initialTerm>/<mileage>")
+def scrapeSelectLeasing(make, model, variant,derivative,term,initialTerm,mileage):
+    return jsonify(selectLeasingScraper.scrape(make, model, variant, derivative, term,initialTerm, mileage))
 
 @app.route("/admin/add/<makeID>/<modelID>/<variant>", methods = ['POST'])
 def addCar(makeID, modelID, variant):
