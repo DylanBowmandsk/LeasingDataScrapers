@@ -5,10 +5,7 @@ from bs4 import BeautifulSoup
 import time
 
 def scrape(make, model, variant, derivative, term, initialTerm, Mileage):
-    derivative = derivative.replace("[", "")
-    derivative = derivative.replace("]", "")
-    derivative = derivative.replace(" ", "-")
-    derivative = derivative.replace(".", "-")
+    derivative = derivative.replace("[", "").replace("]", "").replace(" ", "-").replace(".", "-")
     url = f"https://leasing.com/car-leasing/{make}/{model.replace(' ', '-')}/{variant.replace(' ', '-')}/{derivative}/?finance=personal&".lower()
     if term :
         url += f"term={int(term)-1}&"
@@ -31,7 +28,7 @@ def scrape(make, model, variant, derivative, term, initialTerm, Mileage):
 def scrapeAll(make, model, variant, derivatives, term, initialTerm, mileage):
     rows = []
     for derivative in derivatives:
-        time.sleep(0.8)
+        time.sleep(1)
         derivative = derivative.replace("[", "")
         derivative = derivative.replace("]", "")
         derivative = derivative.replace(" ", "-")

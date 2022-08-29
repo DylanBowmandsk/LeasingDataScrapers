@@ -1,4 +1,4 @@
-const ModelRow = ({name, term, mileage, leasingPrice, selectPrice, derivative}) => {
+const ModelRow = ({name, term, mileage, leasingPrice, selectPrice, locoPrice, derivative}) => {
     return(
         <div>
             <div className="flex flex-row">
@@ -6,6 +6,7 @@ const ModelRow = ({name, term, mileage, leasingPrice, selectPrice, derivative}) 
                 <p>{derivative}</p>
                 <p>{selectPrice}</p>
                 <p>{leasingPrice}</p>
+                <p>{locoPrice}</p>
                 <p>{term}</p>
             </div>
         </div>

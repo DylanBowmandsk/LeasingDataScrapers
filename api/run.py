@@ -74,21 +74,28 @@ def scrapeAllLeasingcom(make,model,variant,term,initialTerm,mileage):
         derivatives.append(derivative)
     return jsonify(leasingScraper.scrapeAll(make,model,variant, derivatives, term, initialTerm, mileage))
 
-@app.route("/leaseloco/scrape/<make>/<model>/<variant>")
-def scrapeLeaseLoco(make, model, variant):
-    return jsonify(leaseLocoScraper.scrape(make, model, variant))
+@app.route("/leaseloco/scrape/<make>/<model>/<variant>/<derivative>/<term>/<initialTerm>/<mileage>")
+def scrapeLeaseLoco(make,model,variant,derivative,term,initialTerm,mileage):
+    return jsonify(leaseLocoScraper.scrape(make,model,variant,derivative,term,initialTerm,mileage))
+
+@app.route("/leaseloco/scrape/<make>/<model>/<variant>/all/<term>/<initialTerm>/<mileage>")
+def scrapeAllLeaseLoco(make,model,variant,term,initialTerm,mileage):
+    derivatives = []
+    data = json.loads(getLeasingcomDerivatives(make, model, variant).data)
+    for derivative in data:
+        derivatives.append(derivative)
+    return jsonify(leaseLocoScraper.scrapeAll(make,model,variant, derivatives,term,initialTerm,mileage))
 
 @app.route("/selectleasing/scrape/<make>/<model>/<variant>/<derivative>/<term>/<initialTerm>/<mileage>")
 def scrapeSelectLeasing(make, model, variant,derivative,term,initialTerm,mileage):
     return jsonify(selectLeasingScraper.scrape(make, model, variant, derivative, term,initialTerm, mileage))
 
 @app.route("/selectleasing/scrape/<make>/<model>/<variant>/all/<term>/<initialTerm>/<mileage>")
-def scrapeAllSelect(make,model,variant,term,initialTerm,mileage):
+def scrapeAllSelectLeasing(make,model,variant,term,initialTerm,mileage):
     derivatives = []
     data = json.loads(getLeasingcomDerivatives(make, model, variant).data)
     for derivative in data:
         derivatives.append(derivative)
-    print(derivatives)
     return jsonify(selectLeasingScraper.scrapeAll(make, model,variant, derivatives, term, initialTerm, mileage))
 
 @app.route("/admin/add/<makeID>/<modelID>/<variant>", methods = ['POST'])

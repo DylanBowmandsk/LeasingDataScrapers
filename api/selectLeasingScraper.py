@@ -23,7 +23,7 @@ def scrape(make,model,variant,derivative,term,initialTerm,mileage):
     if response.status_code == 200:
         path = "./venv/chromedriver.exe"
         options = Options()
-        options.headless = True
+        #options.headless = True
         driver = webdriver.Chrome(executable_path=path, options=options)
         driver.get(url)
         html = driver.page_source
@@ -36,10 +36,15 @@ def scrape(make,model,variant,derivative,term,initialTerm,mileage):
         print("not found")
 
 def scrapeAll(make,model,variant,derivatives,term,initialTerm,mileage):
+    options = Options()
+    #options.headless = True
+    path = "./venv/chromedriver.exe"
+    driver = webdriver.Chrome(executable_path=path, options=options)
+    driver.set_window_size(1024, 768)
+        
     rows = []
     for derivative in derivatives:
         time.sleep(0.8)
-        print(derivative)
         derivative = derivative.replace("[", "")
         derivative = derivative.replace("]", "")
         derivative = derivative.replace(" ", "-")
@@ -55,13 +60,8 @@ def scrapeAll(make,model,variant,derivatives,term,initialTerm,mileage):
         response = requests.get(url)
         
         if response.status_code == 200:
-            path = "./venv/chromedriver.exe"
-            options = Options()
-            options.headless = True
-            driver = webdriver.Chrome(executable_path=path, options=options)
             driver.get(url)
             html = driver.page_source
-            print(url)
             soup = BeautifulSoup(html, "html.parser")
             rows += collateData(soup, make, model, term, initialTerm, mileage)
         elif response.status_code == 403:
