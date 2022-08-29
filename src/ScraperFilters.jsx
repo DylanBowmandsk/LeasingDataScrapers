@@ -17,16 +17,16 @@ const ScraperFilters = ({setMileage, setTerm, setInitialTerm}) => {
             </select>
             <span>Mileage</span>
             <select name="mileage" onChange={(e) => {setMileage(e.target.value)}} id="">
-                <option value="5000">5000K</option>
-                <option value="6000">6000K</option>
-                <option value="8000">8000K</option>
-                <option value="10000">10000K</option>
-                <option value="12000">12000K</option>
-                <option value="15000">15000K</option>
-                <option value="20000">20000K</option>
-                <option value="25000">25000K</option>
-                <option value="30000">30000K</option>
-                <option value="35000">35000K</option>
+                <option value="5000">5000</option>
+                <option value="6000">6000</option>
+                <option value="8000">8000</option>
+                <option value="10000">10000</option>
+                <option value="12000">12000</option>
+                <option value="15000">15000</option>
+                <option value="20000">20000</option>
+                <option value="25000">25000</option>
+                <option value="30000">30000</option>
+                <option value="35000">35000</option>
             </select>
         </div>
     )

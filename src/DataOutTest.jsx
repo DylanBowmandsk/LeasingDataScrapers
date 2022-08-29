@@ -8,18 +8,19 @@ const DataOutTest = ({leasingData, selectData}) => {
 
     useEffect(() => {
         if(leasingData && selectData){
-            collateData(leasingData, selectData)
+            collateData(leasingData, selectData, setData)
         }
       },[leasingData,selectData])
 
 
     return(
         <div>
+
             {data && data.map((element) => {   
                 return (
-                    <div>
-                        <ModelRow price={element.price} totalLease={element.totalLease} term={element.term} name={element.name} derivative={element.derivative}/>
-                        </div>
+                    <div> 
+                        <ModelRow price={element.price} leasingPrice={element.leasingPrice} selectPrice={element.selectPrice} totalLease={element.totalLease} term={element.term} name={element.name} derivative={element.derivative}/>
+                    </div>
                 )
             })}
         </div>
@@ -35,11 +36,7 @@ const collateData = (leasingData, selectData, setData) => {
 
     derivatives.forEach(element => {
         let derivative = element
-        let name 
-        let term
-        let mileage
-        let leasingPrice
-        let selectPrice
+        let name, term, mileage, leasingPrice, selectPrice 
 
         selectData.forEach(selectCar => {
             if (selectCar.derivative === element){
@@ -50,7 +47,7 @@ const collateData = (leasingData, selectData, setData) => {
             }
         })
         leasingData.forEach(leasingCar => {
-            if (leasingCar.derivative === element.derivative){
+            if (leasingCar.derivative === element){
                 leasingPrice = leasingCar.price
             }
         })
@@ -61,7 +58,8 @@ const collateData = (leasingData, selectData, setData) => {
                 "leasingPrice": leasingPrice,
                 "selectPrice": selectPrice})
     })
-    console.log(data)
+    setData(data)
+    
     
 }
 

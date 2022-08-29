@@ -1,10 +1,11 @@
-const ModelRow = ({price, totalLease, term, name, derivative}) => {
+const ModelRow = ({name, term, mileage, leasingPrice, selectPrice, derivative}) => {
     return(
         <div>
             <div className="flex flex-row">
                 <p className="inline-block">{name}</p>
                 <p>{derivative}</p>
-                <p>{price}</p>
+                <p>{selectPrice}</p>
+                <p>{leasingPrice}</p>
                 <p>{term}</p>
             </div>
         </div>

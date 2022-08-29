@@ -21,7 +21,6 @@ const scrapeLeasingData = (make, model, variant, derivative,term, initialTerm, m
     derivative = derivative.replace("/", "").replace(/['"]+/g, '')
     fetch(`http://localhost:5000/leasingcom/scrape/${make.makeName}/${model.modelName}/${variant}/${derivative}/${term}/${initialTerm}/${mileage}`)
     .then(response => response.json()).then(data => {
-      console.log(data)
       setLeasingData(data)
     })
   }
