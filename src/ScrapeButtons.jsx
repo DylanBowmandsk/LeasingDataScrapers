@@ -17,8 +17,8 @@ const scrapeAll = (make, model, variant, derivative,term, initialTerm, mileage, 
 }
 
 const scrapeLeasingData = (make, model, variant, derivative,term, initialTerm, mileage, setLeasingData) => {
+  derivative = derivative.replace("/", "").replace(/['"]+/g, '')
   if( derivative !== "All"){
-    derivative = derivative.replace("/", "").replace(/['"]+/g, '')
     fetch(`http://localhost:5000/leasingcom/scrape/${make.makeName}/${model.modelName}/${variant}/${derivative}/${term}/${initialTerm}/${mileage}`)
     .then(response => response.json()).then(data => {
       setLeasingData(data)
@@ -39,13 +39,18 @@ const scrapeLeasingData = (make, model, variant, derivative,term, initialTerm, m
   }
   
   const scrapeSelectData = (make, model, variant, derivative, term, initialTerm, mileage, setSelectData) => {
-    derivative =derivative.replace(/['"]+/g, '')
+    derivative = derivative.replace(/['"]+/g, '').replace("/", "")
+    if( derivative !== "All"){
     fetch(`http://localhost:5000/selectleasing/scrape/${make.makeName}/${model.modelName}/${variant}/${derivative}/${term}/${initialTerm}/${mileage}`)
     .then(response => response.json()).then(data => {
-      console.log(data)
       setSelectData(data)
-
     })
+    }else{
+    fetch(`http://localhost:5000/selectleasing/scrape/${make.makeName}/${model.modelName}/${variant}/all/${term}/${initialTerm}/${mileage}`)
+    .then(response => response.json()).then(data => {
+      setSelectData(data)
+    })
+  }
   }
 
 export default ScrapeButtons

@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+import time
 
 def scrape(make,model,variant,derivative,term,initialTerm,mileage):
     derivative = derivative.replace("[", "")
@@ -33,6 +34,41 @@ def scrape(make,model,variant,derivative,term,initialTerm,mileage):
         print("forbidden")
     elif response.status_code == 404:
         print("not found")
+
+def scrapeAll(make,model,variant,derivatives,term,initialTerm,mileage):
+    rows = []
+    for derivative in derivatives:
+        time.sleep(0.8)
+        print(derivative)
+        derivative = derivative.replace("[", "")
+        derivative = derivative.replace("]", "")
+        derivative = derivative.replace(" ", "-")
+        derivative = derivative.replace("/", "")
+        derivative = derivative.replace(".", "-")
+        url = (f"https://selectcarleasing.co.uk/car-leasing/{make}/{model.replace(' ', '-')}/{variant.replace(' ', '-')}/{derivative}?".lower())
+        if term :
+            url += f"term={term}&"
+        if initialTerm :
+            url += f"upfront={initialTerm}&"
+        if mileage :
+            url += f"mileage={mileage}&"
+        response = requests.get(url)
+        
+        if response.status_code == 200:
+            path = "./venv/chromedriver.exe"
+            options = Options()
+            options.headless = True
+            driver = webdriver.Chrome(executable_path=path, options=options)
+            driver.get(url)
+            html = driver.page_source
+            print(url)
+            soup = BeautifulSoup(html, "html.parser")
+            rows += collateData(soup, make, model, term, initialTerm, mileage)
+        elif response.status_code == 403:
+            print("forbidden")
+        elif response.status_code == 404:
+            print("not found")
+    return rows
 
 def collateData(soup, make, model, term, initialTerm, mileage):
     rows = []

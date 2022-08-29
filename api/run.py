@@ -82,6 +82,15 @@ def scrapeLeaseLoco(make, model, variant):
 def scrapeSelectLeasing(make, model, variant,derivative,term,initialTerm,mileage):
     return jsonify(selectLeasingScraper.scrape(make, model, variant, derivative, term,initialTerm, mileage))
 
+@app.route("/selectleasing/scrape/<make>/<model>/<variant>/all/<term>/<initialTerm>/<mileage>")
+def scrapeAllSelect(make,model,variant,term,initialTerm,mileage):
+    derivatives = []
+    data = json.loads(getLeasingcomDerivatives(make, model, variant).data)
+    for derivative in data:
+        derivatives.append(derivative)
+    print(derivatives)
+    return jsonify(selectLeasingScraper.scrapeAll(make, model,variant, derivatives, term, initialTerm, mileage))
+
 @app.route("/admin/add/<makeID>/<modelID>/<variant>", methods = ['POST'])
 def addCar(makeID, modelID, variant):
     cursor.execute(f"INSERT INTO ModelTrimMaster VALUES ('{variant}', '{modelID}')")
