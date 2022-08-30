@@ -1,4 +1,4 @@
-const ModelRow = ({name, term, mileage, leasingPrice, selectPrice, locoPrice, derivative}) => {
+const ModelRow = ({name, term, mileage, leasingPrice, selectPrice, locoPrice, derivative, pvPrice}) => {
     return(
         <div>
             <p className="inline-block">{name}</p>
@@ -9,14 +9,17 @@ const ModelRow = ({name, term, mileage, leasingPrice, selectPrice, locoPrice, de
                     <p>{selectPrice}</p>
                 </div>
                 <div className="mr-20">
-                    <p>Loco Leasing</p>
+                    <p>LeaseLoco</p>
                     <p>{locoPrice}</p>
                 </div>
                 <div className="mr-20 mb-20">
                     <p>Leasing.com</p>
                     <p>{leasingPrice}</p>
                 </div>
-
+                <div className="mr-20 mb-20">
+                    <p>Pv Price</p>
+                    <p>{pvPrice}p/m</p>
+                </div>
             </div>
         </div>
     )

@@ -3,7 +3,6 @@ from flask_cors import CORS
 import leasingScraper
 import leaseLocoScraper
 import selectLeasingScraper
-import pvData
 import json
 
 import sqlconnector
@@ -46,6 +45,15 @@ def getPvVariants():
             "modelTrim": variant})
     return jsonify(variants)
 
+@app.route("/pv/scrape/<derivative>/<term>/<initialTerm>/<mileage>")
+def getPvPrice(derivative,term,initialTerm,mileage):
+    cars = []
+    print(derivative)
+    for derivative, price in cursor.execute(f"SELECT [derivative], [monthly_rental] FROM [dbo].[LeasingPrices] where derivative = '{derivative}' and term = {term} and mileage = {mileage} and initial_profile = {initialTerm}"):
+        cars.append({"price": price,
+        "derivative": derivative})
+    return jsonify(cars)  
+    
 @app.route("/leasingcom/get/make")
 def getLeasingcomMakes():
     return jsonify(leasingScraper.scrapeMakeList())

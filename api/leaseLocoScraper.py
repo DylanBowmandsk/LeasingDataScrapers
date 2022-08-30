@@ -15,6 +15,8 @@ def scrape(make,model,variant, derivative, term, initialTerm, mileage):
     options = Options()
     driver = webdriver.Chrome(executable_path=path, options=options)
     url = "https://leaseloco.com/car-leasing/search"
+    driver.get(url)
+    sleep(1)
     Search(driver, derivative)
     sleep(1)
     rows = getElements(driver, derivative, term, initialTerm, mileage)
