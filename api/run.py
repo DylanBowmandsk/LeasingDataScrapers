@@ -4,7 +4,7 @@ import leasingScraper
 import leaseLocoScraper
 import selectLeasingScraper
 import json
-
+import urllib.parse
 import sqlconnector
 
 app = Flask(__name__)
@@ -36,24 +36,36 @@ def getPvModels():
             "modelName": model})
     return jsonify(models)
 
-@app.route("/get/variants")
-def getPvVariants():
+@app.route("/get/variants/<model>")
+def getPvVariants(model):
     variants = []
-    for i, modelID, variant in cursor.execute("select UniqueID, ModelID, ModelTrim from [ModelTrimMaster]"):
-        if variant != "":
-            variants.append({"variantID": i ,"ModelID": modelID,
-            "modelTrim": variant})
+    for row in cursor.execute("SELECT Distinct model  FROM [dbo].[LeasingPrices] where model like '" + model + " %'"):
+       for x in row:
+             variants.append(x[len(model)+ 1:])
     return jsonify(variants)
 
 @app.route("/pv/scrape/<derivative>/<term>/<initialTerm>/<mileage>")
 def getPvPrice(derivative,term,initialTerm,mileage):
+    lowest = 0
+    derivative = derivative.replace("+","/")
+    for derivative, price in cursor.execute(f"SELECT [derivative], [monthly_rental] FROM [dbo].[LeasingPrices] where derivative = '{derivative}' and term = {term} and mileage = {mileage} and initial_profile = {initialTerm} and type = 'Personal'"):
+        if(lowest == 0 or lowest > price): lowest = price
+  
+    return jsonify({"price": lowest,
+        "derivative": derivative})  
+    
+@app.route("/pv/scrape/all/<term>/<initialTerm>/<mileage>")
+def getAllPvPrice(derivative,term,initialTerm,mileage):
+    lowest = 0
     cars = []
-    print(derivative)
-    for derivative, price in cursor.execute(f"SELECT [derivative], [monthly_rental] FROM [dbo].[LeasingPrices] where derivative = '{derivative}' and term = {term} and mileage = {mileage} and initial_profile = {initialTerm}"):
-        cars.append({"price": price,
+    derivative = derivative.replace("+","/")
+    for derivative, price in cursor.execute(f"SELECT [derivative], [monthly_rental] FROM [dbo].[LeasingPrices] where derivative = '{derivative}' and term = {term} and mileage = {mileage} and initial_profile = {initialTerm} and type = 'Personal'"):
+        if(lowest == 0 or lowest > price): lowest = price
+        cars.append({"price": lowest,
         "derivative": derivative})
     return jsonify(cars)  
-    
+  
+     
 @app.route("/leasingcom/get/make")
 def getLeasingcomMakes():
     return jsonify(leasingScraper.scrapeMakeList())

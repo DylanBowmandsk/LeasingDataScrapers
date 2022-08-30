@@ -19,8 +19,8 @@ const scrapeAll = (make, model, variant, derivative,term, initialTerm, mileage, 
 }
 
 const scrapePvData = (derivative, term, initialTerm, mileage, setPvData) => {
-  derivative = derivative.replace(/['"]+/g, '')
-  fetch(`http://localhost:5000/pv/scrape/${derivative}/${term}/${initialTerm}/${mileage}`)
+  derivative = derivative.replace(/['"]+/g, '').replace("/", "+")
+  fetch(`http://localhost:5000/pv/scrape/${(derivative)}/${term}/${initialTerm}/${mileage}`)
   .then(response => response.json()).then(data => {
     setPvData(data)
     console.log(data)

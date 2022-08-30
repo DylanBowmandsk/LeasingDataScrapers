@@ -100,24 +100,20 @@ const populateMakeFields = (setMakeList) => {
 const populateVariantsFields = (modelString, make, setModel, setVariantList) => {
   let model = JSON.parse(modelString)
   setModel(model)
-  fetch(`http://localhost:5000/leasingcom/get/${make.makeName}/${model.modelName}/variants`)
+  fetch(`http://localhost:5000/get/variants/${model.modelName}`)
   .then(response => response.json())
   .then(data => {
-    try{
       let list = []
       data.forEach(element => {
         list.push(element)
     });
-    setVariantList(list)}
-    catch{
-      alert("no matches")
-      setVariantList([])
-    }
+    setVariantList(list)
   })
 }
 
 const populateDerivativeFields = (variant, make, model, setVariant, setDerivativeList) => {
   variant = variant.replace(/['"]+/g, '')
+  console.log(variant, model)
   setVariant(variant)
   fetch(`http://localhost:5000/leasingcom/get/${make.makeName}/${model.modelName}/${variant}/derivative`)
   .then(response => response.json())
