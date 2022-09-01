@@ -27,7 +27,7 @@ const ScraperForm = ({setMake, setModel, setVariant, make, model, setDerivative}
             })}
           </select>
           <span className="text-lg font-semibold" id="model-selector">Model: </span>
-          <select name="model" id="model" onChange={e => {populateVariantsFields(e.target.value, make, setModel, setVariantList)}}>
+          <select name="model" id="model" onChange={e => {populateVariantsFields(e.target.value, setModel, setVariantList)}}>
             <option value="">Model</option>
             {modelList && modelList.map((data, index) => {
               return (
@@ -38,7 +38,7 @@ const ScraperForm = ({setMake, setModel, setVariant, make, model, setDerivative}
             })}
           </select>
           <span className="text-lg font-semibold" id="variant-selector"> Variant: </span>
-          <select name="Variant" id="variant" onChange={e => {populateDerivativeFields(e.target.value, make, model, setVariant,setDerivativeList)}}>
+          <select name="Variant" id="variant" onChange={e => {populateDerivativeFields(e.target.value, model, setVariant,setDerivativeList)}}>
           <option value="">Variant</option>
             {variantList && variantList.map((data, index) => {
               return (
@@ -97,7 +97,7 @@ const populateMakeFields = (setMakeList) => {
 }
 
 //makes api call and fills out input fields of all model variants we have in stock
-const populateVariantsFields = (modelString, make, setModel, setVariantList) => {
+const populateVariantsFields = (modelString, setModel, setVariantList) => {
   let model = JSON.parse(modelString)
   setModel(model)
   fetch(`http://localhost:5000/get/variants/${model.modelName}`)
@@ -111,11 +111,11 @@ const populateVariantsFields = (modelString, make, setModel, setVariantList) => 
   })
 }
 
-const populateDerivativeFields = (variant, make, model, setVariant, setDerivativeList) => {
+const populateDerivativeFields = (variant, model, setVariant, setDerivativeList) => {
   variant = variant.replace(/['"]+/g, '')
   console.log(variant, model)
   setVariant(variant)
-  fetch(`http://localhost:5000/leasingcom/get/${make.makeName}/${model.modelName}/${variant}/derivative`)
+  fetch(`http://localhost:5000/get/derivatives/${model.modelName}/${variant}`)
   .then(response => response.json())
   .then(data => {
     try{

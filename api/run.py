@@ -44,26 +44,38 @@ def getPvVariants(model):
              variants.append(x[len(model)+ 1:])
     return jsonify(variants)
 
+@app.route("/get/derivatives/<model>/<variant>")
+def getPvDerivatives(model ,variant):
+    derivatives = []
+    for row in cursor.execute("SELECT Distinct derivative  FROM [dbo].[LeasingPrices] where model like '" + model +" " + variant +"'"):
+        for x in row:
+                derivatives.append(x)
+    return jsonify(derivatives)
+
 @app.route("/pv/scrape/<derivative>/<term>/<initialTerm>/<mileage>")
 def getPvPrice(derivative,term,initialTerm,mileage):
     lowest = 0
-    derivative = derivative.replace("+","/")
-    for derivative, price in cursor.execute(f"SELECT [derivative], [monthly_rental] FROM [dbo].[LeasingPrices] where derivative = '{derivative}' and term = {term} and mileage = {mileage} and initial_profile = {initialTerm} and type = 'Personal'"):
-        if(lowest == 0 or lowest > price): lowest = price
-  
-    return jsonify({"price": lowest,
-        "derivative": derivative})  
-    
-@app.route("/pv/scrape/all/<term>/<initialTerm>/<mileage>")
-def getAllPvPrice(derivative,term,initialTerm,mileage):
-    lowest = 0
-    cars = []
+    cars =[]
     derivative = derivative.replace("+","/")
     for derivative, price in cursor.execute(f"SELECT [derivative], [monthly_rental] FROM [dbo].[LeasingPrices] where derivative = '{derivative}' and term = {term} and mileage = {mileage} and initial_profile = {initialTerm} and type = 'Personal'"):
         if(lowest == 0 or lowest > price): lowest = price
         cars.append({"price": lowest,
         "derivative": derivative})
     return jsonify(cars)  
+    
+@app.route("/pv/scrape/<model>/<variant>/all/<term>/<initialTerm>/<mileage>")
+def getAllPvPrice(model, variant,term,initialTerm,mileage):
+    lowest = 0
+    derivatives = []
+    data = json.loads(getPvDerivatives(model, variant).data)
+    for derivative in data:
+        derivatives.append(derivative)
+    derivative = derivative.replace("+","/")
+    for derivative, price in cursor.execute(f"SELECT [derivative], [monthly_rental] FROM [dbo].[LeasingPrices] where derivative = '{derivative}' and term = {term} and mileage = {mileage} and initial_profile = {initialTerm} and type = 'Personal'"):
+        if(lowest == 0 or lowest > price): lowest = price
+        derivatives.append({"price": lowest,
+        "derivative": derivative})
+    return jsonify(derivatives)  
   
      
 @app.route("/leasingcom/get/make")
@@ -89,7 +101,7 @@ def scrapeLeasingcom(make,model,variant,derivative,term,initialTerm,mileage):
 @app.route("/leasingcom/scrape/<make>/<model>/<variant>/all/<term>/<initialTerm>/<mileage>")
 def scrapeAllLeasingcom(make,model,variant,term,initialTerm,mileage):
     derivatives = []
-    data = json.loads(getLeasingcomDerivatives(make, model, variant).data)
+    data = json.loads(getPvDerivatives(model, variant).data)
     for derivative in data:
         derivatives.append(derivative)
     return jsonify(leasingScraper.scrapeAll(make,model,variant, derivatives, term, initialTerm, mileage))
@@ -101,7 +113,7 @@ def scrapeLeaseLoco(make,model,variant,derivative,term,initialTerm,mileage):
 @app.route("/leaseloco/scrape/<make>/<model>/<variant>/all/<term>/<initialTerm>/<mileage>")
 def scrapeAllLeaseLoco(make,model,variant,term,initialTerm,mileage):
     derivatives = []
-    data = json.loads(getLeasingcomDerivatives(make, model, variant).data)
+    data = json.loads(getPvDerivatives(model, variant).data)
     for derivative in data:
         derivatives.append(derivative)
     return jsonify(leaseLocoScraper.scrapeAll(make,model,variant, derivatives,term,initialTerm,mileage))
@@ -113,7 +125,7 @@ def scrapeSelectLeasing(make, model, variant,derivative,term,initialTerm,mileage
 @app.route("/selectleasing/scrape/<make>/<model>/<variant>/all/<term>/<initialTerm>/<mileage>")
 def scrapeAllSelectLeasing(make,model,variant,term,initialTerm,mileage):
     derivatives = []
-    data = json.loads(getLeasingcomDerivatives(make, model, variant).data)
+    data = json.loads(getPvDerivatives(model, variant).data)
     for derivative in data:
         derivatives.append(derivative)
     return jsonify(selectLeasingScraper.scrapeAll(make, model,variant, derivatives, term, initialTerm, mileage))

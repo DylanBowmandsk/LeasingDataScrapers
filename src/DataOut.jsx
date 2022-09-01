@@ -10,7 +10,7 @@ const DataOutTest = ({leasingData, selectData, locoData, pvData}) => {
         if(leasingData && selectData && locoData && pvData){
             collateData(leasingData, selectData, locoData, pvData, setData)
         }
-      },[leasingData,selectData, locoData])
+      },[leasingData,selectData, locoData, pvData])
 
 
     return(

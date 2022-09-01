@@ -12,11 +12,11 @@ from selenium.webdriver.support.ui import Select
 # global scrape function for lease loco
 def scrape(make,model,variant, derivative, term, initialTerm, mileage):
     path = "./venv/chromedriver.exe"
+    print(derivative)
     options = Options()
     driver = webdriver.Chrome(executable_path=path, options=options)
     url = "https://leaseloco.com/car-leasing/search"
     driver.get(url)
-    sleep(1)
     Search(driver, derivative)
     sleep(1)
     rows = getElements(driver, derivative, term, initialTerm, mileage)
@@ -37,6 +37,8 @@ def scrapeAll(make, model, variant, derivatives, term, initialTerm, mileage):
     driver.set_window_size(1024, 768)
     url = "https://leaseloco.com/car-leasing/search"
     for derivative in derivatives:
+        derivative = derivative.replace("/", " ")
+        print(derivative)
         response = requests.get(url)
         if response.status_code == 200:
             driver.get(url)
@@ -51,15 +53,16 @@ def scrapeAll(make, model, variant, derivatives, term, initialTerm, mileage):
 
 #Enters search terms for make and model
 def Search(driver, derivative):
-    searchBar = driver.find_element(By.XPATH, "//*[@id='__next']/main/div/div[3]/div[2]/div[1]/div[1]/div/input")
+    sleep(1)
+    searchBar = driver.find_element(By.CLASS_NAME, "search--input")
+    print(searchBar)
+    print(derivative)
     searchBar.clear()
     searchBar.click()
     searchBar.send_keys(derivative.replace("[", "").replace("]",""))
     sleep(1)
-    try:
-        element = driver.find_element(By.XPATH, "//*[@id='__next']/main/div/div[3]/div[2]/div[3]/div/div[2]/a[1]/div")
-    except NoSuchElementException:
-       element = driver.find_element(By.XPATH, '//*[@id="__next"]/main/div/div[3]/div[2]/div[3]/div/div[2]/a[1]/div')
+    element = driver.find_element(By.CLASS_NAME, "button--review-deal")
+                                               
     element.click()
   
 
