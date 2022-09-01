@@ -2,7 +2,6 @@ const ScraperFilters = ({setMileage, setTerm, setInitialTerm}) => {
     return(
         <div><span>Months</span>
             <select name="lease-term" onChange={(e) => setTerm(e.target.value)} id="">
-                <option value="18">18 Months</option>
                 <option value="24">24 Months</option>
                 <option value="36">36 Months</option>
                 <option value="48">48 Months</option>

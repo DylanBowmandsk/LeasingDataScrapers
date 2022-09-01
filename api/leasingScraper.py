@@ -5,8 +5,8 @@ from bs4 import BeautifulSoup
 import time
 
 def scrape(make, model, variant, derivative, term, initialTerm, Mileage):
-    derivative = derivative.replace("[", "").replace("]", "").replace(" ", "-").replace(".", "-")
-    url = f"https://leasing.com/car-leasing/{make}/{model.replace(' ', '-')}/{variant.replace(' ', '-')}/{derivative}/?finance=personal&".lower()
+    derivativeURI = derivative.replace("[", "").replace("]", "").replace(" ", "-").replace(".", "-")
+    url = f"https://leasing.com/car-leasing/{make}/{model.replace(' ', '-')}/{variant.replace(' ', '-')}/{derivativeURI}/?finance=personal&".lower()
     if term :
         url += f"term={int(term)-1}&"
     if initialTerm :
@@ -23,14 +23,22 @@ def scrape(make, model, variant, derivative, term, initialTerm, Mileage):
     elif response.status_code == 403:
         print("forbidden")
     elif response.status_code == 404:
-        print("not found")
+        return [{"name": make+ " " + model,
+            "price" : "No Data",
+            "mileage" : "No Data",
+            "upfrontCost": "No Data",
+            "additionalFees": "No Data",
+            "totalLease" : "No Data",
+            "term" : "No Data",
+            "initialTerm" : "No Data",
+            "derivative" : derivative}]
 
 def scrapeAll(make, model, variant, derivatives, term, initialTerm, mileage):
     rows = []
     for derivative in derivatives:
         time.sleep(1)
-        derivative = derivative.replace("[", "").replace("]", "").replace(" ", "-").replace("/", "").replace(".", "-")
-        url = f"https://leasing.com/car-leasing/{make}/{model.replace(' ', '-')}/{variant.replace(' ', '-')}/{derivative}?finance=personal&".lower()
+        derivativeURI = derivative.replace("[", "").replace("]", "").replace(" ", "-").replace("/", "").replace(".", "-")
+        url = f"https://leasing.com/car-leasing/{make}/{model.replace(' ', '-')}/{variant.replace(' ', '-')}/{derivativeURI}?finance=personal&".lower()
         if term :
             url += f"term={int(term)-1}&"
         if initialTerm :
@@ -129,37 +137,47 @@ def scrapeMakeList():
         print("not found")   
 
 def collateData(soup, make, model, derivative):
-    dealsdiv = soup.find("div", id="alldeals")
-    deal = dealsdiv.find_all("div", class_="deal-panel-card")[0]
     rows = []
+    try:
+        dealsdiv = soup.find("div", id="alldeals")
+        deal = dealsdiv.find_all("div", class_="deal-panel-card")[0]
 
 
-    price = deal.find("div", class_="price").text
-    derivative = deal.find("div", "derivative").text
+        price = deal.find("div", class_="price").text
+        derivative = deal.find("div", "derivative").text
 
-    mileageLi = deal.find("li", class_="mileage")
-    mileage = mileageLi.find("span").text
+        mileageLi = deal.find("li", class_="mileage")
+        mileage = mileageLi.find("span").text
 
-    termLi = deal.find("li", class_="term")
-    term = termLi.find("span").text
+        termLi = deal.find("li", class_="term")
+        term = termLi.find("span").text
 
-    initialTermLi = deal.find("li", class_="initial-rental")
-    initialTerm = initialTermLi.find("span").text
-    
-    priceList = deal.find("ul", class_="price-list")
-    liList = priceList.findAll("span", class_="data")
-    upfrontCost = liList[0].text
-    additionalFees = liList[1].text
-    totalLease = liList[2].text
-
-    rows.append({"name": make+ " " + model,
-        "price" : price,
-        "mileage" : mileage,
-        "upfrontCost": upfrontCost,
-        "additionalFees": additionalFees,
-        "totalLease" : totalLease,
-        "term" : term,
-        "initialTerm" : initialTerm,
-        "derivative" : derivative})
+        initialTermLi = deal.find("li", class_="initial-rental")
+        initialTerm = initialTermLi.find("span").text
+        
+        priceList = deal.find("ul", class_="price-list")
+        liList = priceList.findAll("span", class_="data")
+        upfrontCost = liList[0].text
+        additionalFees = liList[1].text
+        totalLease = liList[2].text
+        rows.append({"name": make+ " " + model,
+            "price" : price,
+            "mileage" : mileage,
+            "upfrontCost": upfrontCost,
+            "additionalFees": additionalFees,
+            "totalLease" : totalLease,
+            "term" : term,
+            "initialTerm" : initialTerm,
+            "derivative" : derivative})
+    except:
+        rows.append({"name": make+ " " + model,
+            "price" : "No Data",
+            "mileage" : "No Data",
+            "upfrontCost": "No Data",
+            "additionalFees": "No Data",
+            "totalLease" : "No Data",
+            "term" : "No Data",
+            "initialTerm" : "No Data",
+            "derivative" : derivative})
 
     return rows

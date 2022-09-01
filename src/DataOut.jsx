@@ -7,10 +7,10 @@ const DataOutTest = ({leasingData, selectData, locoData, pvData}) => {
 
 
     useEffect(() => {
-        if(leasingData && selectData && locoData && pvData){
+        if(leasingData && selectData  && pvData){
             collateData(leasingData, selectData, locoData, pvData, setData)
         }
-      },[leasingData,selectData, locoData, pvData])
+      },[leasingData,selectData, pvData])
 
 
     return(
@@ -19,7 +19,8 @@ const DataOutTest = ({leasingData, selectData, locoData, pvData}) => {
             {data && data.map((element) => {   
                 return (
                     <div> 
-                        <ModelRow price={element.price} leasingPrice={element.leasingPrice} selectPrice={element.selectPrice} pvPrice={element.pvPrice} locoPrice={element.locoPrice} totalLease={element.totalLease} term={element.term} name={element.name} derivative={element.derivative}/>
+                         <ModelRow price={element.price} leasingPrice={element.leasingPrice} selectPrice={element.selectPrice} pvPrice={element.pvPrice} locoPrice={element.locoPrice} totalLease={element.totalLease} term={element.term} name={element.name} derivative={element.derivative}/>
+
                     </div>
                 )
             })}
@@ -33,6 +34,12 @@ const collateData = (leasingData, selectData, locoData, pvData, setData) => {
     leasingData.forEach(element => {
         derivatives.push(element.derivative)
     });
+    selectData.forEach(element => {
+        if(!derivatives.includes(element.derivative)) derivatives.push(element.derivative)
+    })
+    pvData.forEach(element => {
+        if(!derivatives.includes(element.derivative)) derivatives.push(element.derivative)
+    })
 
     derivatives.forEach(element => {
         let derivative = element
@@ -51,15 +58,19 @@ const collateData = (leasingData, selectData, locoData, pvData, setData) => {
                 leasingPrice = leasingCar.price
             }
         })
-        locoData.forEach(locoCar => {
-            if (locoCar.derivative === element){
-                locoPrice = locoCar.price
-            }
-        })
+        //locoData.forEach(locoCar => {
+        //    if (locoCar.derivative === element){
+        //        locoPrice = locoCar.price
+        //    }
+        //})
         pvData.forEach(pvCar => {
             if (pvCar.derivative === element){
-                pvPrice = pvCar.price
+                if(pvCar.price == "No Data") pvPrice = pvCar.price
+                else{
+                    pvPrice = pvCar.price + "p/m"
+                }
             }
+            
         })
         data.push({"name":name,
                 "derivative": derivative,

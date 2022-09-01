@@ -18,7 +18,7 @@ const ModelRow = ({name, term, mileage, leasingPrice, selectPrice, locoPrice, de
                 </div>
                 <div className="mr-20 mb-20">
                     <p>Pv Price</p>
-                    <p>{pvPrice}p/m</p>
+                    <p>{pvPrice}</p>
                 </div>
             </div>
         </div>

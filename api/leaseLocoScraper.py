@@ -1,3 +1,4 @@
+from re import search
 from time import sleep
 import requests 
 #Selenium virtual brwoser for scraping web pages
@@ -14,6 +15,7 @@ def scrape(make,model,variant, derivative, term, initialTerm, mileage):
     path = "./venv/chromedriver.exe"
     print(derivative)
     options = Options()
+    options.add_argument("--headless")
     driver = webdriver.Chrome(executable_path=path, options=options)
     url = "https://leaseloco.com/car-leasing/search"
     driver.get(url)
@@ -32,19 +34,17 @@ def scrapeAll(make, model, variant, derivatives, term, initialTerm, mileage):
     rows = []
     path = "./venv/chromedriver.exe"
     options = Options()
-    #options.add_argument("--headless")
     driver = webdriver.Chrome(executable_path=path, options=options)
     driver.set_window_size(1024, 768)
     url = "https://leaseloco.com/car-leasing/search"
     for derivative in derivatives:
-        derivative = derivative.replace("/", " ")
-        print(derivative)
+        driver.get(url)
+        print("here")
+        Search(driver, derivative)
         response = requests.get(url)
         if response.status_code == 200:
-            driver.get(url)
-            Search(driver, derivative)
-            sleep(1)
-            rows += getElements(driver, derivative, term, initialTerm, mileage)
+            #rows += getElements(driver, derivative, term, initialTerm, mileage)
+            print()
         elif response.status_code == 403:
             print("forbidden")
         elif response.status_code == 404:
@@ -55,10 +55,8 @@ def scrapeAll(make, model, variant, derivatives, term, initialTerm, mileage):
 def Search(driver, derivative):
     sleep(1)
     searchBar = driver.find_element(By.CLASS_NAME, "search--input")
-    print(searchBar)
-    print(derivative)
-    searchBar.clear()
     searchBar.click()
+    searchBar.clear()
     searchBar.send_keys(derivative.replace("[", "").replace("]",""))
     sleep(1)
     element = driver.find_element(By.CLASS_NAME, "button--review-deal")
@@ -81,7 +79,8 @@ def refine(driver, term, initialTerm, mileage):
 def getElements(driver, derivative, term, initialTerm, mileage):
     rows = []
 
-    name = driver.find_element(By.TAG_NAME, "h1").get_attribute("innerHTML")
+    nameContainer = driver.find_element(By.CLASS_NAME, "price-page__vehicle-make-model")
+    name = nameContainer.find_element(By.TAG_NAME, "h1").get_attribute("innerHTML")
     priceContainer = driver.find_element(By.CLASS_NAME, 'price-page__price')
     price = priceContainer.find_element(By.TAG_NAME, "h2").get_attribute("innerHTML")
 
@@ -94,5 +93,7 @@ def getElements(driver, derivative, term, initialTerm, mileage):
             "term" : term,
             "initialTerm" : initialTerm,
             "derivative" : derivative})
+
+    print(rows)
     return rows
 

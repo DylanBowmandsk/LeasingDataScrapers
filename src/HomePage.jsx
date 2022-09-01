@@ -14,7 +14,7 @@ const HomePage = () => {
     const [leasingData, setLeasingData] = useState()
     const [selectData, setSelectData] = useState()
     const [locoData, setLocoData] = useState()
-    const [term, setTerm] = useState(18)
+    const [term, setTerm] = useState(24)
     const [initialTerm, setInitialTerm] = useState(1)
     const [mileage, setMileage] = useState(5000)
     const [pvData, setPvData] = useState()
