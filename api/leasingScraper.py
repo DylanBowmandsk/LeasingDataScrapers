@@ -36,7 +36,7 @@ def scrape(make, model, variant, derivative, term, initialTerm, Mileage):
 def scrapeAll(make, model, variant, derivatives, term, initialTerm, mileage):
     rows = []
     for derivative in derivatives:
-        time.sleep(1)
+        time.sleep(1.5)
         derivativeURI = derivative.replace("[", "").replace("]", "").replace(" ", "-").replace("/", "").replace(".", "-")
         url = f"https://leasing.com/car-leasing/{make}/{model.replace(' ', '-')}/{variant.replace(' ', '-')}/{derivativeURI}?finance=personal&".lower()
         if term :
