@@ -92,12 +92,12 @@ def getElements(driver, derivative, term, initialTerm, mileage):
     name = nameContainer.find_element(By.TAG_NAME, "h1").get_attribute("innerHTML")
     priceContainer = driver.find_element(By.CLASS_NAME, 'price-page__price')
     price = priceContainer.find_element(By.TAG_NAME, "h2").get_attribute("innerHTML")
-
+    upfront  = priceContainer.find_element(By.TAG_NAME, "h2").get_attribute("innerHTML")
 
     rows.append({"name": name,
-            "price" : price+" p/m",
+            "price" : price,
             "mileage" : mileage,
-            "upfrontCost": "upfront",
+            "upfrontCost": upfront,
             "totalLease" : "£"+str("totalLease"),
             "term" : term,
             "initialTerm" : initialTerm,

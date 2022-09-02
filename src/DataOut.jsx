@@ -38,7 +38,7 @@ const collateData = (leasingData, selectData, locoData, pvData, setData) => {
 
     derivatives.forEach(element => {
         let derivative = element
-        let name, term, mileage, leasingPrice, selectPrice, locoPrice, pvPrice
+        let name, term, mileage, leasingPrice, selectPrice, locoPrice, pvPrice, leasingTotalLease, locoUpfront, locoTotalLease
 
         selectData.forEach(selectCar => {
             if (selectCar.derivative === element){
@@ -50,6 +50,7 @@ const collateData = (leasingData, selectData, locoData, pvData, setData) => {
         leasingData.forEach(leasingCar => {
             if (leasingCar.derivative === element){
                 leasingPrice = leasingCar.price
+                leasingTotalLease = leasingCar.totalLease
 
             }
         })
@@ -57,6 +58,11 @@ const collateData = (leasingData, selectData, locoData, pvData, setData) => {
             if (locoCar.derivative === element){
                 locoPrice = locoCar.price
                 name = locoCar.name
+                locoUpfront = locoCar.upfrontCost
+                
+                locoTotalLease = parseInt(locoCar.price.slice(1)) * (locoCar.term - 1)
+                term = locoCar.term
+                mileage = locoCar.mileage
             }
         })
         pvData.forEach(pvCar => {
@@ -75,7 +81,10 @@ const collateData = (leasingData, selectData, locoData, pvData, setData) => {
                 "leasingPrice": leasingPrice,
                 "selectPrice": selectPrice,
                 "locoPrice": locoPrice,
-            "pvPrice" : pvPrice})
+            "pvPrice" : pvPrice,
+        "leasingTotalLease": leasingTotalLease,
+    "locoUpfront": locoUpfront, 
+"locoTotalLease": locoTotalLease })
     })
     console.log(data)
     setData(data)
