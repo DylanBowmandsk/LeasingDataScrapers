@@ -13,9 +13,7 @@ from selenium.webdriver.support.ui import Select
 # global scrape function for lease loco
 def scrape(make,model,variant, derivative, term, initialTerm, mileage):
     path = "./venv/chromedriver.exe"
-    print(derivative)
     options = Options()
-    options.add_argument("--headless")
     driver = webdriver.Chrome(executable_path=path, options=options)
     url = "https://leaseloco.com/car-leasing/search"
     driver.get(url)
@@ -35,22 +33,35 @@ def scrapeAll(make, model, variant, derivatives, term, initialTerm, mileage):
     path = "./venv/chromedriver.exe"
     options = Options()
     driver = webdriver.Chrome(executable_path=path, options=options)
-    driver.set_window_size(1024, 768)
-    url = "https://leaseloco.com/car-leasing/search"
-    for derivative in derivatives:
-        driver.get(url)
-        print("here")
-        Search(driver, derivative)
-        response = requests.get(url)
-        if response.status_code == 200:
-            #rows += getElements(driver, derivative, term, initialTerm, mileage)
-            print()
-        elif response.status_code == 403:
+    baseUrl = "https://leaseloco.com/car-leasing/search"
+    for car in derivatives:
+        driver.get(baseUrl)
+        Search(driver, car)
+        try:
+            element = driver.find_element(By.CLASS_NAME, "link--result-row")        
+            url = element.get_attribute("href").split("/") 
+            urlArray = url
+            filters = urlArray[8].split("-")  
+            filters[0] = "2"
+            filters[1] = term
+            filters [2] = mileage
+            filters[3] = initialTerm
+            urlArray[8] = "-".join(filters)
+            url = "/".join(urlArray)
+            driver.get(url)
+            print(url)
+            
+            sleep(1)
+            rows += getElements(driver, car, term, initialTerm, mileage)
+            response = requests.get(url)
+        except:
+            print("no element")
+        if response.status_code == 403:
             print("forbidden")
         elif response.status_code == 404:
             print("not found")
+ 
     return rows
-
 #Enters search terms for make and model
 def Search(driver, derivative):
     sleep(1)
@@ -59,9 +70,7 @@ def Search(driver, derivative):
     searchBar.clear()
     searchBar.send_keys(derivative.replace("[", "").replace("]",""))
     sleep(1)
-    element = driver.find_element(By.CLASS_NAME, "button--review-deal")
-                                               
-    element.click()
+    
   
 
 def refine(driver, term, initialTerm, mileage):

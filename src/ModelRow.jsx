@@ -1,4 +1,4 @@
-const ModelRow = ({name, term, mileage, leasingPrice, selectPrice, locoPrice, derivative, pvPrice}) => {
+const ModelRow = ({element}) => {
     return(
         <div>
             <p className="inline-block">{name}</p>

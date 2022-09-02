@@ -48,8 +48,8 @@ const ScraperForm = ({setMake, setModel, setVariant, make, model, setDerivative}
               )
             })}
           </select>
-          <span className="text-lg font-semibold" id="variant-selector"> Derivative: </span>
-          <select name="Variant" id="variant" onChange={e => {setDerivative(e.target.value)}}>
+          <span className="text-lg font-semibold" id="derivative-selector"> Derivative: </span>
+          <select name="Variant" id="derivative" onChange={e => {setDerivative(e.target.value)}}>
           <option value="All">All</option>
             {derivativeList && derivativeList.map((data, index) => {
               return (
@@ -113,7 +113,6 @@ const populateVariantsFields = (modelString, setModel, setVariantList) => {
 
 const populateDerivativeFields = (variant, model, setVariant, setDerivativeList) => {
   variant = variant.replace(/['"]+/g, '')
-  console.log(variant, model)
   setVariant(variant)
   fetch(`http://localhost:5000/get/derivatives/${model.modelName}/${variant}`)
   .then(response => response.json())

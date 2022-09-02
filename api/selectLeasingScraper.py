@@ -38,7 +38,7 @@ def scrape(make,model,variant,derivative,term,initialTerm,mileage):
 
 def scrapeAll(make,model,variant,derivatives,term,initialTerm,mileage):
     options = Options()
-    options.headless = True
+    #options.headless = True
     path = "./venv/chromedriver.exe"
     driver = webdriver.Chrome(executable_path=path, options=options)
     driver.set_window_size(1024, 768)
@@ -46,8 +46,8 @@ def scrapeAll(make,model,variant,derivatives,term,initialTerm,mileage):
     rows = []
     for derivative in derivatives:
         time.sleep(0.8)
-
-        derivativeURI = derivative.replace("[", "").replace("]", "").replace(" ", "-").replace("/", "").replace(".", "-")
+        
+        derivativeURI = derivative.replace("[", "").replace("]", "").replace(" ", "-").replace("/", "").replace(".", "-").replace("+", "-plus-")
         url = (f"https://www.selectcarleasing.co.uk/car-leasing/{make}/{model.replace(' ', '-')}/{variant.replace(' ', '-')}/{derivativeURI}?".lower())
         if term :
             url += f"term={term}&"

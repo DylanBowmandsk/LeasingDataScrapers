@@ -14,9 +14,12 @@ const ScrapeButtons = ({make, model, variant, derivative, term, initialTerm, mil
 const scrapeAll = (make, model, variant, derivative,term, initialTerm, mileage, setLeasingData, setSelectData, setLocoData, setPvData) => {
   scrapeLeasingData(make, model, variant, derivative,term, initialTerm, mileage, setLeasingData)
   scrapeSelectData(make, model, variant, derivative, term, initialTerm, mileage, setSelectData)
-  //scrapeLocoData(make, model, variant, derivative, term, initialTerm, mileage, setLocoData)
+  scrapeLocoData(make, model, variant, derivative, term, initialTerm, mileage, setLocoData)
   scrapePvData(model, variant, derivative, term, initialTerm, mileage, setPvData)
-
+  setLeasingData([])
+  setLocoData([])
+  setSelectData([])
+  setPvData([])
 }
 
 const scrapePvData = (model, variant, derivative, term, initialTerm, mileage, setPvData) => {
@@ -58,6 +61,7 @@ const scrapeLeasingData = (make, model, variant, derivative,term, initialTerm, m
   else{
     fetch(`http://localhost:5000/leaseloco/scrape/${make.makeName}/${model.modelName}/${variant}/all/${term}/${initialTerm}/${mileage}`)
     .then(response => response.json()).then(data => {
+      console.log(data)
       setLocoData(data)
    })
   }
