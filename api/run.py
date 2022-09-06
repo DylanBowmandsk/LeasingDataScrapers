@@ -67,7 +67,7 @@ def getPvPrice(derivative,term,initialTerm,mileage):
     lowest = 0
     cars =[]
     derivative = derivative.replace("+","/")
-    for derivative, price in cursor.execute(f"SELECT [derivative], [monthly_rental] FROM [dbo].[LeasingPrices] where derivative = '{derivative}' and term = {term} and initial_profile = {initialTerm} and type = 'Personal' and mileage = {mileage}"):
+    for derivative, price in cursor.execute(f"SELECT [derivative], [monthly_rental], [initial_profile] FROM [dbo].[LeasingPrices] where derivative = '{derivative}' and term = {term} and initial_profile = {initialTerm} and type = 'Personal' and mileage = {mileage}"):
         if(lowest == 0 or lowest > price): lowest = price
         cars.append({"price": lowest,
         "derivative": derivative})
@@ -88,13 +88,15 @@ def getAllPvPrice(model, variant,term,initialTerm,mileage):
     for derivative in derivatives:
         lowest = 0
         print(derivative)
-        for derivative, price in cursor.execute(f"SELECT [derivative], [monthly_rental] FROM [dbo].[LeasingPrices] where derivative = '{derivative}' and term = {term} and mileage = {mileage} and initial_profile = {initialTerm} and type = 'Personal'"):
+        for derivative, price, upfront in cursor.execute(f"SELECT [derivative], [monthly_rental], [initial_profile] FROM [dbo].[LeasingPrices] where derivative = '{derivative}' and term = {term} and mileage = {mileage} and initial_profile = {initialTerm} and type = 'Personal'"):
             if(lowest == 0 or lowest > price): lowest = price
             cars.append({"price": lowest,
-            "derivative": derivative})
+            "derivative": derivative,
+            "upfrontCost": upfront})
         if (lowest == 0):
             cars.append({"price": "No Data",
-            "derivative": derivative})
+            "derivative": derivative,
+            "upfrontCost": "No Data"})
     return jsonify(cars)  
   
      

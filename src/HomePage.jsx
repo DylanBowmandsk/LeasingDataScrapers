@@ -25,7 +25,7 @@ const HomePage = () => {
             <ScraperForm setMake={setMake} setModel={setModel} setVariant={setVariant} make={make} model={model} derivative={derivative} setDerivative={setDerivative}/>
             <ScraperFilters setTerm={setTerm} setInitialTerm={setInitialTerm} setMileage={setMileage}/>
             <ScrapeButtons make={make} model={model} variant={variant} derivative={derivative} term={term} initialTerm={initialTerm} mileage={mileage} setLeasingData={setLeasingData} setSelectData={setSelectData} setLocoData={setLocoData} setPvData={setPvData}/>
-            <DataOut leasingData={leasingData} selectData={selectData} locoData={locoData} pvData={pvData}/>
+            <DataOut leasingData={leasingData} selectData={selectData} locoData={locoData} pvData={pvData} initialTerm={initialTerm}/>
         </div>
         
     )

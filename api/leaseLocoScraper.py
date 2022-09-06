@@ -50,17 +50,16 @@ def scrapeAll(make, model, variant, derivatives, term, initialTerm, mileage):
             url = "/".join(urlArray)
             driver.get(url)
             print(url)
-            
             sleep(1)
             rows += getElements(driver, car, term, initialTerm, mileage)
             response = requests.get(url)
+            if response.status_code == 403:
+                print("forbidden")
+            elif response.status_code == 404:
+                print("not found")
         except:
             print("no element")
-        if response.status_code == 403:
-            print("forbidden")
-        elif response.status_code == 404:
-            print("not found")
- 
+
     return rows
 #Enters search terms for make and model
 def Search(driver, derivative):
@@ -70,20 +69,6 @@ def Search(driver, derivative):
     searchBar.clear()
     searchBar.send_keys(derivative.replace("[", "").replace("]",""))
     sleep(1)
-    
-  
-
-def refine(driver, term, initialTerm, mileage):
-    initialTermButton = driver.find_element(By.CLASS_NAME, "lease-profile__initial-payment-in-months--"+initialTerm)
-    initialTermButton.click()
-    sleep(1)
-    termButton = driver.find_element(By.CLASS_NAME, "lease-profile__term--"+term)
-    termButton.click()
-    sleep(1)
-    mileageDropdown = Select(driver.find_element(By.ID, "mileage"))
-    element = mileageDropdown.select_by_value(mileage)
-    sleep(1)
-
 
 def getElements(driver, derivative, term, initialTerm, mileage):
     rows = []
@@ -92,7 +77,7 @@ def getElements(driver, derivative, term, initialTerm, mileage):
     name = nameContainer.find_element(By.TAG_NAME, "h1").get_attribute("innerHTML")
     priceContainer = driver.find_element(By.CLASS_NAME, 'price-page__price')
     price = priceContainer.find_element(By.TAG_NAME, "h2").get_attribute("innerHTML")
-    upfront  = priceContainer.find_element(By.TAG_NAME, "h2").get_attribute("innerHTML")
+    upfront  = priceContainer.find_element(By.CLASS_NAME, "mt-3").get_attribute("innerHTML")
 
     rows.append({"name": name,
             "price" : price,
