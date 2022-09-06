@@ -4,7 +4,13 @@ const ModelRow = ({element}) => {
             <div className="flex flex-row mx-20 mb-16 justify-center items-center">
                 <p className="block mr-10 w-60 text-lg">{element.derivative}</p>
                 <div className="mr-20">
-                    <p className="text-xl">Select Leasing</p>
+                    <p className="text-xl text-transparent">-</p>
+                    <p className="font-bold">Price</p>
+                    <p className="font-bold">Upfront</p>
+                    <p className="font-bold">Total Lease</p>
+                </div>
+                <div className="mr-20">
+                    <p className="text-xl w-40">Select Leasing</p>
                     <p>{element.selectPrice}</p>
                     <p>{element.selectUpfront}</p>
                     <p>{element.selectTotalLease}</p>
@@ -22,7 +28,7 @@ const ModelRow = ({element}) => {
                     <p>{element.leasingTotalLease}</p>
                 </div>
                 <div className="mr-20 w-40">
-                    <p className="text-xl">Pv Price</p>
+                    <p className="text-xl">Peter Vardy</p>
                     <p>{element.pvPrice}</p>
                     <p>{element.pvUpfront}</p>
                     <p>{element.pvTotalLease}</p>

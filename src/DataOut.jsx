@@ -19,7 +19,7 @@ const DataOutTest = ({leasingData, selectData, locoData, pvData, initialTerm}) =
                 return (
                     <div> 
                         {idx == 0 && <div>
-                            <h1 className="text-center text-4xl">{element.name}</h1>
+                            <h1 className="text-center text-4xl roboto-400">{element.name}</h1>
                             <h2 className="text-center ">Term {element.term} Months</h2>
                             <h2 className="text-center">Mileage {element.mileage} Miles</h2> 
                             <h2 className="text-center mb-10">Initial Term {initialTerm} Months</h2>
