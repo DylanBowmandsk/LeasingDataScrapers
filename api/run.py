@@ -6,6 +6,7 @@ import selectLeasingScraper
 import json
 import urllib.parse
 import sqlconnector
+import csv
 
 
 app = Flask(__name__)
@@ -43,9 +44,11 @@ def getPvModelsByMake(make):
     db = sqlconnector.initialiseDB()
     cursor = db.cursor()
     models = []
-    for uniqueID, model in cursor.execute("select uniqueID, Model from [Model Master] where not Model = '' and MakeID ="+str(make["makeID"])):
-        if model != "":
-            models.append(model)
+    for row in cursor.execute("select distinct Model from [LeasingPrices] where manufacturer ='"+str(make["makeName"])+"'"):
+        if(len(row) > 0):
+            for x in row:
+                print(x)
+                models.append(x)
     return jsonify(models)
 
 
@@ -65,7 +68,7 @@ def getPvVariantsRefined(make, model):
     db = sqlconnector.initialiseDB()
     cursor = db.cursor()
     variants = []
-    for row in cursor.execute("SELECT Distinct model  FROM [dbo].[LeasingPrices] where model like '" + model + " %' and manufacturer = '"+make+"'"):
+    for row in cursor.execute("SELECT Distinct model  FROM [dbo].[LeasingPrices] where range like '" + model + "%' and manufacturer = '"+make+"'"):
        for x in row:
             if(len(row) > 0):
                 variants.append(x[len(model)+ 1:])
@@ -84,6 +87,14 @@ def getPvDerivatives(model ,variant):
 @app.route("/scrape/all")
 def scrapeEverything():
     leaseLocoData = []
+    selectData = []
+    leasingData = []
+    derivatives = []
+    pvData = []
+    allData = []
+
+    
+
     makes = json.loads(getPvMakes().data)
     for make in makes:
         models = (json.loads(getPvModelsByMake(make).data))
@@ -94,10 +105,37 @@ def scrapeEverything():
             if variants != []:
                 print(variants)
                 for variant in variants:
-                    leaseLocoData.append(scrapeAllLeaseLoco(make["makeName"],model,variant,"36", "6", "5000"))
-                    print(leaseLocoData)
-                    scrapeAllLeasingcom(make["makeName"],model,variant,"36", "6", "5000")
-                    scrapeAllSelectLeasing(make["makeName"],model,variant,"36", "6", "5000")
+                    pvData = pvData + (json.loads(getAllPvPrice(model,variant,"36", "6", "5000").data))
+                   # leaseLocoData.append(json.loads(scrapeAllLeaseLoco(make["makeName"],model,variant,"36", "6", "5000").data))
+                    #leasingData.append(json.loads(scrapeAllLeasingcom(make["makeName"],model,variant,"36", "6", "5000").data))
+                   # selectData.append(json.loads(scrapeAllSelectLeasing(make["makeName"],model,variant,"36", "6", "5000").data))
+
+        for element in pvData:
+            if element["derivative"] not in derivatives:
+                derivatives.append(element["derivative"])    
+
+        for derivative in derivatives:
+            f = open('./list.csv', 'a', encoding='UTF8')
+            writer = csv.writer(f)
+            name = f"{make['makeName']} {model} {variant}"
+            pvPrice = ""
+            selectPrice = ""
+            locoPrice = ""
+            leasingPrice = ""
+
+            for pvCar in pvData:
+                if derivative == pvCar["derivative"]:
+                    pvPrice = pvCar["price"]
+
+            row = {"name" : name,
+                "derivative": derivative,
+                "pvPrice": pvPrice}
+            allData.append(row)  
+            writer.writerow([name, derivative, pvPrice])
+            f.close()
+
+    
+    print(allData)
     return "Building List"
     
 
