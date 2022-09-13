@@ -14,7 +14,7 @@ const ScraperForm = ({setMake, setModel, setVariant, make, model, setDerivative}
   
     return (
       <div>
-        <div className="mx-5">
+        <div className="mr-5 mt-3.5">
           <span className="text-lg font-semibold" id="make-selector">Make : </span>
           <select className="mr-10 rounded" name="make" id="make" onChange={e => {populateModelFields(e.target.value, setMake, setModelList, setVariantList, setDerivativeList)}}>
             <option value="">Brand</option>
@@ -60,7 +60,7 @@ const ScraperForm = ({setMake, setModel, setVariant, make, model, setDerivative}
             })}
           </select>
         </div>
-        <hr />
+
 
       </div>
     );
@@ -93,8 +93,10 @@ const populateMakeFields = (setMakeList) => {
         }
       });
       setModelList(list)
+      document.getElementById("model").value = "Model"
       setVariantList([])
       setDerivativeList([])
+      document.getElementById("derivative").value = "All"
     })
 }
 

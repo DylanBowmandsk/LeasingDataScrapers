@@ -53,7 +53,15 @@ def scrapeAll(make, model, variant, derivatives, term, initialTerm, mileage):
         elif response.status_code == 403:
             print("forbidden")
         elif response.status_code == 404:
-            print("not found")
+            rows.append({"name": make+ " " + model,
+            "price" : "No Data",
+            "mileage" : "No Data",
+            "upfrontCost": "No Data",
+            "additionalFees": "No Data",
+            "totalLease" : "No Data",
+            "term" : "No Data",
+            "initialTerm" : "No Data",
+            "derivative" : derivative})
     return rows
         
 

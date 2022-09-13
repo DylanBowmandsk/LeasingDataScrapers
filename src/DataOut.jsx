@@ -1,13 +1,18 @@
+import { setSelectionRange } from "@testing-library/user-event/dist/utils"
 import { useState } from "react"
 import { useEffect } from "react"
 import ModelRow from "./ModelRow"
 
-const DataOutTest = ({leasingData, selectData, locoData, pvData, initialTerm}) => {
+const DataOutTest = ({leasingData, selectData, locoData, pvData, initialTerm, term, mileage}) => {
     const [data , setData] = useState()
 
     useEffect(() => {
-        if(leasingData && selectData && locoData  && pvData){
-            collateData(leasingData, selectData, locoData, pvData, setData)
+        if(leasingData  && selectData  && locoData   && pvData ){
+            console.log(leasingData)
+            console.log(pvData)
+            console.log(locoData)
+            console.log(selectData)
+            collateData(leasingData, selectData, locoData, pvData, setData, term, initialTerm, mileage)
         }
       },[leasingData,selectData, pvData, locoData])
 
@@ -18,11 +23,11 @@ const DataOutTest = ({leasingData, selectData, locoData, pvData, initialTerm}) =
             {data && data.map((element, idx) => {   
                 return (
                     <div> 
-                        {idx == 0 && <div>
-                            <h1 className="text-center text-4xl roboto-400">{element.name}</h1>
-                            <h2 className="text-center ">Term {element.term} Months</h2>
-                            <h2 className="text-center">Mileage {element.mileage} Miles</h2> 
-                            <h2 className="text-center mb-10">Initial Term {initialTerm} Months</h2>
+                        {idx == 0 && <div className="text-center mt-10">
+                            <h1 className="text-4xl roboto-400">{element.name}</h1>
+                            <h2>Term {element.term} Months</h2>
+                            <h2>Mileage {element.mileage} Miles</h2> 
+                            <h2 className="mb-10">Initial Term {initialTerm} Months</h2>
                         </div>}
                         
                          <ModelRow element={element}/>
@@ -34,7 +39,7 @@ const DataOutTest = ({leasingData, selectData, locoData, pvData, initialTerm}) =
     )
 }
 
-const collateData = (leasingData, selectData, locoData, pvData, setData) => {
+const collateData = (leasingData, selectData, locoData, pvData, setData, term, initialTerm, mileage) => {
     let data = []
     let derivatives = []
 
@@ -44,15 +49,18 @@ const collateData = (leasingData, selectData, locoData, pvData, setData) => {
 
     derivatives.forEach(element => {
         let derivative = element
-        let name, term, mileage, leasingPrice, selectPrice, locoPrice, pvPrice, leasingTotalLease, locoUpfront, locoTotalLease, leasingUpfront, selectUpfront, selectTotalLease, pvTotalLease, pvUpfront
+        let name, leasingPrice, selectPrice, locoPrice, pvPrice, leasingTotalLease, locoUpfront, locoTotalLease, leasingUpfront, selectUpfront, selectTotalLease, pvTotalLease, pvUpfront
 
         selectData.forEach(selectCar => {
             if (selectCar.derivative === element){
-                term = selectCar.term
-                mileage = selectCar.mileage
                 selectPrice = selectCar.price
                 selectUpfront = selectCar.upfrontCost
-                selectTotalLease = "£"+new Intl.NumberFormat().format(parseInt(selectPrice.slice(1)) * (parseInt(term) - 1) + parseInt(selectUpfront.slice(1)))
+                if(selectCar.price != "No Data"){
+                    selectTotalLease = "£"+new Intl.NumberFormat().format(parseInt(selectPrice.slice(1)) * (parseInt(term) - 1) + parseInt(selectUpfront.slice(1)))
+                }
+                else{
+                    selectTotalLease = selectCar.price
+                }
                 
             }
         })
@@ -67,12 +75,13 @@ const collateData = (leasingData, selectData, locoData, pvData, setData) => {
         locoData.forEach(locoCar => {
             if (locoCar.derivative === element){
                 locoPrice = locoCar.price+"p/m"
+                if(locoCar.price == "No Data") locoPrice = locoCar.price
                 name = locoCar.name
                 locoUpfront = locoCar.upfrontCost
+                if(locoCar.price != "No Data")
                 locoTotalLease = "£"+new Intl.NumberFormat().format(parseInt(locoPrice.slice(1)) * (parseInt(term) - 1) + parseInt(locoUpfront.slice(1)))
+                else locoTotalLease ="No Data"
                 
-                term = locoCar.term
-                mileage = locoCar.mileage
             }
         })
         pvData.forEach(pvCar => {
@@ -88,6 +97,11 @@ const collateData = (leasingData, selectData, locoData, pvData, setData) => {
             }
             
         })
+        
+
+        let highest  = pvPrice > locoPrice && pvPrice && leasingPrice > selectPrice ? "pv" : locoPrice > pvPrice && locoPrice && leasingPrice > selectPrice ? "loco" : leasingPrice > pvPrice && leasingPrice > locoPrice && leasingPrice > selectPrice ? "leasingcom" : "select"
+        let lowest  = pvPrice < locoPrice && pvPrice && leasingPrice < selectPrice ? "pv" : locoPrice < pvPrice && locoPrice && leasingPrice < selectPrice ? "loco" : leasingPrice < pvPrice && leasingPrice < locoPrice && leasingPrice < selectPrice ? "leasingcom" : "select"
+
         data.push({"name":name,
                 "derivative": derivative,
                 "term": term,
@@ -103,7 +117,9 @@ const collateData = (leasingData, selectData, locoData, pvData, setData) => {
                 "selectUpfront": selectUpfront,
                 "selectTotalLease": selectTotalLease,
                 "pvUpfront": pvUpfront,
-                "pvTotalLease": pvTotalLease })
+                "pvTotalLease": pvTotalLease,
+                "highest": highest,
+               "lowest": lowest})
     })
     console.log(data)
     setData(data)

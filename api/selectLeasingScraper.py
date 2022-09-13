@@ -10,7 +10,12 @@ def scrape(make,model,variant,derivative,term,initialTerm,mileage):
     derivative = derivative.replace("]", "")
     derivative = derivative.replace(" ", "-")
     derivative = derivative.replace("/", "")
-    derivative = derivative.replace(".", "-")
+    print(make)
+    if  make == "HONDA":
+        derivative = derivative.replace(".", "")
+    else:
+        derivative = derivative.replace(".", "-")
+    derivativeOG = derivative
     url = (f"https://www.selectcarleasing.co.uk/car-leasing/{make}/{model.replace(' ', '-')}/{variant.replace(' ', '-')}/{derivative}?".lower())
     if term :
         url += f"term={term}&"
@@ -30,15 +35,15 @@ def scrape(make,model,variant,derivative,term,initialTerm,mileage):
         html = driver.page_source
         print(url)
         soup = BeautifulSoup(html, "html.parser")
-        return collateData(soup, make, model, derivative, term, initialTerm, mileage)
+        return collateData(soup, make, model, derivativeOG, term, initialTerm, mileage)
     elif response.status_code == 403:
         print("forbidden")
     elif response.status_code == 404:
         print("not found")
 
-def scrapeAll(make,model,variant,derivatives,term,initialTerm,mileage):
+def scrapeAllDerivatives(make,model,variant,derivatives,term,initialTerm,mileage):
     options = Options()
-    #options.headless = True
+    options.headless = True
     path = "./venv/chromedriver.exe"
     driver = webdriver.Chrome(executable_path=path, options=options)
     driver.set_window_size(1024, 768)
@@ -46,8 +51,13 @@ def scrapeAll(make,model,variant,derivatives,term,initialTerm,mileage):
     rows = []
     for derivative in derivatives:
         time.sleep(0.8)
-        
-        derivativeURI = derivative.replace("[", "").replace("]", "").replace(" ", "-").replace("/", "").replace(".", "-").replace("+", "-plus-")
+        derivativeOG = derivative
+        derivativeURI = derivative.replace("[", "").replace("]", "").replace(" ", "-").replace("/", "").replace("+", "-plus-")
+        if  make == "HONDA":
+            print(make)
+            derivativeURI = derivativeURI.replace(".", "")
+        else:
+            derivativeURI = derivativeURI.replace(".", "-")
         url = (f"https://www.selectcarleasing.co.uk/car-leasing/{make}/{model.replace(' ', '-')}/{variant.replace(' ', '-')}/{derivativeURI}?".lower())
         if term :
             url += f"term={term}&"
@@ -61,7 +71,7 @@ def scrapeAll(make,model,variant,derivatives,term,initialTerm,mileage):
             driver.get(url)
             html = driver.page_source
             soup = BeautifulSoup(html, "html.parser")
-            rows += collateData(soup, make, model, derivative, term, initialTerm, mileage)
+            rows += collateData(soup, make, model, derivativeOG, term, initialTerm, mileage)
         elif response.status_code == 403:
             print("forbidden")
         elif response.status_code == 404:
@@ -76,8 +86,6 @@ def collateData(soup, make, model, derivative, term, initialTerm, mileage):
         upfrontCostContainer = soup.find("div", "g-deal-options__upfront")
         upfrontCost = upfrontCostContainer.find("span").text
         additionalFees = soup.find("span", "c-list-table__data").text
-        derivative = soup.find("div", "c-title-block__inline").text
-
 
         rows.append({"name": make+ " " + model,
             "price" : price+"p/m",
@@ -87,7 +95,7 @@ def collateData(soup, make, model, derivative, term, initialTerm, mileage):
             "totalLease" : "totalLease",
             "term" : term + "Months",
             "initialTerm" : initialTerm,
-            "derivative" : derivative[0: -9]})
+            "derivative" : derivative})
     except:
         rows.append({"name": make+ " " + model,
             "price" : "No Data",

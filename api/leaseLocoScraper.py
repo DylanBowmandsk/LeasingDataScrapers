@@ -12,30 +12,58 @@ from selenium.webdriver.support.ui import Select
 
 # global scrape function for lease loco
 def scrape(make,model,variant, derivative, term, initialTerm, mileage):
-    path = "./venv/chromedriver.exe"
-    options = Options()
-    driver = webdriver.Chrome(executable_path=path, options=options)
-    url = "https://leaseloco.com/car-leasing/search"
-    driver.get(url)
-    Search(driver, derivative)
-    sleep(1)
-    rows = getElements(driver, derivative, term, initialTerm, mileage)
-    response = requests.get(url)
-    if response.status_code == 200:
-        return rows
-    elif response.status_code == 403:
-        print("forbidden")
-    elif response.status_code == 404:
-        print("not found")
-
-def scrapeAll(make, model, variant, derivatives, term, initialTerm, mileage):
     rows = []
     path = "./venv/chromedriver.exe"
     options = Options()
+    #options.headless = True
+    driver = webdriver.Chrome(executable_path=path, options=options)
+    baseUrl = "https://leaseloco.com/car-leasing/search"
+
+    driver.get(baseUrl)
+    Search(driver, derivative)
+    try:
+        element = driver.find_element(By.CLASS_NAME, "link--result-row")        
+        url = element.get_attribute("href").split("/") 
+        urlArray = url
+        filters = urlArray[8].split("-")  
+        filters[0] = "2"
+        filters[1] = term
+        filters [2] = mileage
+        filters[3] = initialTerm
+        urlArray[8] = "-".join(filters)
+        url = "/".join(urlArray)
+        driver.get(url)
+        print(url)
+        sleep(1)
+        rows += getElements(driver, derivative, term, initialTerm, mileage)
+        response = requests.get(url)
+        if response.status_code == 403:
+            print("forbidden")
+        elif response.status_code == 404:
+            print("not found")
+    except:
+        rows.append({"name": make+ " " + model,
+        "price" : "No Data",
+        "mileage" : "No Data",
+        "upfrontCost": "No Data",
+        "additionalFees": "No Data",
+        "totalLease" : "No Data",
+        "term" : "No Data",
+        "initialTerm" : "No Data",
+        "derivative" : derivative})
+
+    return rows
+
+def scrapeAllDerivatives(make, model, derivatives, term, initialTerm, mileage):
+    rows = []
+    path = "./venv/chromedriver.exe"
+    options = Options()
+    #options.headless = True
     driver = webdriver.Chrome(executable_path=path, options=options)
     baseUrl = "https://leaseloco.com/car-leasing/search"
     for car in derivatives:
         driver.get(baseUrl)
+        sleep(1)
         Search(driver, car)
         try:
             element = driver.find_element(By.CLASS_NAME, "link--result-row")        
@@ -53,12 +81,21 @@ def scrapeAll(make, model, variant, derivatives, term, initialTerm, mileage):
             sleep(1)
             rows += getElements(driver, car, term, initialTerm, mileage)
             response = requests.get(url)
+            print(url)
             if response.status_code == 403:
                 print("forbidden")
             elif response.status_code == 404:
                 print("not found")
         except:
-            print("no element")
+            rows.append({"name": make+ " " + model,
+            "price" : "No Data",
+            "mileage" : "No Data",
+            "upfrontCost": "No Data",
+            "additionalFees": "No Data",
+            "totalLease" : "No Data",
+            "term" : "No Data",
+            "initialTerm" : "No Data",
+            "derivative" : car})
 
     return rows
 #Enters search terms for make and model

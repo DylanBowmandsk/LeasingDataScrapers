@@ -7,11 +7,9 @@ import json
 import urllib.parse
 import sqlconnector
 
+
 app = Flask(__name__)
 CORS(app)
-
-
-
 
 @app.route("/")
 def index():
@@ -40,6 +38,17 @@ def getPvModels():
             "modelName": model})
     return jsonify(models)
 
+@app.route("/get/models/<make>")
+def getPvModelsByMake(make):
+    db = sqlconnector.initialiseDB()
+    cursor = db.cursor()
+    models = []
+    for uniqueID, model in cursor.execute("select uniqueID, Model from [Model Master] where not Model = '' and MakeID ="+str(make["makeID"])):
+        if model != "":
+            models.append(model)
+    return jsonify(models)
+
+
 @app.route("/get/variants/<model>")
 def getPvVariants(model):
     db = sqlconnector.initialiseDB()
@@ -47,7 +56,19 @@ def getPvVariants(model):
     variants = []
     for row in cursor.execute("SELECT Distinct model  FROM [dbo].[LeasingPrices] where model like '" + model + " %'"):
        for x in row:
-             variants.append(x[len(model)+ 1:])
+            if(len(row) > 0):
+                variants.append(x[len(model)+ 1:])
+    return jsonify(variants)
+
+@app.route("/get/variants/<make>/<model>")
+def getPvVariantsRefined(make, model):
+    db = sqlconnector.initialiseDB()
+    cursor = db.cursor()
+    variants = []
+    for row in cursor.execute("SELECT Distinct model  FROM [dbo].[LeasingPrices] where model like '" + model + " %' and manufacturer = '"+make+"'"):
+       for x in row:
+            if(len(row) > 0):
+                variants.append(x[len(model)+ 1:])
     return jsonify(variants)
 
 @app.route("/get/derivatives/<model>/<variant>")
@@ -60,6 +81,26 @@ def getPvDerivatives(model ,variant):
                 derivatives.append(x)
     return jsonify(derivatives)
 
+@app.route("/scrape/all")
+def scrapeEverything():
+    leaseLocoData = []
+    makes = json.loads(getPvMakes().data)
+    for make in makes:
+        models = (json.loads(getPvModelsByMake(make).data))
+        for model in models:
+            variants = json.loads(getPvVariantsRefined(make["makeName"],model).data)
+            print(make)
+            print(model)
+            if variants != []:
+                print(variants)
+                for variant in variants:
+                    leaseLocoData.append(scrapeAllLeaseLoco(make["makeName"],model,variant,"36", "6", "5000"))
+                    print(leaseLocoData)
+                    scrapeAllLeasingcom(make["makeName"],model,variant,"36", "6", "5000")
+                    scrapeAllSelectLeasing(make["makeName"],model,variant,"36", "6", "5000")
+    return "Building List"
+    
+
 @app.route("/pv/scrape/<derivative>/<term>/<initialTerm>/<mileage>")
 def getPvPrice(derivative,term,initialTerm,mileage):
     db = sqlconnector.initialiseDB()
@@ -67,13 +108,15 @@ def getPvPrice(derivative,term,initialTerm,mileage):
     lowest = 0
     cars =[]
     derivative = derivative.replace("+","/")
-    for derivative, price in cursor.execute(f"SELECT [derivative], [monthly_rental], [initial_profile] FROM [dbo].[LeasingPrices] where derivative = '{derivative}' and term = {term} and initial_profile = {initialTerm} and type = 'Personal' and mileage = {mileage}"):
+    for derivative, price, upfront in cursor.execute(f"SELECT [derivative], [monthly_rental], [initial_profile] FROM [dbo].[LeasingPrices] where derivative = '{derivative}' and term = {term} and initial_profile = {initialTerm} and type = 'Personal' and mileage = {mileage}"):
         if(lowest == 0 or lowest > price): lowest = price
         cars.append({"price": lowest,
-        "derivative": derivative})
+        "derivative": derivative,
+        "upfrontCost": upfront})
     if (len(cars) == 0):
         cars.append({"price": "No Data",
-        "derivative": derivative})
+        "derivative": derivative,
+        "upfrontCost": "No Data"})
         return(jsonify(cars))
     return jsonify(cars)  
     
@@ -130,7 +173,6 @@ def scrapeAllLeasingcom(make,model,variant,term,initialTerm,mileage):
 
 @app.route("/leaseloco/scrape/<make>/<model>/<variant>/<derivative>/<term>/<initialTerm>/<mileage>")
 def scrapeLeaseLoco(make,model,variant,derivative,term,initialTerm,mileage):
-    derivative = derivative.replace("+" , "/")
     return jsonify(leaseLocoScraper.scrape(make,model,variant,derivative,term,initialTerm,mileage))
 
 @app.route("/leaseloco/scrape/<make>/<model>/<variant>/all/<term>/<initialTerm>/<mileage>")
@@ -140,7 +182,7 @@ def scrapeAllLeaseLoco(make,model,variant,term,initialTerm,mileage):
     data = json.loads(getPvDerivatives(model, variant).data)
     for derivative in data:
         derivatives.append(derivative)
-    return jsonify(leaseLocoScraper.scrapeAll(make,model,variant, derivatives,term,initialTerm,mileage))
+    return jsonify(leaseLocoScraper.scrapeAllDerivatives(make,model,derivatives,term,initialTerm,mileage))
 
 @app.route("/selectleasing/scrape/<make>/<model>/<variant>/<derivative>/<term>/<initialTerm>/<mileage>")
 def scrapeSelectLeasing(make, model, variant,derivative,term,initialTerm,mileage):
@@ -151,20 +193,6 @@ def scrapeAllSelectLeasing(make,model,variant,term,initialTerm,mileage):
     derivatives = []
     for derivative in json.loads(getPvDerivatives(model, variant).data):
         derivatives.append(derivative)
-    return jsonify(selectLeasingScraper.scrapeAll(make, model,variant, derivatives, term, initialTerm, mileage))
+    return jsonify(selectLeasingScraper.scrapeAllDerivatives(make, model,variant, derivatives, term, initialTerm, mileage))
 
-@app.route("/admin/add/<makeID>/<modelID>/<variant>", methods = ['POST'])
-def addCar(makeID, modelID, variant):
-    cursor.execute(f"INSERT INTO ModelTrimMaster VALUES ('{variant}', '{modelID}')")
-    return "posted"
-
-@app.route("/admin/delete/<makeID>/<modelID>/<variant>", methods = ['POST'])
-def deleteCar(makeID, modelID, variant):
-    cursor.execute(f"DELETE FROM ModelTrimMaster WHERE UniqueID = '{variant}'")
-    return "posted"
-
-@app.route("/admin/edit/<makeID>/<modelID>/<variant>/<input>", methods = ['POST'])
-def editCar(makeID, modelID, variant, input):
-    cursor.execute(f"UPDATE ModelTrimMaster set ModelTrim = '{input}' WHERE UniqueID=CAST({variant} AS INT)")
-    return "posted"
 
