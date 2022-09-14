@@ -6,6 +6,10 @@ import time
 
 def scrape(make, model, variant, derivative, term, initialTerm, Mileage):
     derivativeURI = derivative.replace("[", "").replace("]", "").replace(" ", "-").replace(".", "-").replace("+", "-")
+    if variant == "595C CONVERTIBLE" or variant == "695C CONVERTIBLE":
+        variant = variant[len(model):]
+    else:
+        variant = variant[len(model) + 1:]
     url = f"https://leasing.com/car-leasing/{make}/{model.replace(' ', '-')}/{variant.replace(' ', '-')}/{derivativeURI}/?finance=personal&".lower()
     if term :
         url += f"term={int(term)-1}&"

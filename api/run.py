@@ -82,7 +82,7 @@ def scrapeEverything():
                     pvData = (json.loads(getAllPvPrice(model,variant,"36", "6", "5000").data))
                     leaseLocoData = (json.loads(scrapeAllLeaseLoco(make,model,variant,"36", "6", "5000").data))
                     leasingData = (json.loads(scrapeAllLeasingcom(make,model,variant,"36", "6", "5000").data))
-                    selectData = selectData + (json.loads(scrapeAllSelectLeasing(make,model,variant,"36", "6", "5000").data))
+                    #selectData = (json.loads(scrapeAllSelectLeasing(make,model,variant,"36", "6", "5000").data))
 
                     derivatives = []
 
@@ -115,7 +115,7 @@ def scrapeEverything():
                             "derivative": derivative,
                             "pvPrice": pvPrice}
                         allData.append(row)  
-                        writer.writerow([name, derivative, "£"+pvPrice+"p/m", locoPrice+"p/m", leasingPrice, selectPrice ])
+                        writer.writerow([name, derivative, "£"+pvPrice+"p/m", locoPrice+"p/m", leasingPrice])
                         f.close()
 
     return "Building List"

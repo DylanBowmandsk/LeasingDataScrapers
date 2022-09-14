@@ -30,7 +30,7 @@ const scrapePvData = (model, variant, derivative, term, initialTerm, mileage, se
     console.log(data)
     setPvData(data)
   })}
-  else {fetch(`http://localhost:5000/pv/scrape/${model.modelName}/${variant}/all/${term}/${initialTerm}/${mileage}`)
+  else {fetch(`http://localhost:5000/pv/scrape/${model}/${variant}/all/${term}/${initialTerm}/${mileage}`)
   .then(response => response.json()).then(data => {
     setPvData(data)
   })
@@ -39,12 +39,12 @@ const scrapePvData = (model, variant, derivative, term, initialTerm, mileage, se
 const scrapeLeasingData = (make, model, variant, derivative,term, initialTerm, mileage, setLeasingData) => {
   derivative = derivative.replace("/", "").replace(/['"]+/g, '')
   if( derivative !== "All"){
-    fetch(`http://localhost:5000/leasingcom/scrape/${make.makeName}/${model.modelName}/${variant}/${derivative}/${term}/${initialTerm}/${mileage}`)
+    fetch(`http://localhost:5000/leasingcom/scrape/${make}/${model}/${variant}/${derivative}/${term}/${initialTerm}/${mileage}`)
     .then(response => response.json()).then(data => {
       setLeasingData(data)
     })
   }
-  else {fetch(`http://localhost:5000/leasingcom/scrape/${make.makeName}/${model.modelName}/${variant}/all/${term}/${initialTerm}/${mileage}`)
+  else {fetch(`http://localhost:5000/leasingcom/scrape/${make}/${model}/${variant}/all/${term}/${initialTerm}/${mileage}`)
     .then(response => response.json()).then(data => {
       setLeasingData(data)
     })
@@ -53,13 +53,13 @@ const scrapeLeasingData = (make, model, variant, derivative,term, initialTerm, m
   const scrapeLocoData = (make, model, variant, derivative,term, initialTerm, mileage, setLocoData) => {
     derivative = derivative.replace(/['"]+/g, '').replace("/", "+")
     if( derivative !== "All"){
-      fetch(`http://localhost:5000/leaseloco/scrape/${make.makeName}/${model.modelName}/${variant}/${derivative}/${term}/${initialTerm}/${mileage}`)
+      fetch(`http://localhost:5000/leaseloco/scrape/${make}/${model}/${variant}/${derivative}/${term}/${initialTerm}/${mileage}`)
       .then(response => response.json()).then(data => {
         setLocoData(data)
      })
   }
   else{
-    fetch(`http://localhost:5000/leaseloco/scrape/${make.makeName}/${model.modelName}/${variant}/all/${term}/${initialTerm}/${mileage}`)
+    fetch(`http://localhost:5000/leaseloco/scrape/${make}/${model}/${variant}/all/${term}/${initialTerm}/${mileage}`)
     .then(response => response.json()).then(data => {
       setLocoData(data)
    })
@@ -69,12 +69,12 @@ const scrapeLeasingData = (make, model, variant, derivative,term, initialTerm, m
   const scrapeSelectData = (make, model, variant, derivative, term, initialTerm, mileage, setSelectData) => {
     derivative = derivative.replace(/['"]+/g, '').replace("/", "")
     if( derivative !== "All"){
-      fetch(`http://localhost:5000/selectleasing/scrape/${make.makeName}/${model.modelName}/${variant}/${derivative}/${term}/${initialTerm}/${mileage}`)
+      fetch(`http://localhost:5000/selectleasing/scrape/${make}/${model}/${variant}/${derivative}/${term}/${initialTerm}/${mileage}`)
       .then(response => response.json()).then(data => {
         setSelectData(data)
     })
     }else{
-      fetch(`http://localhost:5000/selectleasing/scrape/${make.makeName}/${model.modelName}/${variant}/all/${term}/${initialTerm}/${mileage}`)
+      fetch(`http://localhost:5000/selectleasing/scrape/${make}/${model}/${variant}/all/${term}/${initialTerm}/${mileage}`)
       .then(response => response.json()).then(data => {
         setSelectData(data)
     })
