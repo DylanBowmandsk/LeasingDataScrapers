@@ -35,6 +35,11 @@ def scrape(make, model, variant, derivative, term, initialTerm, Mileage):
 
 def scrapeAll(make, model, variant, derivatives, term, initialTerm, mileage):
     rows = []
+    if variant == "595C CONVERTIBLE" or variant == "695C CONVERTIBLE":
+        variant = variant[len(model):]
+    else:
+        variant = variant[len(model) + 1:]
+
     for derivative in derivatives:
         time.sleep(3.5)
         derivativeURI = derivative.replace("[", "").replace("]", "").replace(" ", "-").replace("/", "").replace(".", "-").replace("+", "-")

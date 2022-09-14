@@ -21,18 +21,18 @@ const ScraperForm = ({setMake, setModel, setVariant, make, model, setDerivative}
             {makeList && makeList.map((data, index) => {
               return (
               <option key={index} value={JSON.stringify(data)}>
-                {data.makeName}
+                {data}
               </option>
               )
             })}
           </select>
           <span className="text-lg font-semibold" id="model-selector">Model: </span>
-          <select name="model" id="model" onChange={e => {populateVariantsFields(e.target.value, setModel, setVariantList, setDerivativeList)}}>
+          <select name="model" id="model" onChange={e => {populateVariantsFields(make, e.target.value, setModel, setVariantList, setDerivativeList)}}>
             <option value="">Model</option>
             {modelList && modelList.map((data, index) => {
               return (
               <option key={index} value={JSON.stringify(data)}>
-                {data.modelName}
+                {data}
               </option>
               )
             })}
@@ -83,14 +83,13 @@ const populateMakeFields = (setMakeList) => {
   const populateModelFields = (makeString, setMake, setModelList, setVariantList, setDerivativeList) => {
     let make = JSON.parse(makeString)
     setMake(make)
-    fetch("http://localhost:5000/get/models")
+    fetch(`http://localhost:5000/get/models/${make.replace(/['"]+/g, '')}`)
     .then(response => response.json())
     .then(data => {
       let list = []
       data.forEach((element) => {
-        if(make.makeID === element.makeID){
-          list.push(element)
-        }
+        list.push(element)
+        
       });
       setModelList(list)
       document.getElementById("model").value = "Model"
@@ -101,24 +100,26 @@ const populateMakeFields = (setMakeList) => {
 }
 
 //makes api call and fills out input fields of all model variants we have in stock
-const populateVariantsFields = (modelString, setModel, setVariantList, setDerivativeList) => {
-  let model = JSON.parse(modelString)
+const populateVariantsFields = (make, model, setModel, setVariantList, setDerivativeList) => {
+  model = model.replace(/['"]+/g, '')
   setModel(model)
-  fetch(`http://localhost:5000/get/variants/${model.modelName}`)
+  console.log(model)
+  fetch(`http://localhost:5000/get/variants/${make.replace(/['"]+/g, '')}/${model}`)
   .then(response => response.json())
   .then(data => {
     try{
       let list = []
       data.forEach(element => {
         list.push(element)
+        console.log(element)
     });
     if(data.length < 1) alert("No matches")
-    setVariantList(list)
-    setDerivativeList([])
+      setVariantList(list)
+      setDerivativeList([])
   }catch{
-    alert("no matches")
-    setVariantList([])
-    setDerivativeList([])
+      alert("no matches")
+      setVariantList([])
+      setDerivativeList([])
   }
   })
 }
@@ -126,7 +127,7 @@ const populateVariantsFields = (modelString, setModel, setVariantList, setDeriva
 const populateDerivativeFields = (variant, model, setVariant, setDerivativeList) => {
   variant = variant.replace(/['"]+/g, '')
   setVariant(variant)
-  fetch(`http://localhost:5000/get/derivatives/${model.modelName}/${variant}`)
+  fetch(`http://localhost:5000/get/derivatives/${model.replace(/['"]+/g, '')}/${variant}`)
   .then(response => response.json())
   .then(data => {
     try{

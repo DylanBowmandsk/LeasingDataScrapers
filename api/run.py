@@ -21,57 +21,33 @@ def getPvMakes():
     db = sqlconnector.initialiseDB()
     cursor = db.cursor()
     makes = []
-    for i, make in cursor.execute("select * from [Make Master] where not Make = ''"):
-        if make != "":
-            makes.append({"makeID": i,
-            "makeName": make})
-    return jsonify(makes)
-
-@app.route("/get/models")
-def getPvModels():
-    db = sqlconnector.initialiseDB()
-    cursor = db.cursor()
-    models = []
-    for id, makeID , model in cursor.execute("select UniqueID, MakeID, Model from [Model Master] where not Model = ''"):
-        if model != "":
-            models.append({"modelID" : id,
-            "makeID": makeID,
-            "modelName": model})
-    return jsonify(models)
-
-@app.route("/get/models/<make>")
-def getPvModelsByMake(make):
-    db = sqlconnector.initialiseDB()
-    cursor = db.cursor()
-    models = []
-    for row in cursor.execute("select distinct Model from [LeasingPrices] where manufacturer ='"+str(make["makeName"])+"'"):
+    for row in cursor.execute("select distinct manufacturer from [LeasingPrices] where not manufacturer = ''"):
         if(len(row) > 0):
             for x in row:
-                print(x)
+                makes.append(x)
+    return jsonify(makes)
+
+@app.route("/get/models/<make>")
+def getPvModels(make):
+    db = sqlconnector.initialiseDB()
+    cursor = db.cursor()
+    models = []
+    for row in cursor.execute("select distinct range from [LeasingPrices] where manufacturer ='"+make+"'"):
+        if(len(row) > 0):
+            for x in row:
                 models.append(x)
     return jsonify(models)
 
 
-@app.route("/get/variants/<model>")
-def getPvVariants(model):
-    db = sqlconnector.initialiseDB()
-    cursor = db.cursor()
-    variants = []
-    for row in cursor.execute("SELECT Distinct model  FROM [dbo].[LeasingPrices] where model like '" + model + " %'"):
-       for x in row:
-            if(len(row) > 0):
-                variants.append(x[len(model)+ 1:])
-    return jsonify(variants)
-
 @app.route("/get/variants/<make>/<model>")
-def getPvVariantsRefined(make, model):
+def getPvVariants(make, model):
     db = sqlconnector.initialiseDB()
     cursor = db.cursor()
     variants = []
     for row in cursor.execute("SELECT Distinct model  FROM [dbo].[LeasingPrices] where range like '" + model + "%' and manufacturer = '"+make+"'"):
        for x in row:
             if(len(row) > 0):
-                variants.append(x[len(model)+ 1:])
+                variants.append(x)
     return jsonify(variants)
 
 @app.route("/get/derivatives/<model>/<variant>")
@@ -79,63 +55,69 @@ def getPvDerivatives(model ,variant):
     db = sqlconnector.initialiseDB()
     cursor = db.cursor()
     derivatives = []
-    for row in cursor.execute(f"SELECT Distinct derivative  FROM [dbo].[LeasingPrices] where model like '{model} {variant}'"):
+    for row in cursor.execute(f"SELECT Distinct derivative  FROM [dbo].[LeasingPrices] where model like '{variant}'"):
         for x in row:
-                derivatives.append(x)
+            derivatives.append(x)
     return jsonify(derivatives)
 
 @app.route("/scrape/all")
 def scrapeEverything():
+    allData = []
     leaseLocoData = []
     selectData = []
     leasingData = []
-    derivatives = []
     pvData = []
-    allData = []
-
     
 
     makes = json.loads(getPvMakes().data)
     for make in makes:
-        models = (json.loads(getPvModelsByMake(make).data))
+        models = (json.loads(getPvModels(make).data))
         for model in models:
-            variants = json.loads(getPvVariantsRefined(make["makeName"],model).data)
+            variants = json.loads(getPvVariants(make,model).data)
             print(make)
             print(model)
             if variants != []:
                 print(variants)
                 for variant in variants:
-                    pvData = pvData + (json.loads(getAllPvPrice(model,variant,"36", "6", "5000").data))
-                   # leaseLocoData.append(json.loads(scrapeAllLeaseLoco(make["makeName"],model,variant,"36", "6", "5000").data))
-                    #leasingData.append(json.loads(scrapeAllLeasingcom(make["makeName"],model,variant,"36", "6", "5000").data))
-                   # selectData.append(json.loads(scrapeAllSelectLeasing(make["makeName"],model,variant,"36", "6", "5000").data))
+                    pvData = (json.loads(getAllPvPrice(model,variant,"36", "6", "5000").data))
+                    leaseLocoData = (json.loads(scrapeAllLeaseLoco(make,model,variant,"36", "6", "5000").data))
+                    leasingData = (json.loads(scrapeAllLeasingcom(make,model,variant,"36", "6", "5000").data))
+                    selectData = selectData + (json.loads(scrapeAllSelectLeasing(make,model,variant,"36", "6", "5000").data))
 
-        for element in pvData:
-            if element["derivative"] not in derivatives:
-                derivatives.append(element["derivative"])    
+                    derivatives = []
 
-        for derivative in derivatives:
-            f = open('./list.csv', 'a', encoding='UTF8')
-            writer = csv.writer(f)
-            name = f"{make['makeName']} {model} {variant}"
-            pvPrice = ""
-            selectPrice = ""
-            locoPrice = ""
-            leasingPrice = ""
+                    for element in pvData:
+                        if element["derivative"] not in derivatives:
+                            derivatives.append(element["derivative"])    
+                    for derivative in derivatives:
+                        f = open('./list.csv', 'a', encoding='UTF8', newline='')
+                        writer = csv.writer(f)
+                        name = f"{make} {variant}"
+                        pvPrice = ""
+                        selectPrice = ""
+                        locoPrice = ""
+                        leasingPrice = ""
 
-            for pvCar in pvData:
-                if derivative == pvCar["derivative"]:
-                    pvPrice = pvCar["price"]
+                        for pvCar in pvData:
+                            if derivative == pvCar["derivative"]:
+                                pvPrice = pvCar["price"]
+                        for locoCar in leaseLocoData:
+                            if derivative == locoCar["derivative"]:
+                                locoPrice = locoCar["price"]
+                        for leasingCar in leasingData:
+                            if derivative == leasingCar["derivative"]:
+                                leasingPrice = leasingCar["price"]
+                        for selectCar in selectData:
+                            if derivative == selectCar["derivative"]:
+                                selectPrice = selectCar["price"]
 
-            row = {"name" : name,
-                "derivative": derivative,
-                "pvPrice": pvPrice}
-            allData.append(row)  
-            writer.writerow([name, derivative, pvPrice])
-            f.close()
+                        row = {"name" : name,
+                            "derivative": derivative,
+                            "pvPrice": pvPrice}
+                        allData.append(row)  
+                        writer.writerow([name, derivative, "£"+pvPrice+"p/m", locoPrice+"p/m", leasingPrice, selectPrice ])
+                        f.close()
 
-    
-    print(allData)
     return "Building List"
     
 

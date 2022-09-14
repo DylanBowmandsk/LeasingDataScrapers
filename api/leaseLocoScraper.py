@@ -125,6 +125,5 @@ def getElements(driver, derivative, term, initialTerm, mileage):
             "initialTerm" : initialTerm,
             "derivative" : derivative})
 
-    print(rows)
     return rows
 

@@ -11,7 +11,7 @@ def scrape(make,model,variant,derivative,term,initialTerm,mileage):
     derivative = derivative.replace(" ", "-")
     derivative = derivative.replace("/", "")
     print(make)
-    if  make == "HONDA":
+    if  make == "HONDA" or make == "ABARTH":
         derivative = derivative.replace(".", "")
     else:
         derivative = derivative.replace(".", "-")
@@ -42,6 +42,11 @@ def scrape(make,model,variant,derivative,term,initialTerm,mileage):
         print("not found")
 
 def scrapeAllDerivatives(make,model,variant,derivatives,term,initialTerm,mileage):
+    if variant == "595C CONVERTIBLE" or variant == "695C CONVERTIBLE":
+        variant = variant[len(model) + 2:]
+    else:
+        variant = variant[len(model) + 1:]
+
     options = Options()
     options.headless = True
     path = "./venv/chromedriver.exe"
@@ -53,8 +58,7 @@ def scrapeAllDerivatives(make,model,variant,derivatives,term,initialTerm,mileage
         time.sleep(0.8)
         derivativeOG = derivative
         derivativeURI = derivative.replace("[", "").replace("]", "").replace(" ", "-").replace("/", "").replace("+", "-plus-")
-        if  make == "HONDA":
-            print(make)
+        if  make == "HONDA" or make == "ABARTH":
             derivativeURI = derivativeURI.replace(".", "")
         else:
             derivativeURI = derivativeURI.replace(".", "-")
