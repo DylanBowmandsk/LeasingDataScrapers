@@ -1,3 +1,4 @@
+from ast import arg
 from flask import Flask, jsonify
 from flask_cors import CORS
 import leasingScraper
@@ -7,6 +8,7 @@ import json
 import urllib.parse
 import sqlconnector
 import csv
+from threading import Thread
 
 
 app = Flask(__name__)
@@ -67,7 +69,6 @@ def scrapeEverything():
     selectData = []
     leasingData = []
     pvData = []
-    
 
     makes = json.loads(getPvMakes().data)
     for make in makes:
@@ -79,10 +80,19 @@ def scrapeEverything():
             if variants != []:
                 print(variants)
                 for variant in variants:
-                    pvData = (json.loads(getAllPvPrice(model,variant,"36", "6", "5000").data))
-                    leaseLocoData = (json.loads(scrapeAllLeaseLoco(make,model,variant,"36", "6", "5000").data))
-                    leasingData = (json.loads(scrapeAllLeasingcom(make,model,variant,"36", "6", "5000").data))
-                    #selectData = (json.loads(scrapeAllSelectLeasing(make,model,variant,"36", "6", "5000").data))
+                    pvData = (json.loads(getAllPvPrice(model,variant,"36", "6", "5000").data)) 
+                    llt =CustomThread(target=scrapeAllLeaseLoco, args=[make,model,variant,"36", "6", "5000"])
+                    lt = CustomThread(target=scrapeAllLeasingcom, args=[make,model,variant,"36", "6", "5000"])
+                    slt = CustomThread(target=scrapeAllSelectLeasing, args=[make,model,variant,"36", "6", "5000"])
+                    llt.start()
+                    lt.start()
+                    slt.start()
+                    llt.join()
+                    lt.join()
+                    slt.join()
+                    leaseLocoData = llt.value
+                    leasingData = lt.value
+                    selectData = slt.value
 
                     derivatives = []
 
@@ -115,7 +125,7 @@ def scrapeEverything():
                             "derivative": derivative,
                             "pvPrice": pvPrice}
                         allData.append(row)  
-                        writer.writerow([name, derivative, "£"+pvPrice+"p/m", locoPrice+"p/m", leasingPrice])
+                        writer.writerow([name, derivative, "£"+pvPrice+"p/m", locoPrice+"p/m", leasingPrice, selectPrice])
                         f.close()
 
     return "Building List"
@@ -215,4 +225,16 @@ def scrapeAllSelectLeasing(make,model,variant,term,initialTerm,mileage):
         derivatives.append(derivative)
     return jsonify(selectLeasingScraper.scrapeAllDerivatives(make, model,variant, derivatives, term, initialTerm, mileage))
 
-
+class CustomThread(Thread):
+    def __init__(self, target,args ):
+        Thread.__init__(self)
+        self.target = target
+        self.make = args[0]
+        self.model = args[1]
+        self.variant = args[2]
+        self.term = args[3]
+        self.initial = args[4]
+        self.mileage = args[5]
+    def run(self):
+        with app.app_context():
+            self.value = (json.loads(self.target(self.make,self.model,self.variant,self.term,self.initial,self.mileage).data))

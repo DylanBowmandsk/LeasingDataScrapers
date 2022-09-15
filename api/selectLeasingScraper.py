@@ -49,6 +49,8 @@ def scrapeAllDerivatives(make,model,variant,derivatives,term,initialTerm,mileage
 
     options = Options()
     options.headless = True
+    options.add_argument("--incognito")
+    options.add_argument(f'user-agent={"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.56 Safari/537.36"}')
     path = "./venv/chromedriver.exe"
     driver = webdriver.Chrome(executable_path=path, options=options)
     driver.set_window_size(1024, 768)
