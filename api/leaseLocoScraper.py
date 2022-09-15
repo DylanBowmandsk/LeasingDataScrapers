@@ -22,7 +22,7 @@ def scrape(make,model,variant, derivative, term, initialTerm, mileage):
     baseUrl = "https://leaseloco.com/car-leasing/search"
 
     driver.get(baseUrl)
-    Search(driver, derivative)
+    Search(driver, derivative, model)
     try:
         element = driver.find_element(By.CLASS_NAME, "link--result-row")        
         url = element.get_attribute("href").split("/") 
@@ -36,7 +36,7 @@ def scrape(make,model,variant, derivative, term, initialTerm, mileage):
         url = "/".join(urlArray)
         driver.get(url)
         print(url)
-        sleep(1)
+        sleep(0.5)
         rows += getElements(driver, derivative, term, initialTerm, mileage)
         response = requests.get(url)
         if response.status_code == 403:
@@ -67,8 +67,8 @@ def scrapeAllDerivatives(make, model, derivatives, term, initialTerm, mileage):
     baseUrl = "https://leaseloco.com/car-leasing/search"
     for car in derivatives:
         driver.get(baseUrl)
-        sleep(1)
-        Search(driver, car)
+        sleep(0.5)
+        Search(driver, car, model)
         try:
             element = driver.find_element(By.CLASS_NAME, "link--result-row")        
             url = element.get_attribute("href").split("/") 
@@ -82,7 +82,7 @@ def scrapeAllDerivatives(make, model, derivatives, term, initialTerm, mileage):
             url = "/".join(urlArray)
             driver.get(url)
             print(url)
-            sleep(1)
+            sleep(0.5)
             rows += getElements(driver, car, term, initialTerm, mileage)
             response = requests.get(url)
             if response.status_code == 403:
@@ -102,13 +102,12 @@ def scrapeAllDerivatives(make, model, derivatives, term, initialTerm, mileage):
 
     return rows
 #Enters search terms for make and model
-def Search(driver, derivative):
-    sleep(1)
+def Search(driver, derivative, model):
     searchBar = driver.find_element(By.CLASS_NAME, "search--input")
     searchBar.click()
     searchBar.clear()
-    searchBar.send_keys(derivative.replace("[", "").replace("]",""))
-    sleep(1)
+    searchBar.send_keys(model +" "+derivative.replace("[", "").replace("]","".replace("+"," ").replace("-"," ")))
+    sleep(0.5)
 
 def getElements(driver, derivative, term, initialTerm, mileage):
     rows = []
