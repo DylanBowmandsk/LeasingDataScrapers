@@ -1,20 +1,20 @@
-import { setSelectionRange } from "@testing-library/user-event/dist/utils"
 import { useState } from "react"
 import { useEffect } from "react"
 import ModelRow from "./ModelRow"
 
-const DataOutTest = ({leasingData, selectData, locoData, pvData, initialTerm, term, mileage}) => {
+const DataOut = ({make, leasingData, selectData, locoData, pvData, initialTerm, term, mileage, localData, searchedData, dataTrigger}) => {
     const [data , setData] = useState()
 
     useEffect(() => {
+        console.log(searchedData)
         if(leasingData  && selectData  && locoData   && pvData ){
-            console.log(leasingData)
-            console.log(pvData)
-            console.log(locoData)
-            console.log(selectData)
             collateData(leasingData, selectData, locoData, pvData, setData, term, initialTerm, mileage)
         }
-      },[leasingData,selectData, pvData, locoData])
+        if(searchedData){
+            setData(searchedData)
+            console.log(data)
+        }
+      },[leasingData,selectData, pvData, locoData, searchedData])
 
 
     return(
@@ -23,13 +23,13 @@ const DataOutTest = ({leasingData, selectData, locoData, pvData, initialTerm, te
             {data && data.map((element, idx) => {   
                 return (
                     <div> 
-                        {idx == 0 && <div className="text-center mt-10">
-                            <h1 className="text-4xl roboto-400">{element.name}</h1>
+                        {idx === 0 && <div className="text-center mt-10">
+                            <h1 className="text-4xl roboto-400">{make}</h1>
                             <h2>Term {element.term} Months</h2>
                             <h2>Mileage {element.mileage} Miles</h2> 
                             <h2 className="mb-10">Initial Term {initialTerm} Months</h2>
-                        </div>}
-                        
+                        </div>
+                        }
                          <ModelRow element={element}/>
 
                     </div>
@@ -55,7 +55,7 @@ const collateData = (leasingData, selectData, locoData, pvData, setData, term, i
             if (selectCar.derivative === element){
                 selectPrice = selectCar.price
                 selectUpfront = selectCar.upfrontCost
-                if(selectCar.price != "No Data"){
+                if(selectCar.price !== "No Data"){
                     selectTotalLease = "£"+new Intl.NumberFormat().format(parseInt(selectPrice.slice(1)) * (parseInt(term) - 1) + parseInt(selectUpfront.slice(1)))
                 }
                 else{
@@ -78,7 +78,7 @@ const collateData = (leasingData, selectData, locoData, pvData, setData, term, i
                 if(locoCar.price == "No Data") locoPrice = locoCar.price
                 name = locoCar.name
                 locoUpfront = locoCar.upfrontCost
-                if(locoCar.price != "No Data")
+                if(locoCar.price !== "No Data")
                 locoTotalLease = "£"+new Intl.NumberFormat().format(parseInt(locoPrice.slice(1)) * (parseInt(term) - 1) + parseInt(locoUpfront.slice(1)))
                 else locoTotalLease ="No Data"
                 
@@ -86,7 +86,7 @@ const collateData = (leasingData, selectData, locoData, pvData, setData, term, i
         })
         pvData.forEach(pvCar => {
             if (pvCar.derivative === element){
-                if(pvCar.price == "No Data") pvPrice = pvCar.price
+                if(pvCar.price === "No Data") pvPrice = pvCar.price
                 else{
                     pvPrice = "£"+pvCar.price + "p/m"
                     pvUpfront = "£"+parseInt(pvCar.upfrontCost) * parseInt(pvPrice.slice(1))
@@ -127,4 +127,4 @@ const collateData = (leasingData, selectData, locoData, pvData, setData, term, i
     
 }
 
-export default DataOutTest
+export default DataOut

@@ -13,12 +13,6 @@ const ModelRow = ({element}) => {
                     <p className="font-bold">Upfront</p>
                     <p className="font-bold">Total Lease</p>
                 </div>
-                <div className="mr-20 select">
-                    <p className="text-xl w-40">Select Leasing</p>
-                    <p>{element.selectPrice}</p>
-                    <p>{element.selectUpfront}</p>
-                    <p>{element.selectTotalLease}</p>
-                </div>
                 <div className="mr-20 w-40 loco">
                     <p className="text-xl">LeaseLoco</p>
                     <p>{element.locoPrice}</p>

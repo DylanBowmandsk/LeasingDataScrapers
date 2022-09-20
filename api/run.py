@@ -13,6 +13,7 @@ from threading import Thread
 
 app = Flask(__name__)
 CORS(app)
+app.config['JSON_AS_ASCII'] = False
 
 @app.route("/")
 def index():
@@ -23,7 +24,7 @@ def getPvMakes():
     db = sqlconnector.initialiseDB()
     cursor = db.cursor()
     makes = []
-    for row in cursor.execute("select distinct manufacturer from [LeasingPrices] where not manufacturer = ''"):
+    for row in cursor.execute("select distinct manufacturer from [LeasingPrices] where not manufacturer = '' and manufacturer not like '%IVECO%' and manufacturer not like '%MAN%'"):
         if(len(row) > 0):
             for x in row:
                 makes.append(x)
@@ -34,7 +35,7 @@ def getPvModels(make):
     db = sqlconnector.initialiseDB()
     cursor = db.cursor()
     models = []
-    for row in cursor.execute("select distinct range from [LeasingPrices] where manufacturer ='"+make+"'"):
+    for row in cursor.execute("select distinct range from [LeasingPrices] where manufacturer ='"+make+"' and range not like '%TRANSIT%'"):
         if(len(row) > 0):
             for x in row:
                 models.append(x)
@@ -61,66 +62,25 @@ def getPvDerivatives(model ,variant):
         for x in row:
             derivatives.append(x)
     return jsonify(derivatives)
-    
-def getData(make, model, variants, term, initial, mileage):
-    print(variants)
-    for variant in variants:
-        leaseLocoData = []
-        selectData = []
-        leasingData = []
-        pvData = []
-        pvData = (json.loads(getAllPvPrice(model,variant,term, initial, mileage).data)) 
-        llt =ScraperThread(target=scrapeAllLeaseLoco, args=[make,model,variant,term, initial, mileage])
-        lt = ScraperThread(target=scrapeAllLeasingcom, args=[make,model,variant,term, initial, mileage])
-        #slt = ScraperThread(target=scrapeAllSelectLeasing, args=[make,model,variant,"24", "6", "10000"])
-        llt.start()
-        lt.start()
-        #slt.start()
-        llt.join()
-        lt.join()
-        #slt.join()
-        leaseLocoData = llt.value
-        leasingData = lt.value
-        #selectData = slt.value
 
-        derivatives = []
+@app.route("/get/all")
+def getLocalData():
+    data = []
+    with open('list.csv', newline='', encoding="utf-8") as listReader:
+        listReader = csv.reader(listReader, delimiter=',')
+        for row in listReader:
+             data.append(row)
 
-        for element in pvData:
-            if element["derivative"] not in derivatives:
-                derivatives.append(element["derivative"])    
-        for derivative in derivatives:
-            f = open('./list.csv', 'a', encoding='UTF8', newline='')
-            writer = csv.writer(f)
-            name = f"{make} {variant}"
-            pvPrice = ""
-            selectPrice = ""
-            locoPrice = ""
-            leasingPrice = ""
-
-            for pvCar in pvData:
-                if derivative == pvCar["derivative"]:
-                    pvPrice = pvCar["price"]
-            for locoCar in leaseLocoData:
-                if derivative == locoCar["derivative"]:
-                    locoPrice = locoCar["price"]
-            for leasingCar in leasingData:
-                if derivative == leasingCar["derivative"]:
-                    leasingPrice = leasingCar["price"]
-            for selectCar in selectData:
-                if derivative == selectCar["derivative"]:
-                    selectPrice = selectCar["price"]
-
-            row = {"name" : name,
-                "derivative": derivative,
-                "pvPrice": pvPrice}
-            allData.append(row)  
-            writer.writerow([name, derivative, term, initial, mileage, "£"+pvPrice+"p/m", locoPrice+"p/m", leasingPrice])
-            f.close()
+    return jsonify(data)
 
 @app.route("/scrape/all")
 def scrapeEverything():
     allData = []
-    
+    leaseLocoData = []
+    selectData = []
+    leasingData = []
+    pvData = []
+
     makes = json.loads(getPvMakes().data)
     for make in makes:
         models = (json.loads(getPvModels(make).data))
@@ -129,21 +89,50 @@ def scrapeEverything():
             print(make)
             print(model)
             if variants != []:
-                instaceThreads = []
-                instaceThreads.append(InstanceThread(target=getData, make=make, model=model, variants=variants, term=24, initial=1, mileage=10000))
-                instaceThreads.append(InstanceThread(target=getData, make=make, model=model, variants=variants, term=24, initial=3, mileage=10000))
-                instaceThreads.append(InstanceThread(target=getData, make=make, model=model, variants=variants, term=24, initial=6, mileage=10000))
-                instaceThreads.append(InstanceThread(target=getData, make=make, model=model, variants=variants, term=24, initial=9, mileage=10000))
-                instaceThreads.append(InstanceThread(target=getData, make=make, model=model, variants=variants, term=36, initial=1, mileage=10000))
-                instaceThreads.append(InstanceThread(target=getData, make=make, model=model, variants=variants, term=36, initial=3, mileage=10000))
-                instaceThreads.append(InstanceThread(target=getData, make=make, model=model, variants=variants, term=36, initial=6, mileage=10000))
-                instaceThreads.append(InstanceThread(target=getData, make=make, model=model, variants=variants, term=36, initial=9, mileage=10000))
-                
-                for thread in instaceThreads:
-                    thread.start()
-                    
-                for thread in instaceThreads:
-                    thread.join()
+                print(variants)
+                for variant in variants:
+                    pvData = (json.loads(getAllPvPrice(model,variant,"36", "6", "10000").data)) 
+                    llt =CustomThread(target=scrapeAllLeaseLoco, args=[make,model,variant,"36", "6", "10000"])
+                    lt = CustomThread(target=scrapeAllLeasingcom, args=[make,model,variant,"36", "6", "10000"])
+                    llt.start()
+                    lt.start()
+                    llt.join()
+                    lt.join()
+                    leaseLocoData = llt.value
+                    leasingData = lt.value
+#36, 6,10
+#24
+#48
+#48,1,5
+                    derivatives = []
+
+                    for element in pvData:
+                        if element["derivative"] not in derivatives:
+                            derivatives.append(element["derivative"])    
+                    for derivative in derivatives:
+                        f = open('./list.csv', 'a', encoding='UTF8', newline='')
+                        writer = csv.writer(f)
+                        name = f"{make} {variant}"
+                        pvPrice = ""
+                        locoPrice = ""
+                        leasingPrice = ""
+
+                        for pvCar in pvData:
+                            if derivative == pvCar["derivative"]:
+                                pvPrice = pvCar["price"]
+                        for locoCar in leaseLocoData:
+                            if derivative == locoCar["derivative"]:
+                                locoPrice = locoCar["price"]
+                        for leasingCar in leasingData:
+                            if derivative == leasingCar["derivative"]:
+                                leasingPrice = leasingCar["price"]
+
+                        row = {"name" : name,
+                            "derivative": derivative,
+                            "pvPrice": pvPrice}
+                        allData.append(row)  
+                        writer.writerow([name, derivative, "£"+pvPrice+"p/m", locoPrice+"p/m", leasingPrice])
+                        f.close()
 
     return "Building List"
     
@@ -242,7 +231,7 @@ def scrapeAllSelectLeasing(make,model,variant,term,initialTerm,mileage):
         derivatives.append(derivative)
     return jsonify(selectLeasingScraper.scrapeAllDerivatives(make, model,variant, derivatives, term, initialTerm, mileage))
 
-class ScraperThread(Thread):
+class CustomThread(Thread):
     def __init__(self, target,args ):
         Thread.__init__(self)
         self.target = target
@@ -255,17 +244,4 @@ class ScraperThread(Thread):
     def run(self):
         with app.app_context():
             self.value = (json.loads(self.target(self.make,self.model,self.variant,self.term,self.initial,self.mileage).data))
-            
-class InstanceThread(Thread):
-    def __init__(self, target,make, model, variants, term, initial, mileage ):
-        Thread.__init__(self)
-        self.target = target
-        self.make = make
-        self.model = model
-        self.variants = variants
-        self.term = term
-        self.initial = initial
-        self.mileage = mileage
-    def run(self):
-        with app.app_context():
-            self.target(self.make, self.model,self.variants,self.term,self.initial,self.mileage)
+    

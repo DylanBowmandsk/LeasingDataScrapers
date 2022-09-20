@@ -1,14 +1,22 @@
-const ScrapeButtons = ({make, model, variant, derivative, term, initialTerm, mileage,  setLeasingData, setLocoData, setSelectData, setPvData}) => {
+const ScrapeButtons = ({make, model, variant, derivative, term, initialTerm, mileage, setSearchedData, setLeasingData, setLocoData, setSelectData, setPvData, localData}) => {
     
     return (
     <div className="mx-5 mt-4 relative" id="scraper-button-container">
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded mr-2" onClick={() => {scrapeLeasingData(make, model, variant, derivative,term, initialTerm, mileage, setLeasingData)}}>Scrape Data Leasing.com</button>
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={() => {scrapeLocoData(make, model, variant, derivative, term, initialTerm, mileage, setLocoData)}}>Scrape Data Leasing Loco.com</button>
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={() => {scrapeSelectData(make, model, variant, derivative, term, initialTerm, mileage, setSelectData)}}>Scrape Data Select Leasing.com</button>
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={() => {scrapePvData(model, variant, derivative, term, initialTerm, mileage, setPvData)}}>Scrape Data PV</button>
+        {/*<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded mr-2" onClick={() => {scrapeLeasingData(make, model, variant, derivative,term, initialTerm, mileage, setLeasingData)}}>Scrape Data Leasing.com</button>
+        //<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={() => {scrapeLocoData(make, model, variant, derivative, term, initialTerm, mileage, setLocoData)}}>Scrape Data Leasing Loco.com</button>
+        //<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={() => {scrapeSelectData(make, model, variant, derivative, term, initialTerm, mileage, setSelectData)}}>Scrape Data Select Leasing.com</button>
+    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={() => {scrapePvData(model, variant, derivative, term, initialTerm, mileage, setPvData)}}>Scrape Data PV</button>*/}
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-36 rounded scrape-button" onClick={() => {scrapeAll(make, model, variant, derivative,term, initialTerm, mileage, setLeasingData, setSelectData, setLocoData, setPvData)}}>Scrape Data</button>
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-36 rounded scrape-button" onClick={() => {Search(make, model, variant, derivative, setSearchedData, localData)}}>Search</button>
+
+        
       </div>
     )
+}
+
+const Search = (make, model, variant, derivative, setSearchedData, localData) => {
+  let list = localData.filter(element => element.name.includes(make))
+  setSearchedData(list)
 }
 
 const scrapeAll = (make, model, variant, derivative,term, initialTerm, mileage, setLeasingData, setSelectData, setLocoData, setPvData) => {
