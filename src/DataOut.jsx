@@ -24,7 +24,7 @@ const DataOut = ({make, leasingData, selectData, locoData, pvData, initialTerm, 
                 return (
                     <div> 
                         {idx === 0 && <div className="text-center mt-10">
-                            <h1 className="text-4xl roboto-400">{make}</h1>
+                            <h1 className="text-4xl roboto-400">{element.make}</h1>
                             <h2>Term {element.term} Months</h2>
                             <h2>Mileage {element.mileage} Miles</h2> 
                             <h2 className="mb-10">Initial Term {initialTerm} Months</h2>

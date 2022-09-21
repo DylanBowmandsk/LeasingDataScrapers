@@ -16,7 +16,7 @@ const ScraperForm = ({setMake, setModel, setVariant, make, model, setDerivative}
       <div>
         <div className="mr-5 mt-3.5">
           <span className="text-lg font-semibold" id="make-selector">Make : </span>
-          <select className="mr-10 rounded" name="make" id="make" onChange={e => {populateModelFields(e.target.value, setMake, setModelList, setVariantList, setDerivativeList)}}>
+          <select className="mr-10 rounded" name="make" id="make" onChange={e => {populateModelFields(e.target.value, setMake, setModel, setVariant, setDerivative, setModelList, setVariantList, setDerivativeList)}}>
             <option value="">Brand</option>
             {makeList && makeList.map((data, index) => {
               return (
@@ -27,7 +27,7 @@ const ScraperForm = ({setMake, setModel, setVariant, make, model, setDerivative}
             })}
           </select>
           <span className="text-lg font-semibold" id="model-selector">Model: </span>
-          <select name="model" id="model" onChange={e => {populateVariantsFields(make, e.target.value, setModel, setVariantList, setDerivativeList)}}>
+          <select name="model" id="model" onChange={e => {populateVariantsFields(make, e.target.value, setModel, setVariant, setDerivative, setVariantList, setDerivativeList)}}>
             <option value="">Model</option>
             {modelList && modelList.map((data, index) => {
               return (
@@ -49,8 +49,8 @@ const ScraperForm = ({setMake, setModel, setVariant, make, model, setDerivative}
             })}
           </select>
           <span className="text-lg font-semibold" id="derivative-selector"> Derivative: </span>
-          <select name="Variant" id="derivative" onChange={e => {setDerivative(e.target.value)}}>
-          <option value="All">All</option>
+          <select name="Variant" id="derivative" onChange={e => {setDerivative(e.target.value.replace(/['"]+/g, ''))}}>
+          <option value="">Derivative</option>
             {derivativeList && derivativeList.map((data, index) => {
               return (
               <option key={index} value={JSON.stringify(data)}>
@@ -80,7 +80,7 @@ const populateMakeFields = (setMakeList) => {
 }
   
 //makes api call to populate the models of the previously selected brand input
-  const populateModelFields = (makeString, setMake, setModelList, setVariantList, setDerivativeList) => {
+  const populateModelFields = (makeString, setMake, setModel, setVariant, setDerivative, setModelList, setVariantList, setDerivativeList) => {
     let make = JSON.parse(makeString)
     setMake(make)
     fetch(`http://localhost:5000/get/models/${make.replace(/['"]+/g, '')}`)
@@ -92,15 +92,18 @@ const populateMakeFields = (setMakeList) => {
         
       });
       setModelList(list)
-      document.getElementById("model").value = "Model"
-      setVariantList([])
-      setDerivativeList([])
-      document.getElementById("derivative").value = "All"
+      setVariantList()
+      setDerivativeList()
+      setModel()
+      setVariant()
+      setDerivative("")
+      document.getElementById("model").value = ""
+      document.getElementById("derivative").value = ""
     })
 }
 
 //makes api call and fills out input fields of all model variants we have in stock
-const populateVariantsFields = (make, model, setModel, setVariantList, setDerivativeList) => {
+const populateVariantsFields = (make, model, setModel, setVariant, setDerivative, setVariantList, setDerivativeList) => {
   model = model.replace(/['"]+/g, '')
   setModel(model)
   console.log(model)
@@ -113,13 +116,14 @@ const populateVariantsFields = (make, model, setModel, setVariantList, setDeriva
         list.push(element)
         console.log(element)
     });
-    if(data.length < 1) alert("No matches")
       setVariantList(list)
-      setDerivativeList([])
+      setDerivativeList()
+      setVariant()
+      setDerivative("")
   }catch{
       alert("no matches")
-      setVariantList([])
-      setDerivativeList([])
+      setVariantList()
+      setDerivativeList()
   }
   })
 }

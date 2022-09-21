@@ -1,4 +1,6 @@
-const ScrapeButtons = ({make, model, variant, derivative, term, initialTerm, mileage, setSearchedData, setLeasingData, setLocoData, setSelectData, setPvData, localData}) => {
+import { isCompositeComponent } from "react-dom/test-utils"
+
+const ScrapeButtons = ({make, model, variant, derivative, term, initialTerm, mileage, setSearchedData, setLeasingData, setLocoData, setSelectData, setPvData, localData, searchInitialTerm, searchTerm, searchMileage}) => {
     
     return (
     <div className="mx-5 mt-4 relative" id="scraper-button-container">
@@ -6,24 +8,16 @@ const ScrapeButtons = ({make, model, variant, derivative, term, initialTerm, mil
         //<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={() => {scrapeLocoData(make, model, variant, derivative, term, initialTerm, mileage, setLocoData)}}>Scrape Data Leasing Loco.com</button>
         //<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={() => {scrapeSelectData(make, model, variant, derivative, term, initialTerm, mileage, setSelectData)}}>Scrape Data Select Leasing.com</button>
     <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={() => {scrapePvData(model, variant, derivative, term, initialTerm, mileage, setPvData)}}>Scrape Data PV</button>*/}
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-36 rounded scrape-button" onClick={() => {scrapeAll(make, model, variant, derivative,term, initialTerm, mileage, setLeasingData, setSelectData, setLocoData, setPvData)}}>Scrape Data</button>
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-36 rounded scrape-button" onClick={() => {Search(make, model, variant, derivative, setSearchedData, localData)}}>Search</button>
-
-        
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-36 mr-2 rounded scrape-button" onClick={() => {scrapeAll(make, model, variant, derivative,term, initialTerm, mileage, setLeasingData, setSelectData, setLocoData, setPvData)}}>Scrape Data</button>  
       </div>
     )
 }
 
-const Search = (make, model, variant, derivative, setSearchedData, localData) => {
-  let list = localData.filter(element => element.name.includes(make))
-  setSearchedData(list)
-}
-
 const scrapeAll = (make, model, variant, derivative,term, initialTerm, mileage, setLeasingData, setSelectData, setLocoData, setPvData) => {
-  setLeasingData([])
-  setLocoData([])
-  setSelectData([])
-  setPvData([])
+  setLeasingData()
+  setLocoData()
+  setSelectData()
+  setPvData()
   scrapeLeasingData(make, model, variant, derivative,term, initialTerm, mileage, setLeasingData)
   scrapeSelectData(make, model, variant, derivative, term, initialTerm, mileage, setSelectData)
   scrapeLocoData(make, model, variant, derivative, term, initialTerm, mileage, setLocoData)
@@ -32,7 +26,7 @@ const scrapeAll = (make, model, variant, derivative,term, initialTerm, mileage, 
 
 const scrapePvData = (model, variant, derivative, term, initialTerm, mileage, setPvData) => {
   derivative = derivative.replace(/['"]+/g, '').replace("/", "+")
-  if( derivative !== "All"){
+  if(derivative){
   fetch(`http://localhost:5000/pv/scrape/${(derivative)}/${term}/${initialTerm}/${mileage}`)
   .then(response => response.json()).then(data => {
     console.log(data)
@@ -46,7 +40,7 @@ const scrapePvData = (model, variant, derivative, term, initialTerm, mileage, se
 }
 const scrapeLeasingData = (make, model, variant, derivative,term, initialTerm, mileage, setLeasingData) => {
   derivative = derivative.replace("/", "").replace(/['"]+/g, '')
-  if( derivative !== "All"){
+  if(derivative){
     fetch(`http://localhost:5000/leasingcom/scrape/${make}/${model}/${variant}/${derivative}/${term}/${initialTerm}/${mileage}`)
     .then(response => response.json()).then(data => {
       setLeasingData(data)
@@ -60,7 +54,7 @@ const scrapeLeasingData = (make, model, variant, derivative,term, initialTerm, m
 }
   const scrapeLocoData = (make, model, variant, derivative,term, initialTerm, mileage, setLocoData) => {
     derivative = derivative.replace(/['"]+/g, '').replace("/", "+")
-    if( derivative !== "All"){
+    if( derivative){
       fetch(`http://localhost:5000/leaseloco/scrape/${make}/${model}/${variant}/${derivative}/${term}/${initialTerm}/${mileage}`)
       .then(response => response.json()).then(data => {
         setLocoData(data)
@@ -76,7 +70,7 @@ const scrapeLeasingData = (make, model, variant, derivative,term, initialTerm, m
   
   const scrapeSelectData = (make, model, variant, derivative, term, initialTerm, mileage, setSelectData) => {
     derivative = derivative.replace(/['"]+/g, '').replace("/", "")
-    if( derivative !== "All"){
+    if( derivative){
       fetch(`http://localhost:5000/selectleasing/scrape/${make}/${model}/${variant}/${derivative}/${term}/${initialTerm}/${mileage}`)
       .then(response => response.json()).then(data => {
         setSelectData(data)

@@ -75,7 +75,6 @@ def getLocalData():
 
 @app.route("/scrape/all")
 def scrapeEverything():
-    allData = []
     leaseLocoData = []
     selectData = []
     leasingData = []
@@ -91,48 +90,43 @@ def scrapeEverything():
             if variants != []:
                 print(variants)
                 for variant in variants:
-                    pvData = (json.loads(getAllPvPrice(model,variant,"36", "6", "10000").data)) 
-                    llt =CustomThread(target=scrapeAllLeaseLoco, args=[make,model,variant,"36", "6", "10000"])
-                    lt = CustomThread(target=scrapeAllLeasingcom, args=[make,model,variant,"36", "6", "10000"])
-                    llt.start()
-                    lt.start()
-                    llt.join()
-                    lt.join()
-                    leaseLocoData = llt.value
-                    leasingData = lt.value
-#36, 6,10
-#24
-#48
-#48,1,5
-                    derivatives = []
+                    profiles = [["24","6","10000"], ["36","6","10000"], ["48","6","10000"],["48","1","5000"]]
+                    for profile in profiles:
+                        print(profile[0],profile[1],profile[2])
+                        pvData = (json.loads(getAllPvPrice(model,variant,profile[0], profile[1], profile[2]).data)) 
+                        llt =CustomThread(target=scrapeAllLeaseLoco, args=[make,model,variant,profile[0], profile[1], profile[2]])
+                        lt = CustomThread(target=scrapeAllLeasingcom, args=[make,model,variant,profile[0], profile[1], profile[2]])
+                        llt.start()
+                        lt.start()
+                        llt.join()
+                        lt.join()
+                        leaseLocoData = llt.value
+                        leasingData = lt.value
 
-                    for element in pvData:
-                        if element["derivative"] not in derivatives:
-                            derivatives.append(element["derivative"])    
-                    for derivative in derivatives:
-                        f = open('./list.csv', 'a', encoding='UTF8', newline='')
-                        writer = csv.writer(f)
-                        name = f"{make} {variant}"
-                        pvPrice = ""
-                        locoPrice = ""
-                        leasingPrice = ""
+                        derivatives = []
 
-                        for pvCar in pvData:
-                            if derivative == pvCar["derivative"]:
-                                pvPrice = pvCar["price"]
-                        for locoCar in leaseLocoData:
-                            if derivative == locoCar["derivative"]:
-                                locoPrice = locoCar["price"]
-                        for leasingCar in leasingData:
-                            if derivative == leasingCar["derivative"]:
-                                leasingPrice = leasingCar["price"]
+                        for element in pvData:
+                            if element["derivative"] not in derivatives:
+                                derivatives.append(element["derivative"])    
+                        for derivative in derivatives:
+                            f = open('./list.csv', 'a', encoding='UTF8', newline='')
+                            writer = csv.writer(f)
+                            pvPrice = ""
+                            locoPrice = ""
+                            leasingPrice = ""
 
-                        row = {"name" : name,
-                            "derivative": derivative,
-                            "pvPrice": pvPrice}
-                        allData.append(row)  
-                        writer.writerow([name, derivative, "£"+pvPrice+"p/m", locoPrice+"p/m", leasingPrice])
-                        f.close()
+                            for pvCar in pvData:
+                                if derivative == pvCar["derivative"]:
+                                    pvPrice = pvCar["price"]
+                            for locoCar in leaseLocoData:
+                                if derivative == locoCar["derivative"]:
+                                    locoPrice = locoCar["price"]
+                            for leasingCar in leasingData:
+                                if derivative == leasingCar["derivative"]:
+                                    leasingPrice = leasingCar["price"]
+
+                            writer.writerow([make, model, variant ,derivative, profile[0], profile[1], profile[2], "£"+pvPrice+"p/m", locoPrice+"p/m", leasingPrice])
+                            f.close()
 
     return "Building List"
     

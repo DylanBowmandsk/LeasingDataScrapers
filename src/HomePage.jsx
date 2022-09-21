@@ -3,6 +3,8 @@ import DataOut from "./DataOut";
 import { useState } from "react";
 import ScrapeButtons from "./ScrapeButtons";
 import ScraperFilters from "./ScraperFilters";
+import SearchFilters from "./SearchFilters";
+import SearchButtons from "./SearchButtons";
 import { useEffect } from "react";
 
 const HomePage = () => {
@@ -10,20 +12,22 @@ const HomePage = () => {
     const [make, setMake] = useState()
     const [model, setModel] = useState()
     const [variant, setVariant] = useState()
-    const [derivative , setDerivative] = useState("All")
+    const [derivative , setDerivative] = useState()
     const [leasingData, setLeasingData] = useState()
     const [selectData, setSelectData] = useState()
     const [locoData, setLocoData] = useState()
     const [term, setTerm] = useState(24)
     const [initialTerm, setInitialTerm] = useState(1)
     const [mileage, setMileage] = useState(5000)
+    const [searchTerm, setSearchTerm] = useState("All")
+    const [searchInitialTerm, setSearchInitialTerm] = useState("All")
+    const [searchMileage, setSearchMileage] = useState("All")
     const [pvData, setPvData] = useState()
-    const [localData, setLocalData] = useState(0)
+    const [localData, setLocalData] = useState()
     const [searchedData, setSearchedData] = useState()
-    const [dataTrigger, setDataTrigger] = useState(false)
 
     useEffect(() => {
-        loadLocalData(setLocalData, term, mileage, initialTerm)
+        loadLocalData(setLocalData)
         console.log(localData)
       },[])
 
@@ -33,27 +37,37 @@ const HomePage = () => {
                 <div className="inline-block ">
                     <ScraperForm setMake={setMake} setModel={setModel} setVariant={setVariant} make={make} model={model} derivative={derivative} setDerivative={setDerivative}/>
                     <ScraperFilters setTerm={setTerm} setInitialTerm={setInitialTerm} setMileage={setMileage}/>
+                    <SearchFilters setSearchTerm={setSearchTerm} setSearchInitialTerm={setSearchInitialTerm} setSearchMileage={setSearchMileage}/>
+                    <SearchButtons make={make} model={model} variant={variant} derivative={derivative} localData={localData} setSearchedData={setSearchedData} searchMileage={searchMileage}
+                searchTerm={searchTerm} searchInitialTerm={searchInitialTerm} />
                 </div>
                 <div className="inline-block align-top">
-                <ScrapeButtons make={make} model={model} variant={variant} derivative={derivative} term={term} initialTerm={initialTerm} mileage={mileage} setLeasingData={setLeasingData} setSelectData={setSelectData} setLocoData={setLocoData} setPvData={setPvData} localData={localData} setSearchedData={setSearchedData}/>
+                <ScrapeButtons make={make} model={model} variant={variant} derivative={derivative} term={term} initialTerm={initialTerm} mileage={mileage} setLeasingData={setLeasingData}
+                setSelectData={setSelectData} setLocoData={setLocoData} setPvData={setPvData} localData={localData} setSearchedData={setSearchedData} searchMileage={searchMileage}
+                searchTerm={searchTerm} searchInitialTerm={searchInitialTerm}/>
                 </div>
             </div>
-            <DataOut make={make} searchedData={searchedData} leasingData={leasingData} selectData={selectData} locoData={locoData} pvData={pvData} initialTerm={initialTerm} term={term} mileage={mileage} dataTrigger={dataTrigger}/>
+            <DataOut make={make} searchedData={searchedData} leasingData={leasingData} selectData={selectData} locoData={locoData} pvData={pvData} initialTerm={initialTerm} term={term} mileage={mileage}/>
         </div>
         
     )
 }
 
-const loadLocalData = (setLocalData, term, mileage, initialTerm) => {
+const loadLocalData = (setLocalData) => {
     fetch(`http://localhost:5000/get/all`)
   .then(response => response.json()).then(data => {
     let list = []
     data.forEach(element => {
-        let car ={"name":element[0],
-                "derivative": element[1],
-                "pvPrice" : element[2],
-                "locoPrice": element[3],
-                "leasingPrice": element[4],
+        let car ={"make":element[0],
+                "model": element[1],
+                "variant": element[2],
+                "derivative": element[3],
+                "term": element[4],
+                "initialTerm": element[5],
+                "mileage": element[6],
+                "pvPrice" : element[7],
+                "locoPrice": element[8],
+                "leasingPrice": element[9],
                 }
         list.push(car)
     });
