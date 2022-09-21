@@ -7,6 +7,7 @@ const ModelRow = ({element}) => {
         <div>
             <div className="flex flex-row mx-20 mb-16 justify-center items-center">
                 <p className="block mr-10 w-60 text-lg">{element.derivative}</p>
+                <p className="block mr-10 w-60 text-lg">{element.variant} {element.name}</p>
                 <div className="mr-20">
                     <p className="text-xl text-transparent">-</p>
                     <p className="font-bold">Price</p>

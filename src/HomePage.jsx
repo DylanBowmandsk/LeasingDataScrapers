@@ -25,6 +25,9 @@ const HomePage = () => {
     const [pvData, setPvData] = useState()
     const [localData, setLocalData] = useState()
     const [searchedData, setSearchedData] = useState()
+    const [localTrigger, setLocalTrigger] = useState()
+    const [loading, setLoading] = useState(false)
+    
 
     useEffect(() => {
         loadLocalData(setLocalData)
@@ -39,15 +42,16 @@ const HomePage = () => {
                     <ScraperFilters setTerm={setTerm} setInitialTerm={setInitialTerm} setMileage={setMileage}/>
                     <SearchFilters setSearchTerm={setSearchTerm} setSearchInitialTerm={setSearchInitialTerm} setSearchMileage={setSearchMileage}/>
                     <SearchButtons make={make} model={model} variant={variant} derivative={derivative} localData={localData} setSearchedData={setSearchedData} searchMileage={searchMileage}
-                searchTerm={searchTerm} searchInitialTerm={searchInitialTerm} />
+                searchTerm={searchTerm} searchInitialTerm={searchInitialTerm} setLocalTrigger={setLocalTrigger}/>
                 </div>
                 <div className="inline-block align-top">
                 <ScrapeButtons make={make} model={model} variant={variant} derivative={derivative} term={term} initialTerm={initialTerm} mileage={mileage} setLeasingData={setLeasingData}
                 setSelectData={setSelectData} setLocoData={setLocoData} setPvData={setPvData} localData={localData} setSearchedData={setSearchedData} searchMileage={searchMileage}
-                searchTerm={searchTerm} searchInitialTerm={searchInitialTerm}/>
+                searchTerm={searchTerm} searchInitialTerm={searchInitialTerm} setLocalTrigger={setLocalTrigger} setLoading={setLoading}/>
                 </div>
             </div>
-            <DataOut make={make} searchedData={searchedData} leasingData={leasingData} selectData={selectData} locoData={locoData} pvData={pvData} initialTerm={initialTerm} term={term} mileage={mileage}/>
+            <DataOut make={make} searchedData={searchedData} leasingData={leasingData} selectData={selectData} locoData={locoData} pvData={pvData} initialTerm={initialTerm} term={term} mileage={mileage} localTrigger={localTrigger}
+            setLoading={setLoading} loading={loading}/>
         </div>
         
     )

@@ -2,36 +2,55 @@ import { useState } from "react"
 import { useEffect } from "react"
 import ModelRow from "./ModelRow"
 
-const DataOut = ({make, leasingData, selectData, locoData, pvData, initialTerm, term, mileage, localData, searchedData, dataTrigger}) => {
-    const [data , setData] = useState()
+const DataOut = ({make, leasingData, selectData, locoData, pvData, initialTerm, term, mileage, searchedData, localTrigger, setLoading, loading}) => {
+    const [scrapeData , setScrapedData] = useState()
+    const [localData , setLocalData] = useState()
 
     useEffect(() => {
-        console.log(searchedData)
-        if(leasingData  && selectData  && locoData   && pvData ){
-            collateData(leasingData, selectData, locoData, pvData, setData, term, initialTerm, mileage)
+        if(leasingData  && selectData  && locoData  && pvData ){
+            setScrapedData()
+            collateData(leasingData, selectData, locoData, pvData, setScrapedData, term, initialTerm, mileage, setLoading)
         }
         if(searchedData){
-            setData(searchedData)
-            console.log(data)
+            setLocalData(searchedData)
         }
+
+        console.log(localTrigger)
       },[leasingData,selectData, pvData, locoData, searchedData])
 
 
     return(
         <div>
-
-            {data && data.map((element, idx) => {   
+            {scrapeData && localTrigger == false && loading === false && scrapeData.map((element, idx) => {   
                 return (
                     <div> 
                         {idx === 0 && <div className="text-center mt-10">
-                            <h1 className="text-4xl roboto-400">{element.make}</h1>
+                            <h1 className="text-4xl roboto-400">{make}</h1>
                             <h2>Term {element.term} Months</h2>
                             <h2>Mileage {element.mileage} Miles</h2> 
                             <h2 className="mb-10">Initial Term {initialTerm} Months</h2>
                         </div>
                         }
-                         <ModelRow element={element}/>
-
+                        <ModelRow element={element}/>
+                    </div>
+                )
+            })}
+            {loading === true &&
+            <div>
+                <h1 className="text-center">LOADING</h1>
+            </div>
+            }
+            {localData && localTrigger && localData.map((element, idx) => {   
+                return (
+                    <div> 
+                        {idx === 0 && <div className="text-center mt-10">
+                            <h1 className="text-4xl roboto-400">{make}</h1>
+                            <h2>Term {element.term} Months</h2>
+                            <h2>Mileage {element.mileage} Miles</h2> 
+                            <h2 className="mb-10">Initial Term {element.initialTerm} Months</h2>
+                        </div>
+                        }
+                        <ModelRow element={element}/>
                     </div>
                 )
             })}
@@ -39,7 +58,7 @@ const DataOut = ({make, leasingData, selectData, locoData, pvData, initialTerm, 
     )
 }
 
-const collateData = (leasingData, selectData, locoData, pvData, setData, term, initialTerm, mileage) => {
+const collateData = (leasingData, selectData, locoData, pvData, setData, term, initialTerm, mileage, setLoading) => {
     let data = []
     let derivatives = []
 
@@ -122,6 +141,7 @@ const collateData = (leasingData, selectData, locoData, pvData, setData, term, i
                "lowest": lowest})
     })
     console.log(data)
+    setLoading(false)
     setData(data)
     
     

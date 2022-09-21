@@ -60,7 +60,7 @@ def scrapeAllDerivatives(make, model, derivatives, term, initialTerm, mileage):
     rows = []
     path = "./venv/chromedriver.exe"
     options = Options()
-    options.headless = True
+    #options.headless = True
     options.add_argument("--incognito")
     options.add_argument(f'user-agent={"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.56 Safari/537.36"}')
     driver = webdriver.Chrome(executable_path=path, options=options)

@@ -1,12 +1,12 @@
-const SearchButtons = ({make, model, variant, derivative, setSearchedData, localData, searchInitialTerm, searchTerm, searchMileage}) => {
+const SearchButtons = ({make, model, variant, derivative, setSearchedData, localData, searchInitialTerm, searchTerm, searchMileage, setLocalTrigger}) => {
     return(
         <div>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-36 rounded scrape-button" onClick={() => {Search(make, model, variant, derivative, setSearchedData, localData, searchInitialTerm, searchTerm, searchMileage)}}>Search</button>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-36 rounded scrape-button" onClick={() => {Search(make, model, variant, derivative, setSearchedData, localData, searchInitialTerm, searchTerm, searchMileage, setLocalTrigger)}}>Search</button>
         </div>
     )
 }
 
-const Search = (make, model, variant, derivative, setSearchedData, localData, searchInitialTerm, searchTerm, searchMileage) => {
+const Search = (make, model, variant, derivative, setSearchedData, localData, searchInitialTerm, searchTerm, searchMileage, setLocalTrigger) => {
     console.log(localData)
     let list 
     console.log(make,model,variant)
@@ -28,6 +28,7 @@ const Search = (make, model, variant, derivative, setSearchedData, localData, se
         else list = localData.filter(element => element.make.includes(make) &&  element.mileage === searchMileage && element.initialTerm === searchInitialTerm && element.term === searchTerm)
     }
     setSearchedData(list)
+    setLocalTrigger(true)
   }
 
 export default SearchButtons

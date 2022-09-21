@@ -1,6 +1,6 @@
 import { isCompositeComponent } from "react-dom/test-utils"
 
-const ScrapeButtons = ({make, model, variant, derivative, term, initialTerm, mileage, setSearchedData, setLeasingData, setLocoData, setSelectData, setPvData, localData, searchInitialTerm, searchTerm, searchMileage}) => {
+const ScrapeButtons = ({make, model, variant, derivative, term, initialTerm, mileage, setSearchedData, setLeasingData, setLocoData, setSelectData, setPvData, setLocalTrigger,setLoading}) => {
     
     return (
     <div className="mx-5 mt-4 relative" id="scraper-button-container">
@@ -8,20 +8,27 @@ const ScrapeButtons = ({make, model, variant, derivative, term, initialTerm, mil
         //<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={() => {scrapeLocoData(make, model, variant, derivative, term, initialTerm, mileage, setLocoData)}}>Scrape Data Leasing Loco.com</button>
         //<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={() => {scrapeSelectData(make, model, variant, derivative, term, initialTerm, mileage, setSelectData)}}>Scrape Data Select Leasing.com</button>
     <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={() => {scrapePvData(model, variant, derivative, term, initialTerm, mileage, setPvData)}}>Scrape Data PV</button>*/}
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-36 mr-2 rounded scrape-button" onClick={() => {scrapeAll(make, model, variant, derivative,term, initialTerm, mileage, setLeasingData, setSelectData, setLocoData, setPvData)}}>Scrape Data</button>  
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-36 mr-2 rounded scrape-button" onClick={() => {scrapeAll(make, model, variant, derivative,term, initialTerm, mileage, setLeasingData, setSelectData, setLocoData, setPvData, setLocalTrigger, setLoading)}}>Scrape Data</button>  
       </div>
     )
 }
 
-const scrapeAll = (make, model, variant, derivative,term, initialTerm, mileage, setLeasingData, setSelectData, setLocoData, setPvData) => {
-  setLeasingData()
-  setLocoData()
-  setSelectData()
-  setPvData()
-  scrapeLeasingData(make, model, variant, derivative,term, initialTerm, mileage, setLeasingData)
-  scrapeSelectData(make, model, variant, derivative, term, initialTerm, mileage, setSelectData)
-  scrapeLocoData(make, model, variant, derivative, term, initialTerm, mileage, setLocoData)
-  scrapePvData(model, variant, derivative, term, initialTerm, mileage, setPvData)
+const scrapeAll = (make, model, variant, derivative,term, initialTerm, mileage, setLeasingData, setSelectData, setLocoData, setPvData, setLocalTrigger, setLoading) => {
+  if(make && model && variant){
+    setLeasingData()
+    setLocoData()
+    setSelectData()
+    setPvData()
+    setLocalTrigger(false)
+    setLoading(true)
+    scrapeLeasingData(make, model, variant, derivative,term, initialTerm, mileage, setLeasingData)
+    scrapeSelectData(make, model, variant, derivative, term, initialTerm, mileage, setSelectData)
+    scrapeLocoData(make, model, variant, derivative, term, initialTerm, mileage, setLocoData)
+    scrapePvData(model, variant, derivative, term, initialTerm, mileage, setPvData)
+  }
+  else{
+    alert("fill fields")
+  }
 }
 
 const scrapePvData = (model, variant, derivative, term, initialTerm, mileage, setPvData) => {
