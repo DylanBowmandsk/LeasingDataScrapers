@@ -39,7 +39,9 @@ const HomePage = () => {
             <div>
                 <div className="inline-block ">
                     <ScraperForm setMake={setMake} setModel={setModel} setVariant={setVariant} make={make} model={model} derivative={derivative} setDerivative={setDerivative}/>
+					<h1>Scraper Filters</h1>
                     <ScraperFilters setTerm={setTerm} setInitialTerm={setInitialTerm} setMileage={setMileage}/>
+					<h1>Local Search Filters</h1>
                     <SearchFilters setSearchTerm={setSearchTerm} setSearchInitialTerm={setSearchInitialTerm} setSearchMileage={setSearchMileage}/>
                     <SearchButtons make={make} model={model} variant={variant} derivative={derivative} localData={localData} setSearchedData={setSearchedData} searchMileage={searchMileage}
                 searchTerm={searchTerm} searchInitialTerm={searchInitialTerm} setLocalTrigger={setLocalTrigger}/>
@@ -58,7 +60,7 @@ const HomePage = () => {
 }
 
 const loadLocalData = (setLocalData) => {
-    fetch(`http://localhost:5000/get/all`)
+    fetch(`http://20.254.177.250:8000/get/all`)
   .then(response => response.json()).then(data => {
     let list = []
     data.forEach(element => {

@@ -6,7 +6,6 @@ const SearchFilters = ({setSearchMileage, setSearchTerm, setSearchInitialTerm}) 
                 <option value="24-6-10000">24-6-10000</option>
                 <option value="36-6-10000">36-6-10000</option>
                 <option value="48-6-10000">48-6-10000</option>
-                <option value="48-1-5000">48-1-5000</option>
             </select>
         </div>
     )

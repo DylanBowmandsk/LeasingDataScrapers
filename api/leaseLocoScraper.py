@@ -13,7 +13,7 @@ from selenium.webdriver.support.ui import Select
 # global scrape function for lease loco
 def scrape(make,model,variant, derivative, term, initialTerm, mileage):
     rows = []
-    path = "./venv/chromedriver.exe"
+    path = "./chromedriver.exe"
     options = Options()
     options.headless = True
     options.add_argument("--incognito")
@@ -58,9 +58,9 @@ def scrape(make,model,variant, derivative, term, initialTerm, mileage):
 
 def scrapeAllDerivatives(make, model, derivatives, term, initialTerm, mileage):
     rows = []
-    path = "./venv/chromedriver.exe"
+    path = "./chromedriver.exe"
     options = Options()
-    #options.headless = True
+    options.headless = True
     options.add_argument("--incognito")
     options.add_argument(f'user-agent={"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.56 Safari/537.36"}')
     driver = webdriver.Chrome(executable_path=path, options=options)
@@ -107,7 +107,7 @@ def Search(driver, derivative, model):
     searchBar.click()
     searchBar.clear()
     searchBar.send_keys(model +" "+derivative.replace("[", "").replace("]","".replace("+"," ").replace("-"," ")))
-    sleep(0.5)
+    sleep(1)
 
 def getElements(driver, derivative, term, initialTerm, mileage):
     rows = []

@@ -1,0 +1,253 @@
+[33mcommit ed81cf47f85dbcf4626d1a095c5383d439e3937a[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Thu Sep 15 11:46:03 2022 +0100
+
+    multithreading added
+
+[33mcommit 3687328e7a73d2c7bf1df08d9422246e3c365dcc[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Wed Sep 14 16:19:41 2022 +0100
+
+    server test
+
+[33mcommit 6c70726362a9e4114ce8df4bfd0ef0a46c08e0c5[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Wed Sep 14 13:09:42 2022 +0100
+
+    all scrapers on and mass scrape implemented
+
+[33mcommit e4680dd5f301d787639b7e08c8cd60c69e014dd5[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Tue Sep 13 15:34:51 2022 +0100
+
+    revising searching for models
+
+[33mcommit 16c0a0002d962827d617ed470757621b0de8b152[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Tue Sep 13 12:57:42 2022 +0100
+
+    toolkit for mass scraping implemented
+
+[33mcommit 73275c05986f58369b952b9c4dfdd87caca5d739[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Tue Sep 6 12:47:54 2022 +0100
+
+    added no matches error check
+
+[33mcommit 0b714b986c2d4b059ca6b949f74fcf42160a6421[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Tue Sep 6 12:03:58 2022 +0100
+
+    updated ui to display all values
+
+[33mcommit c21b5689ddf48483a70ede1694ffe99d020b7573[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Fri Sep 2 16:55:39 2022 +0100
+
+    started to extrapolate data
+
+[33mcommit 03c786d71b9797c1678fead7fc7eaa54102f438f[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Fri Sep 2 16:23:32 2022 +0100
+
+    refining search criteria
+
+[33mcommit 7b766c4d5af80dc35b85e80cdbdc3cbe4df57c4c[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Thu Sep 1 16:59:27 2022 +0100
+
+    new
+
+[33mcommit 14a80e7e00925064af39887a73cac69179100b86[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Thu Sep 1 16:47:28 2022 +0100
+
+    added errror handling
+
+[33mcommit ce40fc50498396c4077a689dd632b48f6b2b6a2e[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Thu Sep 1 10:32:33 2022 +0100
+
+    test
+
+[33mcommit 724fa9fd424d2ab5dfd47c45aeab49af736b7b5b[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Tue Aug 30 15:03:02 2022 +0100
+
+    variant pulls from internal list
+
+[33mcommit 8a4d320286201b5dc178ba91a9ac5bdc6b009f8a[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Tue Aug 30 11:19:40 2022 +0100
+
+    started to pull pv price
+
+[33mcommit 000cc28c443a72a5ea101e1959bcc697797c1875[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Mon Aug 29 16:22:25 2022 +0100
+
+    refining search
+
+[33mcommit 52c48e87761768c4ab6c44601918e467113f2dfb[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Mon Aug 29 15:53:00 2022 +0100
+
+    3 main scrapers functional
+
+[33mcommit c1a9cc543af65bb7606b229363d60e124204c2c0[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Mon Aug 29 10:55:40 2022 +0100
+
+    select all scrape working
+
+[33mcommit dc118f8f1c0c09cf866e2ba186c31a06a9572b94[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Mon Aug 29 09:58:07 2022 +0100
+
+    data out working
+
+[33mcommit 9e4a77c92632e47ab2bd0264d5d47da26a975ce8[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Wed Aug 24 16:59:14 2022 +0100
+
+    fixed data out error
+
+[33mcommit 07fb1e42d48ddd1e05b10958de90c3740c3a32e6[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Wed Aug 24 16:53:16 2022 +0100
+
+    added global object
+
+[33mcommit c2af21362951e59bc3aecfa171f8ad58ecd378ae[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Wed Aug 24 16:48:46 2022 +0100
+
+    started integratin seperate data sets
+
+[33mcommit 09cfa5f7ba6d4c467d3b995c8083ac98b5804414[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Tue Aug 23 16:11:35 2022 +0100
+
+    restructuring UI
+
+[33mcommit 106142feb33a8719c446c025b9018c404765410f[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Tue Aug 23 14:38:28 2022 +0100
+
+    filters now work
+
+[33mcommit 711f17f68f279173a0ac6da1f61a2f860b548ce0[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Tue Aug 23 12:05:39 2022 +0100
+
+    all derivatives accessed
+
+[33mcommit 8b0d7b144e8b5d52163e9898078a87b644a32b51[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Fri Aug 19 16:59:47 2022 +0100
+
+    scraping lease complete
+
+[33mcommit 293656674f374ffa0649d8e5216e366b745b1d6b[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Fri Aug 19 16:49:35 2022 +0100
+
+    update for weekend
+
+[33mcommit e57bf4baa14d524644f3322b10695512b3ebfa61[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Fri Aug 19 16:29:02 2022 +0100
+
+    derivatives load from leasingcom
+
+[33mcommit f0ff4af03a07db0db95247781c0284ba572183cf[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Tue Aug 16 16:59:21 2022 +0100
+
+    fixed ui to work with new template
+
+[33mcommit 8aa3ddb560b92ef0d7549496f10c1d3bd53382b7[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Tue Aug 16 16:14:07 2022 +0100
+
+    edits now work
+
+[33mcommit d7fedc0e99d10393a198205d76f42bb6d0f6a3fe[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Tue Aug 16 15:08:48 2022 +0100
+
+    updated how hooks are handled
+
+[33mcommit 9f56de25f5903fed50832dcb3c50e0e153e11ddf[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Tue Aug 16 13:07:38 2022 +0100
+
+    adding variants now works
+
+[33mcommit 0df045296e7d53d10aec8a2cdf481c17334bd0fa[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Tue Aug 16 11:40:41 2022 +0100
+
+    added admin page CRON buttons
+
+[33mcommit 3838d390efd9aead7cf0a421e54c380ffb4edcd1[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Fri Aug 12 16:52:51 2022 +0100
+
+    weekend changes
+
+[33mcommit 4c09584f7264750bf19c6a28803aade0e945d628[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Fri Aug 12 16:15:20 2022 +0100
+
+    refined url searches
+
+[33mcommit 2f3a514688f4175943fb2b62fe2f2115676d218c[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Fri Aug 12 14:16:34 2022 +0100
+
+    api works as intended
+
+[33mcommit 8e794ade5ae6595fcef2afb32adbf92cbd2daf36[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Fri Aug 12 13:46:36 2022 +0100
+
+     variants search now works
+
+[33mcommit ed41e730f82f7bb02e918ff8273b0313509cb45a[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Fri Aug 12 13:08:07 2022 +0100
+
+    sql interactions more streamlined
+
+[33mcommit d37854d2b64dd4f80b6e722708e6b9f74e83227d[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Wed Aug 10 16:36:12 2022 +0100
+
+    added database integration
+
+[33mcommit 33016b3853f1dd0ab88b5ce3f0446aef7fce7739[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Wed Aug 10 16:31:28 2022 +0100
+
+    added sql integration
+
+[33mcommit 3f94466d8469607d84b83222bea1a5f775654ea0[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Wed Aug 10 15:31:25 2022 +0100
+
+    restructured carslist list
+
+[33mcommit eacff3126079db59ec126f820c3d8a3c1de94e4e[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Wed Aug 10 13:14:36 2022 +0100
+
+    added routing
+
+[33mcommit 644ac03257a2ec265f8690ead363902c3a56a48e[m
+Author: Dylan Bowman - Vardy Central <Dylan.Bowman@petervardy.com>
+Date:   Fri Aug 5 16:55:52 2022 +0100
+
+    select leasing scraping started
+
+[33

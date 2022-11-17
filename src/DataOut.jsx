@@ -7,16 +7,16 @@ const DataOut = ({make, leasingData, selectData, locoData, pvData, initialTerm, 
     const [localData , setLocalData] = useState()
 
     useEffect(() => {
-        if(leasingData  && selectData  && locoData  && pvData ){
+        if(leasingData    && locoData  && pvData ){
             setScrapedData()
-            collateData(leasingData, selectData, locoData, pvData, setScrapedData, term, initialTerm, mileage, setLoading)
+            collateData(leasingData, locoData, pvData, setScrapedData, term, initialTerm, mileage, setLoading)
         }
         if(searchedData){
             setLocalData(searchedData)
         }
 
         console.log(localTrigger)
-      },[leasingData,selectData, pvData, locoData, searchedData])
+      },[leasingData, pvData, locoData, searchedData])
 
 
     return(
@@ -25,7 +25,7 @@ const DataOut = ({make, leasingData, selectData, locoData, pvData, initialTerm, 
                 return (
                     <div> 
                         {idx === 0 && <div className="text-center mt-10">
-                            <h1 className="text-4xl roboto-400">{make}</h1>
+                            <h1 className="text-4xl roboto-400">{element.make}</h1>
                             <h2>Term {element.term} Months</h2>
                             <h2>Mileage {element.mileage} Miles</h2> 
                             <h2 className="mb-10">Initial Term {initialTerm} Months</h2>
@@ -58,7 +58,7 @@ const DataOut = ({make, leasingData, selectData, locoData, pvData, initialTerm, 
     )
 }
 
-const collateData = (leasingData, selectData, locoData, pvData, setData, term, initialTerm, mileage, setLoading) => {
+const collateData = (leasingData, locoData, pvData, setData, term, initialTerm, mileage, setLoading) => {
     let data = []
     let derivatives = []
 
@@ -70,19 +70,6 @@ const collateData = (leasingData, selectData, locoData, pvData, setData, term, i
         let derivative = element
         let name, leasingPrice, selectPrice, locoPrice, pvPrice, leasingTotalLease, locoUpfront, locoTotalLease, leasingUpfront, selectUpfront, selectTotalLease, pvTotalLease, pvUpfront
 
-        selectData.forEach(selectCar => {
-            if (selectCar.derivative === element){
-                selectPrice = selectCar.price
-                selectUpfront = selectCar.upfrontCost
-                if(selectCar.price !== "No Data"){
-                    selectTotalLease = "£"+new Intl.NumberFormat().format(parseInt(selectPrice.slice(1)) * (parseInt(term) - 1) + parseInt(selectUpfront.slice(1)))
-                }
-                else{
-                    selectTotalLease = selectCar.price
-                }
-                
-            }
-        })
         leasingData.forEach(leasingCar => {
             if (leasingCar.derivative === element){
                 leasingPrice = leasingCar.price

@@ -68,7 +68,7 @@ const ScraperForm = ({setMake, setModel, setVariant, make, model, setDerivative}
 
 //makes api call and fills out input fields of all brands we have in stock
 const populateMakeFields = (setMakeList) => {
-    fetch("http://localhost:5000/get/makes")
+    fetch("http://20.254.177.250:8000/get/makes")
     .then(response => response.json())
     .then(data => {
       let list = []
@@ -83,7 +83,7 @@ const populateMakeFields = (setMakeList) => {
   const populateModelFields = (makeString, setMake, setModel, setVariant, setDerivative, setModelList, setVariantList, setDerivativeList) => {
     let make = JSON.parse(makeString)
     setMake(make)
-    fetch(`http://localhost:5000/get/models/${make.replace(/['"]+/g, '')}`)
+    fetch(`http://20.254.177.250:8000/get/models/${make.replace(/['"]+/g, '')}`)
     .then(response => response.json())
     .then(data => {
       let list = []
@@ -107,7 +107,7 @@ const populateVariantsFields = (make, model, setModel, setVariant, setDerivative
   model = model.replace(/['"]+/g, '')
   setModel(model)
   console.log(model)
-  fetch(`http://localhost:5000/get/variants/${make.replace(/['"]+/g, '')}/${model}`)
+  fetch(`http://20.254.177.250:8000/get/variants/${make.replace(/['"]+/g, '')}/${model}`)
   .then(response => response.json())
   .then(data => {
     try{
@@ -131,7 +131,7 @@ const populateVariantsFields = (make, model, setModel, setVariant, setDerivative
 const populateDerivativeFields = (variant, model, setVariant, setDerivativeList) => {
   variant = variant.replace(/['"]+/g, '')
   setVariant(variant)
-  fetch(`http://localhost:5000/get/derivatives/${model.replace(/['"]+/g, '')}/${variant}`)
+  fetch(`http://20.254.177.250:8000/get/derivatives/${model.replace(/['"]+/g, '')}/${variant}`)
   .then(response => response.json())
   .then(data => {
     try{
